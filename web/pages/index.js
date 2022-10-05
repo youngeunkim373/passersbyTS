@@ -1,7 +1,7 @@
 import Head from "next/head";
 import prisma from "../lib/prisma";
 
-export default function Home({ products, productsFromSql }) {
+export default function Home({ members, membersFromSql }) {
   return (
     <div>
       <Head>
@@ -16,53 +16,63 @@ export default function Home({ products, productsFromSql }) {
           <table style={{ marginLeft: "auto", marginRight: "auto" }}>
             <thead>
               <tr>
-                <th style={{ border: "1px solid #444444" }}>id</th>
-                <th style={{ border: "1px solid #444444" }}>category</th>
-                <th style={{ border: "1px solid #444444" }}>name</th>
-                <th style={{ border: "1px solid #444444" }}>description</th>
+                <th style={{ border: "1px solid #444444" }}>email</th>
+                <th style={{ border: "1px solid #444444" }}>nickname</th>
+                <th style={{ border: "1px solid #444444" }}>sex</th>
+                <th style={{ border: "1px solid #444444" }}>age</th>
+                <th style={{ border: "1px solid #444444" }}>region</th>
               </tr>
             </thead>
             <tbody>
-              {products.map((product) => (
-                <tr key={product.id}>
-                  <td style={{ border: "1px solid #444444" }}>{product.id}</td>
+              {members.map((member) => (
+                <tr key={member.id}>
                   <td style={{ border: "1px solid #444444" }}>
-                    {product.category.name}
+                    {member.user_email}
                   </td>
                   <td style={{ border: "1px solid #444444" }}>
-                    {product.name}
+                    {member.user_nicknm}
                   </td>
                   <td style={{ border: "1px solid #444444" }}>
-                    {product.description}
+                    {member.user_sex}
+                  </td>
+                  <td style={{ border: "1px solid #444444" }}>
+                    {member.user_age}
+                  </td>
+                  <td style={{ border: "1px solid #444444" }}>
+                    {member.user_region}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
           <h4>Raw SQL</h4>
-          <table style={{ margin: "30px auto" }}>
+          <table style={{ marginLeft: "auto", marginRight: "auto" }}>
             <thead>
               <tr>
-                <th style={{ border: "1px solid #444444" }}>id</th>
-                <th style={{ border: "1px solid #444444" }}>category</th>
-                <th style={{ border: "1px solid #444444" }}>name</th>
-                <th style={{ border: "1px solid #444444" }}>description</th>
+                <th style={{ border: "1px solid #444444" }}>email</th>
+                <th style={{ border: "1px solid #444444" }}>nickname</th>
+                <th style={{ border: "1px solid #444444" }}>sex</th>
+                <th style={{ border: "1px solid #444444" }}>age</th>
+                <th style={{ border: "1px solid #444444" }}>region</th>
               </tr>
             </thead>
             <tbody>
-              {productsFromSql.map((product) => (
-                <tr key={product.product_id}>
+              {membersFromSql.map((member) => (
+                <tr key={member.id}>
                   <td style={{ border: "1px solid #444444" }}>
-                    {product.product_id}
+                    {member.user_email}
                   </td>
                   <td style={{ border: "1px solid #444444" }}>
-                    {product.category_name}
+                    {member.user_nicknm}
                   </td>
                   <td style={{ border: "1px solid #444444" }}>
-                    {product.product_name}
+                    {member.user_sex}
                   </td>
                   <td style={{ border: "1px solid #444444" }}>
-                    {product.product_description}
+                    {member.user_age}
+                  </td>
+                  <td style={{ border: "1px solid #444444" }}>
+                    {member.user_region}
                   </td>
                 </tr>
               ))}
@@ -99,53 +109,51 @@ export default function Home({ products, productsFromSql }) {
 /*---------- Read ----------*/
 export async function getStaticProps(context) {
   // prisma
-  const data = await prisma.product.findMany({
-    include: {
-      category: true,
-    },
-  });
-  const products = data.map((product) => ({
-    ...product,
-    price: product.price.toString(), //convert decimal value to string to pass through as json
+  const data = await prisma.members.findMany({});
+  const members = data.map((member) => ({
+    ...member,
   }));
 
   // raw SQL
   const dataFromSql = await prisma.$queryRaw`
-    SELECT  A.id as product_id
-          , A.name as product_name
-          , A.description as product_description
-          , B.name as category_name   
-      FROM Product A 
-      LEFT OUTER JOIN Category B 
-           ON B.id = A.category_id
+    SELECT  A.user_email    AS user_email 
+           ,A.user_nicknm   AS user_nicknm
+           ,A.user_pw       AS user_pw    
+           ,A.user_sex      AS user_sex   
+           ,A.user_age      AS user_age   
+           ,A.user_region   AS user_region
+           ,A.user_img      AS user_img   
+           ,A.reg_id        AS reg_id     
+           ,A.reg_date      AS reg_date   
+           ,A.reg_time      AS reg_time             
+      FROM Members A
   `;
-  const productsFromSql = dataFromSql.map((productFromSql) => ({
-    ...productFromSql,
-    //price: productFromSql.price.toString(),
+  const membersFromSql = dataFromSql.map((memberFromSql) => ({
+    ...memberFromSql,
   }));
 
-  const newProducts = await prisma.product.createMany({
-    data: [
-      {
-        id: 4,
-        name: "테스트 모자",
-        description: "테스트 모자입니다.",
-        price: 10000,
-        // image: null,
-        category_id: 1,
-      },
-      {
-        id: 5,
-        name: "테스트 모자2",
-        description: "테스트 모자2입니다.",
-        price: 20000,
-        // image: null,
-        category_id: 2,
-      },
-    ],
-  });
+  // const newProducts = await prisma.product.createMany({
+  //   data: [
+  //     {
+  //       id: 4,
+  //       name: "테스트 모자",
+  //       description: "테스트 모자입니다.",
+  //       price: 10000,
+  //       // image: null,
+  //       category_id: 1,
+  //     },
+  //     {
+  //       id: 5,
+  //       name: "테스트 모자2",
+  //       description: "테스트 모자2입니다.",
+  //       price: 20000,
+  //       // image: null,
+  //       category_id: 2,
+  //     },
+  //   ],
+  // });
 
   return {
-    props: { products, productsFromSql },
+    props: { members, membersFromSql },
   };
 }
