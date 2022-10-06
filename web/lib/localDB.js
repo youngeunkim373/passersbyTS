@@ -6,7 +6,7 @@ export async function query({ query, values = [] }) {
     database: "passersby",
     port: 3306,
     user: "root",
-    password: "apm6311",
+    password: "******",
     //socketPath: "/Applications/MAMP/tmp/mysql/mysql.sock",
   });
   try {

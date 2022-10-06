@@ -1,4 +1,6 @@
+import { useState } from "react";
 import Head from "next/head";
+import router from "next/router";
 import prisma from "../lib/prisma";
 
 /*---------- Read ----------*/
@@ -10,50 +12,94 @@ export async function getServerSideProps(context) {
   }));
 
   // raw SQL
-  // const dataFromSql = await prisma.$queryRaw`
-  //   SELECT  A.user_email    AS user_email
-  //          ,A.user_nicknm   AS user_nicknm
-  //          ,A.user_pw       AS user_pw
-  //          ,A.user_sex      AS user_sex
-  //          ,A.user_age      AS user_age
-  //          ,A.user_region   AS user_region
-  //          ,A.user_img      AS user_img
-  //          ,A.reg_id        AS reg_id
-  //          ,A.reg_date      AS reg_date
-  //          ,A.reg_time      AS reg_time
-  //     FROM Members A
-  // `;
-  // const membersFromSql = dataFromSql.map((memberFromSql) => ({
-  //   ...memberFromSql,
-  // }));
-
-  // const newProducts = await prisma.product.createMany({
-  //   data: [
-  //     {
-  //       id: 4,
-  //       name: "테스트 모자",
-  //       description: "테스트 모자입니다.",
-  //       price: 10000,
-  //       // image: null,
-  //       category_id: 1,
-  //     },
-  //     {
-  //       id: 5,
-  //       name: "테스트 모자2",
-  //       description: "테스트 모자2입니다.",
-  //       price: 20000,
-  //       // image: null,
-  //       category_id: 2,
-  //     },
-  //   ],
-  // });
+  const dataFromSql = await prisma.$queryRaw`
+    SELECT  A.user_email    AS user_email
+           ,A.user_nicknm   AS user_nicknm
+           ,A.user_pw       AS user_pw
+           ,A.user_sex      AS user_sex
+           ,A.user_age      AS user_age
+           ,A.user_region   AS user_region
+           ,A.user_img      AS user_img
+           ,A.reg_id        AS reg_id
+           ,A.reg_date      AS reg_date
+           ,A.reg_time      AS reg_time
+      FROM Members A
+  `;
+  const membersFromSql = dataFromSql.map((memberFromSql) => ({
+    ...memberFromSql,
+  }));
 
   return {
-    props: { members },
+    props: { members, membersFromSql },
   };
 }
 
 export default function Home({ members, membersFromSql }) {
+  const [data, setData] = useState({
+    user_email: "",
+    user_nicknm: "",
+    user_pw: "",
+    user_sex: "",
+    user_age: "",
+    user_region: "",
+  });
+  const { user_email, user_nicknm, user_pw, user_sex, user_age, user_region } =
+    data;
+
+  const [checkedData, setCheckedData] = useState([]);
+
+  /*---------- create / update ----------*/
+  const onSaveTextChange = (e) => {
+    e.preventDefault();
+    const { value, id } = e.target;
+    setData({ ...data, [id]: value });
+  };
+
+  const submitData = async (e) => {
+    e.preventDefault();
+    try {
+      const body = {
+        user_email,
+        user_nicknm,
+        user_pw,
+        user_sex,
+        user_age,
+        user_region,
+      };
+      await fetch("/api/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      await router.push("/");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /*---------- delete ----------*/
+  const onCheckboxClick = (e) => {
+    const { id, checked } = e.target;
+    if (checked === true) {
+      setCheckedData([...checkedData, id]);
+    } else {
+      setCheckedData(checkedData.filter((checked) => checked !== id));
+    }
+  };
+
+  const deleteData = async () => {
+    try {
+      await fetch("/api/delete", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(checkedData),
+      });
+      await router.push("/");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div>
       <Head>
@@ -77,7 +123,7 @@ export default function Home({ members, membersFromSql }) {
             </thead>
             <tbody>
               {members.map((member) => (
-                <tr key={member.id}>
+                <tr key={member.user_email}>
                   <td style={{ border: "1px solid #444444" }}>
                     {member.user_email}
                   </td>
@@ -97,10 +143,72 @@ export default function Home({ members, membersFromSql }) {
               ))}
             </tbody>
           </table>
+        </div>
+        <div style={{ padding: "20px" }}>
+          <h3>INSERT / UPDATE</h3>
+          <form onSubmit={submitData} method="put">
+            <input
+              type="text"
+              id="user_email"
+              placeholder="email"
+              style={{ margin: "0px 10px" }}
+              value={user_email}
+              onChange={onSaveTextChange}
+            />
+            <input
+              type="text"
+              id="user_nicknm"
+              placeholder="nickname"
+              style={{ margin: "0px 10px" }}
+              value={user_nicknm}
+              onChange={onSaveTextChange}
+            />
+            <input
+              type="text"
+              id="user_pw"
+              placeholder="password"
+              style={{ margin: "0px 10px" }}
+              value={user_pw}
+              onChange={onSaveTextChange}
+            />
+            <br />
+            <input
+              type="text"
+              id="user_sex"
+              placeholder="sex"
+              style={{ margin: "0px 10px" }}
+              value={user_sex}
+              onChange={onSaveTextChange}
+            />
+            <input
+              type="text"
+              id="user_age"
+              placeholder="age"
+              style={{ margin: "0px 10px" }}
+              value={user_age}
+              onChange={onSaveTextChange}
+            />
+            <input
+              type="text"
+              id="user_region"
+              placeholder="region"
+              style={{ margin: "0px 10px" }}
+              value={user_region}
+              onChange={onSaveTextChange}
+            />
+            <br />
+            <button type="submit" style={{ margin: "10px" }}>
+              저장
+            </button>
+          </form>
+        </div>
+        <div style={{ padding: "30px" }}>
+          <h3>DELETE</h3>
           <h4>Raw SQL</h4>
           <table style={{ marginLeft: "auto", marginRight: "auto" }}>
             <thead>
               <tr>
+                <th style={{ border: "1px solid #444444" }}>√</th>
                 <th style={{ border: "1px solid #444444" }}>email</th>
                 <th style={{ border: "1px solid #444444" }}>nickname</th>
                 <th style={{ border: "1px solid #444444" }}>sex</th>
@@ -109,8 +217,15 @@ export default function Home({ members, membersFromSql }) {
               </tr>
             </thead>
             <tbody>
-              {/* {membersFromSql.map((member) => (
-                <tr key={member.id}>
+              {membersFromSql.map((member) => (
+                <tr key={member.user_email}>
+                  <td style={{ border: "1px solid #444444" }}>
+                    <input
+                      id={member.user_email}
+                      onClick={onCheckboxClick}
+                      type="checkbox"
+                    />
+                  </td>
                   <td style={{ border: "1px solid #444444" }}>
                     {member.user_email}
                   </td>
@@ -127,31 +242,13 @@ export default function Home({ members, membersFromSql }) {
                     {member.user_region}
                   </td>
                 </tr>
-              ))} */}
+              ))}
             </tbody>
           </table>
-        </div>
-        <div style={{ padding: "20px" }}>
-          <h3>INSERT</h3>
-          <input
-            type="text"
-            id="id"
-            placeholder="id"
-            style={{ margin: "0px 10px" }}
-          />
-          <input
-            type="text"
-            id="name"
-            placeholder="name"
-            style={{ margin: "0px 10px" }}
-          />
-          <input
-            type="text"
-            id="description"
-            placeholder="description"
-            style={{ margin: "0px 10px" }}
-          />
-          <button>저장</button>
+          <br />
+          <button onClick={deleteData} style={{ margin: "10px" }}>
+            삭제
+          </button>
         </div>
       </div>
     </div>
