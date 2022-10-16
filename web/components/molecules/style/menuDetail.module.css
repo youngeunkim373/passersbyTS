@@ -1,0 +1,10 @@
+.menu_font {
+  font-family: "ibmRegular";
+  font-size: 20px;
+  font-weight: bold;
+  color: #101820;
+}
+
+.menu_font.isActive {
+  color: #9000ff;
+}
