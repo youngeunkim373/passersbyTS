@@ -13,14 +13,14 @@ datasource db {
 }
 
 model Members {
-    user_email  String    @id
-    user_nicknm String
-    user_pw     String
-    user_sex    String
-    user_age    Int
-    user_region String
-    user_img    String?
-    reg_id      String?
-    reg_date    String?
-    reg_time    String?
+    email               String                  @id
+    password            String             
+    nickname            String  
+    sex                 String                  // F:여자 / M:남자
+    age                 Int
+    region              String                  //         
+    userRole            String                  // seller / user / admin
+    userImage           String?             
+    registerId          String                    
+    registerDate        DateTime                @updatedAt   
 }
