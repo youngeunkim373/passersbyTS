@@ -1,4 +1,5 @@
 export type ButtonType = "button" | "submit" | "reset";
+
 export type InputType =
   | "button"
   | "checkbox"
@@ -22,3 +23,21 @@ export type InputType =
   | "time"
   | "url"
   | "week";
+
+export type RegionType =
+  | "Seoul"
+  | "Gyeonggi"
+  | "Gwangju"
+  | "Daegu"
+  | "Daejeon"
+  | "Busan"
+  | "Incheon"
+  | "Ulsan"
+  | "Sejong"
+  | "Jeju"
+  | "Gangwon"
+  | "Gyeongsang"
+  | "Jeolla"
+  | "Chungcheong";
+
+export type SexType = "F" | "M";

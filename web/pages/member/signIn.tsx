@@ -1,6 +1,10 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/reducers";
+import { signIn } from "../../store/actions/authentication";
+import type { SignInProps } from "../../types/sessionTypes";
 
 import BasicInput from "../../components/atoms/basicInput";
 import Title from "../../components/atoms/title";
@@ -8,13 +12,33 @@ import BasicLabel from "../../components/atoms/basicLabel";
 import PushButton from "../../components/atoms/pushButton";
 
 const SignIn: React.FC = () => {
-  const router = useRouter();
-
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
   });
   const { email, password } = inputs;
+
+  const router = useRouter();
+
+  const dispatch = useDispatch();
+  const session = useSelector((state: RootState) => state.auth);
+
+  const createSession = useCallback(
+    ({
+      email,
+      nickname,
+      sex,
+      age,
+      region,
+      userRole,
+      userImage,
+    }: SignInProps) => {
+      dispatch(
+        signIn({ email, nickname, sex, age, region, userRole, userImage })
+      );
+    },
+    [dispatch]
+  );
 
   const onInputChange = (e: React.ChangeEvent) => {
     e.preventDefault();
@@ -34,8 +58,25 @@ const SignIn: React.FC = () => {
         },
       })
       .then((res) => {
+        const {
+          email,
+          nickname,
+          sex,
+          age,
+          region,
+          userRole,
+          userImage,
+        }: SignInProps = res.data[0];
         if (res.data.length > 0) {
-          // 상태관리 + 로그인 정보 보관 로직 필요
+          createSession({
+            email,
+            nickname,
+            sex,
+            age,
+            region,
+            userRole,
+            userImage,
+          });
           router.push("/");
         } else {
           alert("아이디와 비밀번호를 확인하세요.");
@@ -48,7 +89,7 @@ const SignIn: React.FC = () => {
     <form
       id="page"
       onSubmit={handleSubmit}
-      method="POST"
+      method="GET"
       className="narrow-width"
     >
       <Title>로그인</Title>
@@ -62,6 +103,7 @@ const SignIn: React.FC = () => {
         placeholder="이메일을 입력하세요."
         onChange={onInputChange}
         submitOnEnter={true}
+        required={true}
       />
       <div className="PL10 PT30">
         <BasicLabel>비밀번호</BasicLabel>
@@ -73,6 +115,7 @@ const SignIn: React.FC = () => {
         placeholder="비밀번호를 입력하세요."
         onChange={onInputChange}
         submitOnEnter={true}
+        required={true}
       />
       <div
         className="pointer black PT10 PB50 right"

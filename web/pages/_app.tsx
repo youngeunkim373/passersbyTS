@@ -1,8 +1,11 @@
+import type { AppProps } from "next/app";
+import { wrapper } from "../store";
+
+import Layout from "../components/templates/layout";
+
 import "../styles/global.css";
 import "../styles/lightTheme.css";
 import "../styles/font.css";
-import type { AppProps } from "next/app";
-import Layout from "../components/templates/layout";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -12,4 +15,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default MyApp;
+export default wrapper.withRedux(MyApp);
