@@ -10,6 +10,7 @@ import BasicInput from "../../components/atoms/basicInput";
 import Title from "../../components/atoms/title";
 import BasicLabel from "../../components/atoms/basicLabel";
 import PushButton from "../../components/atoms/pushButton";
+import Alert from "../../components/molecules/Alert";
 
 const SignIn: React.FC = () => {
   const [inputs, setInputs] = useState({
@@ -17,6 +18,7 @@ const SignIn: React.FC = () => {
     password: "",
   });
   const { email, password } = inputs;
+  const [open, setOpen] = useState(false);
 
   const router = useRouter();
 
@@ -58,29 +60,13 @@ const SignIn: React.FC = () => {
         },
       })
       .then((res) => {
-        const {
-          email,
-          nickname,
-          sex,
-          age,
-          region,
-          userRole,
-          userImage,
-        }: SignInProps = res.data[0];
-        if (res.data.length > 0) {
-          createSession({
-            email,
-            nickname,
-            sex,
-            age,
-            region,
-            userRole,
-            userImage,
-          });
-          router.push("/");
-        } else {
-          alert("아이디와 비밀번호를 확인하세요.");
+        if (res.data.length === 0) {
+          setOpen(true);
+          return;
         }
+
+        createSession(res.data[0]);
+        router.push("/");
       })
       .catch((error) => console.log(error.response));
   };
@@ -93,6 +79,9 @@ const SignIn: React.FC = () => {
       className="narrow-width"
     >
       <Title>로그인</Title>
+      <Alert open={open} setOpen={setOpen}>
+        이메일과 비밀번호를 확인하세요.
+      </Alert>
       <div className="PL10">
         <BasicLabel>이메일</BasicLabel>
       </div>

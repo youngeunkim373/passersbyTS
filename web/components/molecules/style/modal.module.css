@@ -1,0 +1,6 @@
+.small_modal {
+  margin: 0 auto;
+  position: absolute;
+  top: 40%;
+  overflow: auto;
+}
