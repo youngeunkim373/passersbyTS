@@ -7,16 +7,23 @@ import menuClass from "./style/menuDetail.module.css";
 interface TextMenuProps {
   koreanMenu: string;
   englishMenu?: string;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-const TextMenu = (props: TextMenuProps) => {
-  const { koreanMenu, englishMenu } = props;
-
+const TextMenu = ({ koreanMenu, englishMenu, onClick }: TextMenuProps) => {
   const router = useRouter();
 
   return (
     <>
-      {englishMenu ? (
+      {onClick ? (
+        <button
+          type="button"
+          className={`PL30 ${menuClass.menu_font}`}
+          onClick={onClick}
+        >
+          {koreanMenu}
+        </button>
+      ) : englishMenu ? (
         <Link href={`/${englishMenu}`}>
           <a
             className={clsx(

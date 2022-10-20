@@ -10,21 +10,21 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 
 import menuDetail from "./style/menuDetail.module.css";
+import Link from "next/link";
 
 type Anchor = "top" | "left" | "bottom" | "right";
 
 interface IconMenuProps {
   direction: Anchor;
   icon: any;
-  drawerList: {
-    koreanMenu: string;
-    englishMenu: string;
-    icon?: any;
-  }[];
+  drawerList: any[];
 }
 
-export default function IconMenu(props: IconMenuProps) {
-  const { direction, icon, drawerList } = props;
+export default function IconMenu({
+  direction,
+  icon,
+  drawerList,
+}: IconMenuProps) {
   const Icon = icon;
 
   const [state, setState] = React.useState({
@@ -50,7 +50,12 @@ export default function IconMenu(props: IconMenuProps) {
 
   const list = (
     anchor: Anchor,
-    drawerList: { koreanMenu: string; englishMenu: string; icon?: any }[]
+    drawerList: {
+      koreanMenu: string;
+      englishMenu?: string;
+      icon?: any;
+      onClick?: React.MouseEventHandler<HTMLButtonElement>;
+    }[]
   ) => (
     <Box
       sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
@@ -59,14 +64,38 @@ export default function IconMenu(props: IconMenuProps) {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {drawerList.map((list) => (
-          <ListItem key={list.englishMenu} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>{list.icon}</ListItemIcon>
-              <div className={`${menuDetail.menu_font}`}>{list.koreanMenu}</div>
-            </ListItemButton>
-          </ListItem>
-        ))}
+        {drawerList.map(
+          (list) =>
+            typeof list !== "boolean" && (
+              <ListItem
+                key={list.englishMenu && list.koreanMenu}
+                disablePadding
+              >
+                {list.onClick ? (
+                  <ListItemButton>
+                    <ListItemIcon>{list.icon}</ListItemIcon>
+                    <button
+                      type="button"
+                      className={`${menuDetail.menu_font}`}
+                      onClick={list.onClick}
+                    >
+                      {list.koreanMenu}
+                    </button>
+                  </ListItemButton>
+                ) : (
+                  <Link href={`/${list.englishMenu}`}>
+                    <ListItemButton>
+                      <ListItemIcon>{list.icon}</ListItemIcon>
+
+                      <a className={`${menuDetail.menu_font}`}>
+                        {list.koreanMenu}
+                      </a>
+                    </ListItemButton>
+                  </Link>
+                )}
+              </ListItem>
+            )
+        )}
       </List>
       {/* <Divider /> */}
     </Box>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useSession, signOut } from "next-auth/react";
 
 import menuClass from "./style/menu.module.css";
 
@@ -15,9 +16,19 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { useRouter } from "next/router";
 
 const Menu: React.FC = () => {
+  const { data: session, status } = useSession();
+
+  const router = useRouter();
+
   const matches = useMediaQuery("(max-width:750px)");
+
+  const handleSignOut = async () => {
+    signOut({ redirect: false });
+    router.replace("/");
+  };
 
   return (
     <div
@@ -34,7 +45,7 @@ const Menu: React.FC = () => {
                 height="70px"
               />
             </div>
-            <span className="right logo-font PT30">길 가는 사람들</span>
+            <span className="right logo-font">길 가는 사람들</span>
           </>
         </Link>
       </div>
@@ -45,20 +56,22 @@ const Menu: React.FC = () => {
             icon={MenuIcon}
             drawerList={[
               {
-                koreanMenu: "로그인",
-                englishMenu: "member/signIn",
-                icon: <LoginIcon />,
-              },
-              // {
-              //   koreanMenu: "로그아웃",
-              //   englishMenu: "signout",
-              //   icon: <LogoutIcon />,
-              // },
-              {
                 koreanMenu: "회원가입",
-                englishMenu: "signup",
+                englishMenu: "member/signUp",
                 icon: <PersonAddIcon />,
               },
+              status === "authenticated"
+                ? {
+                    koreanMenu: "로그아웃",
+                    englishMenu: "member/signOut",
+                    icon: <LogoutIcon />,
+                    onClick: handleSignOut,
+                  }
+                : {
+                    koreanMenu: "로그인",
+                    englishMenu: "member/signIn",
+                    icon: <LoginIcon />,
+                  },
               {
                 koreanMenu: "공지사항",
                 englishMenu: "notice",
@@ -69,10 +82,15 @@ const Menu: React.FC = () => {
                 englishMenu: "board",
                 icon: <AssignmentIcon />,
               },
-              {
+              status === "authenticated" && {
                 koreanMenu: "프로필",
                 englishMenu: "profile",
                 icon: <AccountCircleIcon />,
+              },
+              {
+                koreanMenu: "설정",
+                englishMenu: "setting",
+                icon: <SettingsIcon />,
               },
             ]}
           />
@@ -85,7 +103,7 @@ const Menu: React.FC = () => {
               { koreanMenu: "게시판", englishMenu: "board" },
             ].map((menu) => (
               <TextMenu
-                key={menu.englishMenu}
+                key={menu.koreanMenu}
                 koreanMenu={menu.koreanMenu}
                 englishMenu={menu.englishMenu}
               />
@@ -94,20 +112,25 @@ const Menu: React.FC = () => {
           <div className={`right vertical-center ${menuClass.setting_width}`}>
             <div className="left PR30">
               {[
-                { koreanMenu: "로그인", englishMenu: "member/signIn" },
-                // { korean: "로그아웃", english: "signout" },
+                status === "authenticated"
+                  ? {
+                      koreanMenu: "로그아웃",
+                      onClick: handleSignOut,
+                    }
+                  : { koreanMenu: "로그인", englishMenu: "member/signIn" },
                 {
                   koreanMenu: "|",
                 },
                 {
                   koreanMenu: "회원가입",
-                  englishMenu: "signup",
+                  englishMenu: "member/signUp",
                 },
               ].map((menu) => (
                 <TextMenu
-                  key={menu.englishMenu + "_2"}
+                  key={menu.koreanMenu + "_2"}
                   koreanMenu={menu.koreanMenu}
                   englishMenu={menu.englishMenu}
+                  onClick={menu.onClick}
                 />
               ))}
             </div>
@@ -122,11 +145,11 @@ const Menu: React.FC = () => {
                   englishMenu: "profile",
                   icon: <AccountCircleIcon />,
                 },
-                // {
-                //   koreanMenu: "로그아웃",
-                //   englishMenu: "signout",
-                //   icon: <LogoutIcon />,
-                // },
+                {
+                  koreanMenu: "설정",
+                  englishMenu: "setting",
+                  icon: <SettingsIcon />,
+                },
               ]}
             />
           </div>
