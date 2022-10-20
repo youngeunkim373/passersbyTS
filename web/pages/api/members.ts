@@ -8,22 +8,12 @@ export default async function members(
   const path = req.query.path;
 
   switch (path) {
-    case "signIn":
     case "checkEmail":
       try {
         const email = req.query.email;
-        const password = req.query.password;
 
         const result: { [k: string]: string | number }[] =
           await prisma.$queryRaw`
-          SELECT  email, nickname, sex, age, region, userRole, userImage
-            FROM Members
-           WHERE email = ${email}
-             AND password = ${password}
-        `;
-        const checkAuth = result?.map(
-          (auth: { [k: string]: string | number }) => ({
-            ...auth,
             SELECT email     FROM Members
              WHERE email = ${email}
           `;
@@ -34,7 +24,7 @@ export default async function members(
           })
         );
 
-        res.status(200).json(checkAuth);
+        res.status(200).json(checkEmail);
       } catch (e) {
         console.error("Request error", e);
         res.status(500).json({ error: "Error while seleting data" });
