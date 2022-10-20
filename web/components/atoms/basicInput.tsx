@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import type { InputType } from "../../types/globalTypes";
 import styled from "styled-components";
 
@@ -9,9 +10,11 @@ interface InputProps {
   readOnly?: boolean;
   width?: string;
   lineHeight?: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
   onKeyPress?: React.KeyboardEventHandler<HTMLInputElement>;
   submitOnEnter?: boolean;
+  required?: boolean;
+  autoFocus?: boolean;
 }
 
 const StyledInput = styled.input<InputProps>`
@@ -31,18 +34,23 @@ const StyledInput = styled.input<InputProps>`
   }
 `;
 
-const BasicInput = ({
-  type,
-  id,
-  placeholder,
-  value,
-  readOnly = false,
-  width,
-  lineHeight,
-  onChange,
-  onKeyPress,
-  submitOnEnter = false,
-}: InputProps) => {
+const BasicInput = (
+  {
+    type,
+    id,
+    placeholder,
+    value,
+    readOnly = false,
+    width,
+    lineHeight,
+    onChange,
+    onKeyPress,
+    submitOnEnter = false,
+    required = false,
+    autoFocus = false,
+  }: InputProps,
+  ref: any
+) => {
   const handleKeyPress = (e: any) => {
     if (!submitOnEnter && e.key === "Enter") e.preventDefault();
     if (typeof onKeyPress === "function") onKeyPress(e.key);
@@ -59,8 +67,10 @@ const BasicInput = ({
       readOnly={readOnly}
       width={width}
       lineHeight={lineHeight}
+      required={required}
+      ref={ref}
+      autoFocus={autoFocus}
     />
   );
 };
-
-export default BasicInput;
+export default forwardRef(BasicInput);

@@ -6,12 +6,12 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 interface BoxProps {
   children: React.ReactNode;
   open: boolean;
-  setOpen: Function;
+  setAlert: Function;
 }
 
-const Alert = ({ children, open = false, setOpen }: BoxProps) => {
+const Alert = ({ children, open = false, setAlert }: BoxProps) => {
   const handleClose = () => {
-    setOpen(false);
+    setAlert({ open: false, text: "" });
   };
 
   return (

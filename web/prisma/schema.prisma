@@ -15,7 +15,7 @@ datasource db {
 model Members {
     email               String                  @id
     password            String             
-    nickname            String  
+    nickname            String                  @unique
     sex                 String                  // F:여자 / M:남자
     age                 Int
     region              String                  //         

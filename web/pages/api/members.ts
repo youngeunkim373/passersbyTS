@@ -9,6 +9,7 @@ export default async function members(
 
   switch (path) {
     case "signIn":
+    case "checkEmail":
       try {
         const email = req.query.email;
         const password = req.query.password;
@@ -23,6 +24,13 @@ export default async function members(
         const checkAuth = result?.map(
           (auth: { [k: string]: string | number }) => ({
             ...auth,
+            SELECT email     FROM Members
+             WHERE email = ${email}
+          `;
+
+        const checkEmail = result?.map(
+          (check: { [k: string]: string | number }) => ({
+            ...check,
           })
         );
 

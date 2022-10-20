@@ -41,10 +41,11 @@ export default async function allDBAccess(
     case "POST":
       try {
         const table: string = req.body.table;
-        const createFields: { [k: string]: string } = req.body.fields;
-        createFields["registerId"] = createFields.id; // 나중에 로그인한 아이디 값을 변경해야 함
-        const primaryKey: { [k: string]: string } = req.body.primaryKey;
-        const updateFields: { [k: string]: string } = {};
+        const createFields: { [k: string]: string | number } = req.body.fields;
+        createFields["registerId"] = createFields.email; // 나중에 로그인한 아이디 값을 변경해야 함
+        const primaryKey: { [k: string]: string | number } =
+          req.body.primaryKey;
+        const updateFields: { [k: string]: string | number } = {};
         Object.entries(createFields).forEach(([key, value]) => {
           if (!Object.keys(primaryKey).includes(key)) {
             updateFields[key] = value;
