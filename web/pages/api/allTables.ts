@@ -10,7 +10,9 @@ export default async function allDBAccess(
   switch (method) {
     case "GET":
       try {
-        var url = new URL(`http://localhost:3000/api/allTables/${req.url}`);
+        var url = new URL(
+          `${process.env.NEXT_PUBLIC_ENV_HOST}/api/allTables/${req.url}`
+        );
 
         let table: string = "";
         let fields: { [k: string]: boolean } = {};
