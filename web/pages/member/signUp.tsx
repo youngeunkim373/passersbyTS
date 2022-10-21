@@ -1,9 +1,12 @@
 import axios from "axios";
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
+import clsx from "clsx";
 
 import { checkEmail } from "../../lib/checkEmail";
 import { hashPassword } from "../../lib/hasePassword";
+
+import TextField from "@mui/material/TextField";
 
 import BasicButton from "../../components/atoms/basicButton";
 import BasicInput from "../../components/atoms/basicInput";
@@ -35,6 +38,9 @@ const regionList = {
 
 const SignUp: React.FC = () => {
   const [alert, setAlert] = useState({ open: false, text: "" });
+  const [verifyInput, setVerifyInput] = useState(false);
+  const [verifyComplete, setVerifyComplete] = useState(false);
+  const [verifyNumber, setVerifyNumber] = useState(null);
 
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
@@ -43,6 +49,7 @@ const SignUp: React.FC = () => {
   const ageInputRef = useRef<HTMLInputElement>(null);
   const sexSelectRef = useRef<HTMLLabelElement>(null);
   const regionSelectRef = useRef<HTMLLabelElement>(null);
+  const verifyInputRef = useRef<HTMLInputElement>(null);
 
   const router = useRouter();
 
@@ -61,17 +68,40 @@ const SignUp: React.FC = () => {
     await axios
       .get("/api/members", {
         params: {
-          path: "checkEmail",
+          path: "sendEmail",
           email: email,
         },
       })
       .then((res) => {
-        if (res.data.length > 0) {
+        const { checkEmail, verifyNumber } = res.data;
+        if (checkEmail > 0) {
           setAlert({ open: true, text: "이미 가입이력이 있는 이메일입니다." });
           return;
         }
+
+        setVerifyInput(true);
+        setVerifyNumber(verifyNumber);
       })
       .catch((error) => console.log(error.response));
+  };
+
+  const onPressEnter = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+
+      const verifyInput = Number(verifyInputRef.current?.value);
+
+      if (verifyNumber !== verifyInput) {
+        setAlert({
+          open: true,
+          text: "본인인증 번호가 일치하지 않습니다.",
+        });
+        return;
+      }
+
+      setVerifyInput(false);
+      setVerifyComplete(true);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -94,13 +124,13 @@ const SignUp: React.FC = () => {
       return;
     }
 
-    // if (display.verifyComplete !== "block") {
-    //   setAlert({
-    //     open: true,
-    //     text: "본인인증을 완료하세요.",
-    //   });
-    //   return;
-    // }
+    if (verifyComplete !== true) {
+      setAlert({
+        open: true,
+        text: "본인인증을 완료하세요.",
+      });
+      return;
+    }
 
     if (password !== confirm) {
       setAlert({
@@ -160,6 +190,28 @@ const SignUp: React.FC = () => {
           ref={emailInputRef}
           autoFocus={true}
         />
+        <TextField
+          type="text"
+          id="verify"
+          placeholder="본인인증 메일이 전송되었습니다."
+          label="인증번호"
+          color="warning"
+          size="small"
+          focused
+          fullWidth
+          inputRef={verifyInputRef}
+          onKeyDown={onPressEnter}
+          className={clsx("MT30", {
+            [memberClass.verify]: verifyInput === false,
+          })}
+        />
+        <p
+          className={clsx("blue", {
+            [memberClass.verify]: verifyComplete === false,
+          })}
+        >
+          본인인증이 완료되었습니다.
+        </p>
         <div className="PL10 PT30">
           <BasicLabel>비밀번호</BasicLabel>
         </div>
