@@ -15,6 +15,7 @@ interface InputProps {
   submitOnEnter?: boolean;
   required?: boolean;
   autoFocus?: boolean;
+  defaultValue?: string;
 }
 
 const StyledInput = styled.input<InputProps>`
@@ -48,6 +49,7 @@ const BasicInput = (
     submitOnEnter = false,
     required = false,
     autoFocus = false,
+    defaultValue,
   }: InputProps,
   ref: any
 ) => {
@@ -70,6 +72,7 @@ const BasicInput = (
       required={required}
       ref={ref}
       autoFocus={autoFocus}
+      defaultValue={defaultValue}
     />
   );
 };
