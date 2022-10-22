@@ -38,7 +38,7 @@ const SignIn: React.FC = () => {
       password: password,
     });
 
-    if (result!.error) {
+    if (result!.error && result!.status === 401) {
       setAlert({
         open: true,
         text: "이메일과 비밀번호를 확인하세요.",
