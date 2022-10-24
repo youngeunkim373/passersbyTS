@@ -1,4 +1,4 @@
-import prisma from "../../lib/prisma";
+import prisma from "../../lib/db/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function allDBAccess(
@@ -16,6 +16,9 @@ export default async function allDBAccess(
 
         let table: string = "";
         let fields: { [k: string]: boolean } = {};
+        //Record<string, boolean>
+        // Partial<Type> Omit<Type, 'id'>
+        // type action = add | edit | delete => Exclude<action, 'add'>
 
         url.searchParams.forEach(function (value, key) {
           if (key === "table") table = value;

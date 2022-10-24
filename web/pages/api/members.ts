@@ -1,6 +1,9 @@
 import prisma from "../../lib/prisma";
+import prisma from "../../lib/db/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { sendEmail } from "../../lib/sendEmail";
+import { sendEmail } from "../../lib/utils/sendEmail";
+import checkMembership from "./utils/checkMembership";
 
 export default async function members(
   req: NextApiRequest,

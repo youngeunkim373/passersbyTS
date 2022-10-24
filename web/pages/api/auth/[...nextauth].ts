@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { verifyPassword } from "../../../lib/hasePassword";
-import prisma from "../../../lib/prisma";
+import { verifyPassword } from "../../../lib/utils/hashPassword";
+import prisma from "../../../lib/db/prisma";
 
 interface signInProps {
   email: string;

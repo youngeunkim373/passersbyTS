@@ -7,8 +7,8 @@ import Alert from "../../components/molecules/Alert";
 import BasicInput from "../../components/atoms/basicInput";
 import BasicLabel from "../../components/atoms/basicLabel";
 import PushButton from "../../components/atoms/pushButton";
-import { checkEmail } from "../../lib/checkEmail";
 import Title from "../../components/atoms/title";
+import { checkEmail } from "../../lib/utils/checkEmail";
 
 const SignIn: React.FC = () => {
   const [alert, setAlert] = useState({ open: false, text: "" });

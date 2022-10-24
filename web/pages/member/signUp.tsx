@@ -1,7 +1,5 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { checkEmail } from "../../lib/checkEmail";
-import { hashPassword } from "../../lib/hasePassword";
 import axios from "axios";
 import styled from "styled-components";
 
@@ -15,6 +13,8 @@ import BasicSelect from "../../components/atoms/basicSelect";
 import PushButton from "../../components/atoms/pushButton";
 import Title from "../../components/atoms/title";
 
+import { checkEmail } from "../../lib/utils/checkEmail";
+import { hashPassword } from "../../lib/utils/hashPassword";
 
 const sexList = { F: "여성", M: "남성" };
 const regionList = {
