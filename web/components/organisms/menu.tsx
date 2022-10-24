@@ -1,13 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import { useRouter } from "next/router";
 import { useSession, signOut } from "next-auth/react";
+import styled from "styled-components";
 
-import menuClass from "./style/menu.module.css";
-
-import IconMenu from "../molecules/iconMenu";
-import TextMenu from "../molecules/textMenu";
-
+import useMediaQuery from "@mui/material/useMediaQuery";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -16,13 +13,20 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useRouter } from "next/router";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import NightlightRoundIcon from "@mui/icons-material/NightlightRound";
 
-const Menu: React.FC = () => {
+import IconMenu from "../molecules/iconMenu";
+import TextMenu from "../molecules/textMenu";
+
+interface MenuProps {
+  isDark: boolean;
+  toggleDarkMode: () => void;
+}
+
+const Menu = ({ isDark, toggleDarkMode }: MenuProps) => {
   const { data: session, status } = useSession();
-
   const router = useRouter();
-
   const matches = useMediaQuery("(max-width:750px)");
 
   const handleSignOut = async () => {
@@ -31,26 +35,24 @@ const Menu: React.FC = () => {
   };
 
   return (
-    <div
-      className={`vertical-center menu ${menuClass.menu_width} ${menuClass.menu_height}`}
-    >
-      <div className={`left vertical-center pointer ${menuClass.img_width}`}>
+    <MenuContainer>
+      <LogoContainer>
         <Link href="/">
           <>
-            <div className="left PL10 PR10 PT10">
+            <LogoImageContainer>
               <Image
                 src="/images/symbol.png"
                 alt="Home"
                 width="70px"
                 height="70px"
               />
-            </div>
-            <span className="right logo-font">길 가는 사람들</span>
+            </LogoImageContainer>
+            <TitleSpan>길 가는 사람들</TitleSpan>
           </>
         </Link>
-      </div>
+      </LogoContainer>
       {matches ? (
-        <div className={`PR30 ${menuClass.icon_right}`}>
+        <HamburgerMenuContainer>
           <IconMenu
             direction="right"
             icon={MenuIcon}
@@ -63,7 +65,7 @@ const Menu: React.FC = () => {
               status === "authenticated"
                 ? {
                     koreanMenu: "로그아웃",
-                    englishMenu: "member/signOut",
+                    englishMenu: "signOut",
                     icon: <LogoutIcon />,
                     onClick: handleSignOut,
                   }
@@ -87,17 +89,23 @@ const Menu: React.FC = () => {
                 englishMenu: "profile",
                 icon: <AccountCircleIcon />,
               },
+              // {
+              //   koreanMenu: "설정",
+              //   englishMenu: "setting",
+              //   icon: <SettingsIcon />,
+              // },
               {
-                koreanMenu: "설정",
-                englishMenu: "setting",
-                icon: <SettingsIcon />,
+                koreanMenu: "밝기",
+                englishMenu: "brightness",
+                icon: isDark ? <NightlightRoundIcon /> : <LightModeIcon />,
+                onClick: toggleDarkMode,
               },
             ]}
           />
-        </div>
+        </HamburgerMenuContainer>
       ) : (
         <>
-          <div className={`left align-center ${menuClass.textmenu_width}`}>
+          <TextMenuContainer>
             {[
               { koreanMenu: "공지사항", englishMenu: "notice" },
               { koreanMenu: "게시판", englishMenu: "board" },
@@ -108,9 +116,9 @@ const Menu: React.FC = () => {
                 englishMenu={menu.englishMenu}
               />
             ))}
-          </div>
-          <div className={`right vertical-center ${menuClass.setting_width}`}>
-            <div className="left PR30">
+          </TextMenuContainer>
+          <SettingMenuContainer>
+            <SettingMenuLeftSide>
               {[
                 status === "authenticated"
                   ? {
@@ -133,30 +141,99 @@ const Menu: React.FC = () => {
                   onClick={menu.onClick}
                 />
               ))}
-            </div>
-          </div>
-          <div className="right">
-            <IconMenu
-              direction="top"
-              icon={SettingsIcon}
-              drawerList={[
-                {
-                  koreanMenu: "프로필",
-                  englishMenu: "profile",
-                  icon: <AccountCircleIcon />,
-                },
-                {
-                  koreanMenu: "설정",
-                  englishMenu: "setting",
-                  icon: <SettingsIcon />,
-                },
-              ]}
-            />
-          </div>
+            </SettingMenuLeftSide>
+            <SettingMenuRightSide>
+              <IconMenu
+                direction="top"
+                icon={SettingsIcon}
+                drawerList={[
+                  {
+                    koreanMenu: "프로필",
+                    englishMenu: "profile",
+                    icon: <AccountCircleIcon />,
+                  },
+                  // {
+                  //   koreanMenu: "설정",
+                  //   englishMenu: "setting",
+                  //   icon: <SettingsIcon />,
+                  // },
+                  {
+                    koreanMenu: "밝기",
+                    englishMenu: "brightness",
+                    icon: isDark ? <NightlightRoundIcon /> : <LightModeIcon />,
+                    onClick: toggleDarkMode,
+                  },
+                ]}
+              />
+            </SettingMenuRightSide>
+          </SettingMenuContainer>
         </>
       )}
-    </div>
+    </MenuContainer>
   );
 };
 
 export default Menu;
+
+const MenuContainer = styled.div`
+  align-items: center;
+  background: ${(props) => props.theme.menu.bgColor};
+  display: flex;
+  height: 70px;
+  min-width: 400px;
+  width: 100vw;
+`;
+
+const LogoContainer = styled.div`
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  float: left;
+  min-width: 260px;
+  width: 20vw;
+`;
+
+const LogoImageContainer = styled.div`
+  float: left;
+  padding: 10px 10px 0px 10px;
+`;
+
+const HamburgerMenuContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 30px;
+  width: 100%;
+`;
+
+const TextMenuContainer = styled.div`
+  float: left;
+  min-width: 200px;
+  text-align: center;
+  width: 60vw;
+`;
+
+const SettingMenuContainer = styled.div`
+  align-items: center;
+  display: flex;
+  float: right;
+  justify-content: flex-end;
+  min-width: 330px;
+  width: 10vw;
+`;
+
+const SettingMenuLeftSide = styled.div`
+  float: left;
+  padding-right: 30px;
+`;
+
+const SettingMenuRightSide = styled.div`
+  float: right;
+`;
+
+const TitleSpan = styled.span`
+  color: #9000ff;
+  float: right;
+  font-family: "sanjuGotgam";
+  font-size: 25px;
+  font-weight: bold;
+`;

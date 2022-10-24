@@ -1,19 +1,19 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import { getSession, signIn } from "next-auth/react";
+import styled from "styled-components";
 
+import Alert from "../../components/molecules/Alert";
 import BasicInput from "../../components/atoms/basicInput";
-import Title from "../../components/atoms/title";
 import BasicLabel from "../../components/atoms/basicLabel";
 import PushButton from "../../components/atoms/pushButton";
-import Alert from "../../components/molecules/Alert";
 import { checkEmail } from "../../lib/checkEmail";
+import Title from "../../components/atoms/title";
 
 const SignIn: React.FC = () => {
+  const [alert, setAlert] = useState({ open: false, text: "" });
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
-
-  const [alert, setAlert] = useState({ open: false, text: "" });
 
   const router = useRouter();
 
@@ -58,19 +58,14 @@ const SignIn: React.FC = () => {
   }, [router]);
 
   return (
-    <form
-      id="page"
-      onSubmit={handleSubmit}
-      method="GET"
-      className="narrow-width"
-    >
+    <form id="narrow-page" onSubmit={handleSubmit} method="GET">
       <Title>로그인</Title>
-      <Alert open={alert.open} setAlert={setAlert}>
+      <Alert open={alert.open} setOpen={setAlert}>
         {alert.text}
       </Alert>
-      <div className="PL10">
+      <LabelContainer>
         <BasicLabel>이메일</BasicLabel>
-      </div>
+      </LabelContainer>
       <BasicInput
         type="text"
         id="email"
@@ -80,9 +75,9 @@ const SignIn: React.FC = () => {
         ref={emailInputRef}
         autoFocus={true}
       />
-      <div className="PL10 PT30">
+      <PasswordLabelContainer>
         <BasicLabel>비밀번호</BasicLabel>
-      </div>
+      </PasswordLabelContainer>
       <BasicInput
         type="password"
         id="password"
@@ -91,8 +86,7 @@ const SignIn: React.FC = () => {
         required={true}
         ref={passwordInputRef}
       />
-      <div
-        className="pointer black PT10 PB50 right"
+      <FindUserContainer
         onClick={() => {
           setAlert({
             open: true,
@@ -100,13 +94,34 @@ const SignIn: React.FC = () => {
           });
         }}
       >
-        <span className="base-font">아이디찾기 | 비밀번호 찾기</span>
-      </div>
-      <div className="align-center PT50">
+        아이디찾기 | 비밀번호 찾기
+      </FindUserContainer>
+      <ButtonContainer>
         <PushButton type="submit">로그인</PushButton>
-      </div>
+      </ButtonContainer>
     </form>
   );
 };
 
 export default SignIn;
+
+const LabelContainer = styled.div`
+  padding-left: 10px;
+`;
+
+const PasswordLabelContainer = styled(LabelContainer)`
+  padding-top: 30px;
+`;
+
+const FindUserContainer = styled.div`
+  color: ${(props) => props.theme.color};
+  cursor: pointer;
+  float: right;
+  padding-bottom: 50px;
+  padding-top: 10px;
+`;
+
+const ButtonContainer = styled.div`
+  padding-top: 50px;
+  text-align: center;
+`;

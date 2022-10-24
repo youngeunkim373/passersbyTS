@@ -1,25 +1,16 @@
-import type { ButtonType } from "../../types/globalTypes";
-import Button from "@mui/material/Button";
 import styled from "styled-components";
-
-interface ButtonProps {
-  type: ButtonType;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  children: React.ReactNode;
-  width?: string;
-  height?: string;
-  fontSize?: string;
-}
+import Button from "@mui/material/Button";
+import type { ButtonProps } from "../../types/globalTypes";
 
 const StyledButton = styled(Button)<ButtonProps>`
-  font-family: ibmLight;
-  font-weight: bold;
   background: #6F30C9;
   border: 0;
-  padding: 0;
   border-radius: 15px;
   cursor: pointer;
+  font-family: ibmLight;
+  font-weight: bold;
   outline-offset: 4px;
+  padding: 0;
 
   &:hover {
     transform: translateY(5px);
@@ -29,24 +20,24 @@ const StyledButton = styled(Button)<ButtonProps>`
 `;
 
 const StyledSpan = styled.span`
-  min-width: 130px;
-  display: block;
-  border-radius: 15px;
-  line-height: 50px;
-  font-size: 1.2rem;
-  color: white;
   background: #9000ff;
+  border-radius: 15px;
+  color: white;
+  display: block;
+  font-size: 1.2rem;
+  line-height: 50px;
+  min-width: 130px;
   transform: translateY(-8px);
   transition: transform 0.4s cubic-bezier(0.3, 0.7, 0.4, 1);
 `;
 
 const PushButton = ({
-  type,
-  onClick,
   children,
-  width,
-  height,
   fontSize,
+  height,
+  type,
+  width,
+  onClick,
 }: ButtonProps) => {
   if (onClick && type !== "submit") {
     return (

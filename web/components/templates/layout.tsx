@@ -1,16 +1,15 @@
-import React from "react";
-import MainHeader from "./mainHeader";
+import Menu from "../organisms/menu";
 
 interface LayoutProps {
   children: React.ReactNode;
+  isDark: boolean;
+  toggleDarkMode: () => void;
 }
 
-const Layout = (props: LayoutProps) => {
-  const { children } = props;
-
+const Layout = ({ children, isDark, toggleDarkMode }: LayoutProps) => {
   return (
     <>
-      <MainHeader />
+      <Menu isDark={isDark} toggleDarkMode={toggleDarkMode} />
       <main>{children}</main>
     </>
   );

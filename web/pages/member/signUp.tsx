@@ -1,22 +1,20 @@
-import axios from "axios";
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
-import clsx from "clsx";
-
 import { checkEmail } from "../../lib/checkEmail";
 import { hashPassword } from "../../lib/hasePassword";
+import axios from "axios";
+import styled from "styled-components";
 
 import TextField from "@mui/material/TextField";
 
+import Alert from "../../components/molecules/Alert";
 import BasicButton from "../../components/atoms/basicButton";
 import BasicInput from "../../components/atoms/basicInput";
 import BasicLabel from "../../components/atoms/basicLabel";
 import BasicSelect from "../../components/atoms/basicSelect";
 import PushButton from "../../components/atoms/pushButton";
 import Title from "../../components/atoms/title";
-import Alert from "../../components/molecules/Alert";
 
-import memberClass from "./style/member.module.css";
 
 const sexList = { F: "여성", M: "남성" };
 const regionList = {
@@ -174,13 +172,13 @@ const SignUp: React.FC = () => {
   return (
     <form id="page" onSubmit={handleSubmit} method="POST">
       <Title>회원가입</Title>
-      <Alert open={alert.open} setAlert={setAlert}>
+      <Alert open={alert.open} setOpen={setAlert}>
         {alert.text}
       </Alert>
-      <div className="auto-center narrow-width">
-        <div className="PL10">
+      <UserInfoContainer>
+        <LabelContainer>
           <BasicLabel>이메일</BasicLabel>
-        </div>
+        </LabelContainer>
         <BasicInput
           type="text"
           id="email"
@@ -190,7 +188,7 @@ const SignUp: React.FC = () => {
           ref={emailInputRef}
           autoFocus={true}
         />
-        <TextField
+        <VerifyTextField
           type="text"
           id="verify"
           placeholder="본인인증 메일이 전송되었습니다."
@@ -201,20 +199,14 @@ const SignUp: React.FC = () => {
           fullWidth
           inputRef={verifyInputRef}
           onKeyDown={onPressEnter}
-          className={clsx("MT30", {
-            [memberClass.verify]: verifyInput === false,
-          })}
+          $verifyInput={verifyInput}
         />
-        <p
-          className={clsx("blue", {
-            [memberClass.verify]: verifyComplete === false,
-          })}
-        >
+        <VerifyCompleteParagraph verifyComplete={verifyComplete}>
           본인인증이 완료되었습니다.
-        </p>
-        <div className="PL10 PT30">
+        </VerifyCompleteParagraph>
+        <SecondLabelContainer>
           <BasicLabel>비밀번호</BasicLabel>
-        </div>
+        </SecondLabelContainer>
         <BasicInput
           type="password"
           id="password"
@@ -223,9 +215,9 @@ const SignUp: React.FC = () => {
           required={true}
           ref={passwordInputRef}
         />
-        <div className="PL10 PT30">
+        <SecondLabelContainer>
           <BasicLabel>비밀번호 확인</BasicLabel>
-        </div>
+        </SecondLabelContainer>
         <BasicInput
           type="password"
           id="confirm"
@@ -234,9 +226,9 @@ const SignUp: React.FC = () => {
           required={true}
           ref={confirmInputRef}
         />
-        <div className="PL10 PT30">
+        <SecondLabelContainer>
           <BasicLabel>닉네임</BasicLabel>
-        </div>
+        </SecondLabelContainer>
         <BasicInput
           type="text"
           id="nickname"
@@ -245,9 +237,9 @@ const SignUp: React.FC = () => {
           required={true}
           ref={nicknameInputRef}
         />
-        <div className="PL10 PT30">
+        <SecondLabelContainer>
           <BasicLabel>연령</BasicLabel>
-        </div>
+        </SecondLabelContainer>
         <BasicInput
           type="number"
           id="age"
@@ -256,29 +248,81 @@ const SignUp: React.FC = () => {
           required={true}
           ref={ageInputRef}
         />
-        <div className="left PT30">
-          <div className="PL10">
+        <SexSelectContainer>
+          <LabelContainer>
             <BasicLabel>성별</BasicLabel>
-          </div>
+          </LabelContainer>
           <BasicSelect options={sexList} ref={sexSelectRef} />
-        </div>
-        <div className="right PT30">
-          <div className="PL10">
+        </SexSelectContainer>
+        <RegionSelectContainer>
+          <LabelContainer>
             <BasicLabel>지역</BasicLabel>
-          </div>
+          </LabelContainer>
           <BasicSelect options={regionList} ref={regionSelectRef} />
-        </div>
-        <div className="align-center MT100 PT100">
+        </RegionSelectContainer>
+        <SignUpButtonContainer>
           <PushButton type="submit">회원가입</PushButton>
-        </div>
-      </div>
-      <div className={`${memberClass.self_auth}`}>
+        </SignUpButtonContainer>
+      </UserInfoContainer>
+      <SelfAuthButtonContainer>
         <BasicButton type="button" fontSize="15px" onClick={handleSendMail}>
           본인인증
         </BasicButton>
-      </div>
+      </SelfAuthButtonContainer>
     </form>
   );
 };
 
 export default SignUp;
+
+const UserInfoContainer = styled.div`
+  margin: 0 auto;
+  width: 300px;
+`;
+
+const LabelContainer = styled.div`
+  padding-left: 10px;
+`;
+
+const SecondLabelContainer = styled(LabelContainer)`
+  padding-top: 30px;
+`;
+
+interface VerifyTextFieldProps {
+  $verifyInput: boolean;
+}
+
+const VerifyTextField = styled(TextField)<VerifyTextFieldProps>`
+  display: ${({ $verifyInput }) => ($verifyInput ? "block" : "none")};
+  margin-top: 30px;
+`;
+
+interface VerifyCompleteParagraphProps {
+  verifyComplete: boolean;
+}
+
+const VerifyCompleteParagraph = styled.p<VerifyCompleteParagraphProps>`
+  color: #5f00ff;
+  display: ${({ verifyComplete }) => (verifyComplete ? "block" : "none")};
+`;
+
+const SexSelectContainer = styled.div`
+  float: left;
+  padding-top: 30px;
+`;
+
+const RegionSelectContainer = styled.div`
+  float: right;
+  padding-top: 30px;
+`;
+
+const SignUpButtonContainer = styled.div`
+  padding-top: 200px;
+  text-align: center;
+`;
+
+const SelfAuthButtonContainer = styled.div`
+  left: calc(50% + 150px);
+  position: absolute;
+  top: 315px;
+`;

@@ -1,14 +1,61 @@
 import { useState, forwardRef } from "react";
 import styled from "styled-components";
-import TextBalloon from "./textBalloon";
+import type { SelectProps } from "../../types/globalTypes";
 
-interface SelectProps {
-  options: { [k: string]: string };
-  currentValue?: { [k: string]: string | number };
-  background?: string;
-}
+const BasicSelect = (
+  {
+    currentValue = {
+      id: "unselected",
+      text: "선택",
+    },
+    options,
+  }: SelectProps,
+  ref: any
+) => {
+  const [isShowOptions, setShowOptions] = useState(false);
+  const [currentOption, setCurrentOption] = useState(currentValue);
 
-const StyledDiv = styled.div<SelectProps>`
+  const handleChangeOption = (e: React.MouseEvent) => {
+    const eventTarget = e.target as HTMLElement;
+    setCurrentOption({ id: eventTarget.id, text: eventTarget.innerText });
+  };
+
+  return (
+    <Container
+      onClick={() => setShowOptions((prev) => !prev)}
+      options={options}
+    >
+      <SelectedOption htmlFor={`${currentOption.id}`} ref={ref}>
+        {currentOption.text}
+      </SelectedOption>
+      <SelectList isShowOptions={isShowOptions} options={options}>
+        <SelectItem id={"unselected"} onClick={handleChangeOption}>
+          &nbsp;&nbsp;&nbsp;선택
+        </SelectItem>
+        {Object.keys(options).map((option) => (
+          <SelectItem key={option} id={option} onClick={handleChangeOption}>
+            &nbsp;&nbsp;&nbsp;{options[option]}
+          </SelectItem>
+        ))}
+      </SelectList>
+    </Container>
+  );
+};
+
+export default forwardRef(BasicSelect);
+
+const Container = styled.div<SelectProps>`
+  align-items: center;
+  align-self: center;
+  background: ${(props) => props.theme.basicSelect.bgColor};
+  border-radius: 8px;
+  color: ${(props) => props.theme.basicSelect.color};
+  cursor: pointer;
+  display: flex;
+  height: 35px;
+  max-width: 400px;
+  min-width: 100px;
+  position: relative;
   width: ${({ options }) =>
     options
       ? `${
@@ -17,17 +64,6 @@ const StyledDiv = styled.div<SelectProps>`
           }, 0) * 20
         }px`
       : "300px"};
-
-  height: 35px;
-  display: flex;
-  align-items: center;
-  position: relative;
-  background: #fffaff;
-  min-width: 100px;
-  max-width: 400px;
-  border-radius: 8px;
-  align-self: center;
-  cursor: pointer;
 
   ::before {
     content: "⌵";
@@ -39,16 +75,33 @@ const StyledDiv = styled.div<SelectProps>`
   }
 `;
 
-const StyledLabel = styled.label`
+const SelectedOption = styled.label`
   font-size: 18px;
   margin-left: 10px;
 `;
 
-const StyledUl = styled.ul<{
+const SelectList = styled.ul<{
   isShowOptions?: boolean;
   options: { [k: string]: string };
 }>`
+  background: ${(props) => props.theme.basicSelect.bgColor};
+  border-radius: 8px;
+  color: ${(props) => props.theme.basicSelect.color};
   display: ${({ isShowOptions }) => (isShowOptions ? "block" : "none")};
+  height: ${({ options }) =>
+    Object.keys(options).length >= 5
+      ? "180px"
+      : 33 * Object.keys(options).length};
+  left: 0;
+  list-style: none;
+  margin-top: 23px;
+  min-width: 100px;
+  max-width: 400px;
+  overflow: ${({ options }) =>
+    Object.keys(options).length >= 5 ? "auto" : "hidden"};
+  padding: 0px;
+  position: absolute;
+  top: 18px;
   width: ${({ options }) =>
     options
       ? `${
@@ -57,25 +110,6 @@ const StyledUl = styled.ul<{
           }, 0) * 20
         }px`
       : "300px"};
-  height: ${({ options }) =>
-    Object.keys(options).length >= 5
-      ? "180px"
-      : 33 * Object.keys(options).length};
-  overflow: ${({ options }) =>
-    Object.keys(options).length >= 5 ? "auto" : "hidden"};
-
-  position: absolute;
-  background: #fffaff;
-  min-width: 100px;
-  max-width: 400px;
-  list-style: none;
-  top: 18px;
-  left: 0;
-  width: 100%;
-  padding: 0px;
-  margin-top: 23px;
-  border-radius: 8px;
-  color: #101820;
   z-index: 999;
 
   ::-webkit-scrollbar {
@@ -93,7 +127,7 @@ const StyledUl = styled.ul<{
   }
 `;
 
-const StyledLi = styled.li`
+const SelectItem = styled.li`
   font-size: 16px;
   padding: 6px 0px;
   transition: background-color 0.1s ease-in;
@@ -102,45 +136,3 @@ const StyledLi = styled.li`
     background: #ffe8f5;
   }
 `;
-
-const BasicSelect = (
-  {
-    options,
-    currentValue = {
-      id: "unselected",
-      text: "선택",
-    },
-  }: SelectProps,
-  ref: any
-) => {
-  const [isShowOptions, setShowOptions] = useState(false);
-  const [currentOption, setCurrentOption] = useState(currentValue);
-
-  const handleChangeOption = (e: React.MouseEvent) => {
-    const eventTarget = e.target as HTMLElement;
-    setCurrentOption({ id: eventTarget.id, text: eventTarget.innerText });
-  };
-
-  return (
-    <StyledDiv
-      onClick={() => setShowOptions((prev) => !prev)}
-      options={options}
-    >
-      <StyledLabel htmlFor={`${currentOption.id}`} ref={ref}>
-        {currentOption.text}
-      </StyledLabel>
-      <StyledUl isShowOptions={isShowOptions} options={options}>
-        <StyledLi id={"unselected"} onClick={handleChangeOption}>
-          &nbsp;&nbsp;&nbsp;선택
-        </StyledLi>
-        {Object.keys(options).map((option) => (
-          <StyledLi key={option} id={option} onClick={handleChangeOption}>
-            &nbsp;&nbsp;&nbsp;{options[option]}
-          </StyledLi>
-        ))}
-      </StyledUl>
-    </StyledDiv>
-  );
-};
-
-export default forwardRef(BasicSelect);

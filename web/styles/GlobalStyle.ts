@@ -1,71 +1,86 @@
-/* --------------------------------------------------- */
-/*  tag                                                */
-/* --------------------------------------------------- */
-html,
-body {
-  position: relative;
-  width: 100vw;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  font-family: "ibmLight";
-  font-size: 17px;
-  font-weight: bold;
-  color: #101820;
-  background-color: rgb(245, 245, 245);
-}
+import { createGlobalStyle } from "styled-components";
 
-footer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  min-width: 700px;
-  height: 150px;
+export const GlobalStyle = createGlobalStyle`
+/*-------------------------------------------*/
+/*                    TAG                    */
+/*-------------------------------------------*/
+    html,
+    body {
+      background: ${(props) => props.theme.bgColor};
+      color: ${(props) => props.theme.color};
+      font-family: "ibmLight";
+      font-size: 17px;
+      font-weight: bold;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      width: 100vw;
+    }
 
-  text-align: center;
-  font-family: "ibmRegular";
-  font-size: 20px;
-  font-weight: normal;
-  color: #cccccc;
-  white-space: nowrap;
-}
+    footer {
+      bottom: 0;
+      color: #cccccc;
+      font-family: "ibmRegular";
+      font-size: 20px;
+      font-weight: normal;
+      height: 150px;
+      left: 0;
+      min-width: 700px;
+      position: absolute;
+      text-align: center;
+      white-space: nowrap;
+      width: 100%;
+    }
+    
+    button {
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+    }
 
-button {
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-}
+    a {
+      cursor: pointer;
+      text-decoration: none;
+    }    
+    
+/*-------------------------------------------*/
+/*                    ID                     */
+/*-------------------------------------------*/
+  #root {
+    height: 100%;
+  }
+  
+  #wrapper {
+    position: relative;
+    min-height: calc(100% - 150px);
+    padding-bottom: 150px; /* footer 높이 */
+  }
+  
+  #content {
+    min-height: 100%;
+    overflow: hidden;
+  }
+  
+  #page {
+    min-width: "700px";
+    height: 100%;
+    margin: 0 auto;
+    padding-top: 100px;
+    padding-bottom: 150px;
+  }
 
-/* --------------------------------------------------- */
-/*  id                                                 */
-/* --------------------------------------------------- */
-#root {
-  height: 100%;
-}
+  #narrow-page {
+    width: 300px;
+    height: 100%;
+    margin: 0 auto;
+    padding-top: 100px;
+    padding-bottom: 150px;
+  }  
 
-#wrapper {
-  position: relative;
-  min-height: calc(100% - 150px);
-  padding-bottom: 150px; /* footer 높이 */
-}
-
-#content {
-  min-height: 100%;
-  overflow: hidden;
-}
-
-#page {
-  min-width: "700px";
-  height: 100%;
-  margin: 0 auto;
-  padding-top: 100px;
-  padding-bottom: 150px;
-}
-
-/* --------------------------------------------------- */
-/*  class                                              */
-/* --------------------------------------------------- */
+//-------------------------------------------//
+//                  CLASS                    //
+//-------------------------------------------// 
 /*---------- 여백 ----------*/
 .P10 {
   padding: 10px;
@@ -383,3 +398,5 @@ button {
   word-wrap: break-word;
   white-space: normal;
 }
+
+`;

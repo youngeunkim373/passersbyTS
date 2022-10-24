@@ -1,30 +1,38 @@
 import * as React from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import styled from "styled-components";
+
+import type { ButtonProps, AnchorProps } from "../../types/globalTypes";
 
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
 import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-
-import menuDetail from "./style/menuDetail.module.css";
-import Link from "next/link";
 
 type Anchor = "top" | "left" | "bottom" | "right";
 
 interface IconMenuProps {
   direction: Anchor;
-  icon: any;
   drawerList: any[];
+  icon: any;
+}
+
+interface LinkProps extends AnchorProps {
+  children: React.ReactNode;
+  englishMenu: string;
+  path: string;
 }
 
 export default function IconMenu({
   direction,
-  icon,
   drawerList,
+  icon,
 }: IconMenuProps) {
+  const router = useRouter();
   const Icon = icon;
 
   const [state, setState] = React.useState({
@@ -52,13 +60,15 @@ export default function IconMenu({
     anchor: Anchor,
     drawerList: {
       koreanMenu: string;
-      englishMenu?: string;
+      englishMenu: string;
       icon?: any;
-      onClick?: React.MouseEventHandler<HTMLButtonElement>;
+      onClick?: React.MouseEventHandler<HTMLElement>;
     }[]
   ) => (
     <Box
-      sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
+      sx={{
+        width: anchor === "top" || anchor === "bottom" ? "auto" : 250,
+      }}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
@@ -67,37 +77,34 @@ export default function IconMenu({
         {drawerList.map(
           (list) =>
             typeof list !== "boolean" && (
-              <ListItem
+              <ThemeListItem
                 key={list.englishMenu && list.koreanMenu}
                 disablePadding
               >
                 {list.onClick ? (
-                  <ListItemButton>
-                    <ListItemIcon>{list.icon}</ListItemIcon>
-                    <button
-                      type="button"
-                      className={`${menuDetail.menu_font}`}
-                      onClick={list.onClick}
-                    >
+                  <ListItemButton onClick={list.onClick}>
+                    <ThemeListItemIcon>{list.icon}</ThemeListItemIcon>
+                    <EventTextMenu type="button">
                       {list.koreanMenu}
-                    </button>
+                    </EventTextMenu>
                   </ListItemButton>
                 ) : (
                   <Link href={`/${list.englishMenu}`}>
                     <ListItemButton>
-                      <ListItemIcon>{list.icon}</ListItemIcon>
-
-                      <a className={`${menuDetail.menu_font}`}>
+                      <ThemeListItemIcon>{list.icon}</ThemeListItemIcon>
+                      <LinkTextMenu
+                        englishMenu={list.englishMenu}
+                        path={router.pathname}
+                      >
                         {list.koreanMenu}
-                      </a>
+                      </LinkTextMenu>
                     </ListItemButton>
                   </Link>
                 )}
-              </ListItem>
+              </ThemeListItem>
             )
         )}
       </List>
-      {/* <Divider /> */}
     </Box>
   );
 
@@ -108,7 +115,7 @@ export default function IconMenu({
           <Button onClick={toggleDrawer(anchor, true)}>
             <Icon sx={{ color: "#9000ff" }} />
           </Button>
-          <Drawer
+          <ThemeDrawer
             anchor={anchor}
             open={state[anchor]}
             onClose={toggleDrawer(anchor, false)}
@@ -125,9 +132,41 @@ export default function IconMenu({
             }}
           >
             {list(anchor, drawerList)}
-          </Drawer>
+          </ThemeDrawer>
         </React.Fragment>
       ))}
     </div>
   );
 }
+
+const EventTextMenu = styled.button<ButtonProps>`
+  color: ${(props) => props.theme.textMenu.color};
+  font-family: ibmRegular;
+  font-size: 20px;
+  font-weight: bold;
+`;
+
+const LinkTextMenu = styled.a<LinkProps>`
+  color: ${({ englishMenu, path, theme }) =>
+    `/${englishMenu}` === path ? "#9000ff" : theme.textMenu.color};
+  font-family: ibmRegular;
+  font-size: 20px;
+  font-weight: bold;
+`;
+
+const ThemeDrawer = styled(Drawer)`
+  .css-1qvuuif-MuiPaper-root-MuiDrawer-paper,
+  .css-14ukx6z-MuiPaper-root-MuiDrawer-paper {
+    background: ${(props) => props.theme.menu.bgColor};
+  }
+`;
+
+const ThemeListItem = styled(ListItem)`
+  :hover {
+    background: rgb(255, 255, 255, 0.05);
+  }
+`;
+
+const ThemeListItemIcon = styled(ListItemIcon)`
+  color: ${(props) => props.theme.menuIcon.color};
+`;
