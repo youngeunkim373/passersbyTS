@@ -107,6 +107,20 @@ export default async function members(
         res.status(500).json({ error: "Error while seleting data" });
       }
       break;
+    case "changePassword":
+      try {
+        const { email, password }: { [k: string]: string } = req.body;
+
+        const result = await prisma.Members.update({
+          where: {
+            email: email,
+          },
+          data: {
+            password: password,
+          },
+        });
+
+        res.status(200).json(result);
       } catch (e) {
         console.error("Request error", e);
         res.status(500).json({ error: "Error while seleting data" });
