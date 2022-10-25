@@ -6,12 +6,16 @@ import styled from "styled-components";
 import Alert from "../../components/molecules/Alert";
 import BasicInput from "../../components/atoms/basicInput";
 import BasicLabel from "../../components/atoms/basicLabel";
+import FindUserInfo from "../../components/templates/FindUserInfo";
+import Modal from "../../components/molecules/Modal";
 import PushButton from "../../components/atoms/pushButton";
 import Title from "../../components/atoms/title";
 import { checkEmail } from "../../lib/utils/checkEmail";
 
 const SignIn: React.FC = () => {
   const [alert, setAlert] = useState({ open: false, text: "" });
+  const [open, setOpen] = useState(false);
+
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
 
@@ -63,6 +67,9 @@ const SignIn: React.FC = () => {
       <Alert open={alert.open} setOpen={setAlert}>
         {alert.text}
       </Alert>
+      <Modal open={open} setOpen={setOpen}>
+        <FindUserInfo />
+      </Modal>
       <LabelContainer>
         <BasicLabel>이메일</BasicLabel>
       </LabelContainer>
@@ -88,10 +95,7 @@ const SignIn: React.FC = () => {
       />
       <FindUserContainer
         onClick={() => {
-          setAlert({
-            open: true,
-            text: "아직 준비중인 기능입니다.",
-          });
+          setOpen(true);
         }}
       >
         아이디찾기 | 비밀번호 찾기
