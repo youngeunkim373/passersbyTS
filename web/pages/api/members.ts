@@ -62,6 +62,51 @@ export default async function members(
         res.status(500).json({ error: "Error while seleting data" });
       }
       break;
+    case "signUp":
+      try {
+        const {
+          email,
+          password,
+          nickname,
+          age,
+          sex,
+          region,
+        }: { [k: string]: string | number } = req.body;
+
+        const checkNicknameDuplication = await prisma?.Members.findUnique({
+          where: {
+            nickname: nickname,
+          },
+          select: {
+            email: true,
+          },
+        });
+
+        if (!checkNicknameDuplication) {
+          const result = await prisma.Members.create({
+            data: {
+              email,
+              password,
+              nickname,
+              age,
+              sex,
+              region,
+              userRole: "user",
+              registerId: email,
+            },
+          });
+        }
+
+        if (checkNicknameDuplication) {
+          res.status(200).json(checkNicknameDuplication);
+        } else {
+          res.status(204).json({ message: "No content" });
+        }
+      } catch (e) {
+        console.error("Request error", e);
+        res.status(500).json({ error: "Error while seleting data" });
+      }
+      break;
       } catch (e) {
         console.error("Request error", e);
         res.status(500).json({ error: "Error while seleting data" });

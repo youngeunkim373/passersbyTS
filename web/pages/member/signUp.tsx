@@ -52,6 +52,14 @@ const SignUp: React.FC = () => {
   const router = useRouter();
 
   const handleSendMail = async (e: React.FormEvent) => {
+    if (verifyComplete === true) {
+      setAlert({
+        open: true,
+        text: "이미 본인인증이 완료되었습니다.",
+      });
+      return;
+    }
+
     const email = emailInputRef.current?.value;
 
     const checkEmailResult = await checkEmail(email!);
@@ -71,8 +79,8 @@ const SignUp: React.FC = () => {
         },
       })
       .then((res) => {
-        const { checkEmail, verifyNumber } = res.data;
-        if (checkEmail > 0) {
+        const { checkMembership, verifyNumber } = res.data;
+        if (checkMembership > 0) {
           setAlert({ open: true, text: "이미 가입이력이 있는 이메일입니다." });
           return;
         }
@@ -112,7 +120,6 @@ const SignUp: React.FC = () => {
     const age = parseInt(ageInputRef.current!.value);
     const sex = sexSelectRef.current?.htmlFor;
     const region = regionSelectRef.current?.htmlFor;
-    const userRole = "user";
 
     if (sex === "unselected" || region === "unselected") {
       setAlert({
@@ -123,6 +130,7 @@ const SignUp: React.FC = () => {
     }
 
     if (verifyComplete !== true) {
+      emailInputRef.current!.focus();
       setAlert({
         open: true,
         text: "본인인증을 완료하세요.",
@@ -131,6 +139,7 @@ const SignUp: React.FC = () => {
     }
 
     if (password !== confirm) {
+      confirmInputRef.current!.focus();
       setAlert({
         open: true,
         text: "비밀번호가 일치하지 않습니다.",
@@ -147,26 +156,35 @@ const SignUp: React.FC = () => {
 
     await axios
       .post(
-        "/api/allTables",
+        "/api/members",
         JSON.stringify({
-          table: "Members",
-          fields: {
-            email: email,
-            password: hashedpassword,
-            nickname: nickname,
-            sex: sex,
-            age: age,
-            region: region,
-            userRole: userRole,
-          },
-          primaryKey: { email },
+          path: "signUp",
+          email,
+          password: hashedpassword,
+          nickname,
+          age,
+          sex,
+          region,
         }),
         config
       )
       .then((res) => {
-        router.push("/member/signIn");
+        switch (res.status) {
+          case 200:
+            nicknameInputRef.current!.focus();
+            setAlert({
+              open: true,
+              text: "중복되는 닉네임이 존재합니다.",
+            });
+            break;
+          case 204:
+            router.push("/member/signIn");
+            break;
+        }
       })
-      .catch((error) => console.log(error.response));
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
