@@ -21,14 +21,14 @@ const Pagination = ({
 
   return (
     <Container>
-      <Stack spacing={2}>
-        <Page
+      <ThemeStack spacing={2}>
+        <ThemePage
           page={currentPage}
           count={pageCount}
           color="standard"
           onChange={onChangePage}
         />
-      </Stack>
+      </ThemeStack>
     </Container>
   );
 };
@@ -39,4 +39,22 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   margin: 5px;
+`;
+
+const ThemeStack = styled(Stack)`
+  color: ${(props) => props.theme.table.color};
+`;
+
+const ThemePage = styled(Page)`
+  .css-yuzg60-MuiButtonBase-root-MuiPaginationItem-root {
+    color: ${(props) => props.theme.pagination.page};
+  }
+
+  .css-yuzg60-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
+    background: ${(props) => props.theme.pagination.circle};
+  }
+
+  .css-g2z002-MuiSvgIcon-root-MuiPaginationItem-icon {
+    color: ${(props) => props.theme.pagination.arrow};
+  }
 `;

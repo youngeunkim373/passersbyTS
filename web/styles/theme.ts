@@ -38,6 +38,17 @@ export const lightTheme: DefaultTheme = {
   textMenu: {
     color: "#101820",
   },
+  table: {
+    bgColor: "#ffffff",
+    color: "#101820",
+    hover: "#fff7ff",
+    border: "#eaeaea",
+  },
+  pagination: {
+    page: "#5D5D5D",
+    arrow: "#BDBDBD",
+    circle: "rgba(0, 0, 0, 0.08)",
+  },
 };
 
 export const darkTheme: DefaultTheme = {
@@ -77,5 +88,16 @@ export const darkTheme: DefaultTheme = {
   },
   textMenu: {
     color: "#ffffff",
+  },
+  table: {
+    bgColor: "#151515",
+    color: "#ffffff",
+    hover: "#242424",
+    border: "#353535",
+  },
+  pagination: {
+    page: "#ffffff",
+    arrow: "#ffffff",
+    circle: "rgba(255, 255, 255, 0.1)",
   },
 };

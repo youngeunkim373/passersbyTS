@@ -39,5 +39,16 @@ declare module "styled-components" {
     textMenu: {
       color: string;
     };
+    table: {
+      bgColor: string;
+      color: string;
+      hover: string;
+      border: string;
+    };
+    pagination: {
+      page: string;
+      arrow: string;
+      circle: string;
+    };
   }
 }

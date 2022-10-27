@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
+import SCstyled from "styled-components";
 import { styled } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
@@ -22,7 +23,7 @@ export default function SearchBar({
   };
 
   return (
-    <Search>
+    <StyledSearch>
       <SearchIconWrapper>
         <SearchIcon sx={{ color: "#9000ff" }} />
       </SearchIconWrapper>
@@ -31,7 +32,7 @@ export default function SearchBar({
         inputProps={{ "aria-label": "search" }}
         onKeyPress={onPressEnter}
       />
-    </Search>
+    </StyledSearch>
   );
 }
 
@@ -53,6 +54,11 @@ const Search = styled("div")(({ theme }) => ({
   },
 }));
 
+const StyledSearch = SCstyled(Search)`
+  background: ${(props) => props.theme.table.bgColor};
+  color: ${(props) => props.theme.table.color};
+`;
+
 const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: "100%",
@@ -64,8 +70,7 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  //color: "inherit",
-  color: "#101820",
+  color: "inherit",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
