@@ -7,7 +7,7 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import { Divider } from "@mui/material";
 
-import Alert from "../molecules/Alert";
+import Alert from "../molecules/alert";
 import BasicInput from "../atoms/basicInput";
 import PushButton from "../atoms/pushButton";
 

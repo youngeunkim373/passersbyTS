@@ -3,11 +3,11 @@ import { useRouter } from "next/router";
 import { getSession, signIn } from "next-auth/react";
 import styled from "styled-components";
 
-import Alert from "../../components/molecules/Alert";
+import Alert from "../../components/molecules/alert";
 import BasicInput from "../../components/atoms/basicInput";
 import BasicLabel from "../../components/atoms/basicLabel";
 import FindUserInfo from "../../components/templates/FindUserInfo";
-import Modal from "../../components/molecules/Modal";
+import Modal from "../../components/molecules/modal";
 import PushButton from "../../components/atoms/pushButton";
 import Title from "../../components/atoms/title";
 import { checkEmail } from "../../lib/utils/checkEmail";

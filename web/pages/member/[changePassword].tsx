@@ -8,7 +8,7 @@ import BasicInput from "../../components/atoms/basicInput";
 import BasicLabel from "../../components/atoms/basicLabel";
 import PushButton from "../../components/atoms/pushButton";
 import Title from "../../components/atoms/title";
-import Alert from "../../components/molecules/Alert";
+import Alert from "../../components/molecules/alert";
 
 const ChangePassword = (props: { email: string }) => {
   const { email } = props;

@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 import TextField from "@mui/material/TextField";
 
-import Alert from "../../components/molecules/Alert";
+import Alert from "../../components/molecules/alert";
 import BasicButton from "../../components/atoms/basicButton";
 import BasicInput from "../../components/atoms/basicInput";
 import BasicLabel from "../../components/atoms/basicLabel";
