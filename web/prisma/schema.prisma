@@ -13,14 +13,27 @@ datasource db {
 }
 
 model Members {
-    email               String                  @id
-    password            String             
-    nickname            String                  @unique
-    sex                 String                  // F:여자 / M:남자
-    age                 Int
-    region              String                  //         
-    userRole            String                  // seller / user / admin
-    userImage           String?             
-    registerId          String                    
-    registerDate        DateTime                @updatedAt   
+    email              String          @id
+    password           String          
+    nickname           String          @unique
+    sex                String          // F:여자 / M:남자
+    age                Int
+    region             String          //         
+    userRole           String          // seller / user / admin
+    userImage          String?         
+    registerId         String            
+    registerDate       DateTime        @updatedAt   
+    boardLists         BoardList[]    
+}
+
+model BoardList {
+    listId             String          @id
+    listTitle          String          
+    writerEmail        String          
+    writer             Members?        @relation(fields: [writerEmail], references: [email])
+    listContent        String          @db.LongText
+    viewCount          Decimal         @db.Decimal(15, 0)
+    answerCount        Decimal         @db.Decimal(15, 0)
+    registerId         String            
+    registerDate       DateTime        @updatedAt   
 }

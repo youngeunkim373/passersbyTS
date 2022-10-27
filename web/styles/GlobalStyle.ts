@@ -52,9 +52,9 @@ export const GlobalStyle = createGlobalStyle`
   }
   
   #wrapper {
-    position: relative;
     min-height: calc(100% - 150px);
     padding-bottom: 150px; /* footer 높이 */
+    position: relative;
   }
   
   #content {
@@ -63,21 +63,29 @@ export const GlobalStyle = createGlobalStyle`
   }
   
   #page {
-    min-width: "700px";
     height: 100%;
     margin: 0 auto;
-    padding-top: 100px;
+    min-width: "700px";
     padding-bottom: 150px;
+    padding-top: 100px;
   }
 
   #narrow-page {
+    height: 100%;
+    margin: 0 auto;
+    padding-bottom: 150px;
+    padding-top: 100px;
     width: 300px;
+  }  
+
+  #list-page {
+    min-width: 700px;
     height: 100%;
     margin: 0 auto;
     padding-top: 100px;
     padding-bottom: 150px;
-  }  
-
+    width:70vw;
+  }
 //-------------------------------------------//
 //                  CLASS                    //
 //-------------------------------------------// 

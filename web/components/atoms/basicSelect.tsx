@@ -9,6 +9,7 @@ const BasicSelect = (
       text: "선택",
     },
     options,
+    setOption,
   }: SelectProps,
   ref: any
 ) => {
@@ -18,6 +19,7 @@ const BasicSelect = (
   const handleChangeOption = (e: React.MouseEvent) => {
     const eventTarget = e.target as HTMLElement;
     setCurrentOption({ id: eventTarget.id, text: eventTarget.innerText });
+    setOption && setOption(eventTarget.id);
   };
 
   return (

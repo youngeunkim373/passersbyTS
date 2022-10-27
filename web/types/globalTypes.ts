@@ -75,9 +75,9 @@ export interface LabelProps extends HTMLAttributes<HTMLLabelElement> {
 }
 
 export interface SelectProps extends HTMLAttributes<HTMLDivElement> {
-  options: { [k: string]: string };
-  currentValue?: { [k: string]: string | number };
-  background?: string;
+  options: { [k: string]: any };
+  currentValue?: { [k: string]: string };
+  setOption?: Dispatch<SetStateAction<string>>;
 }
 
 export interface BoxProps extends HTMLAttributes<HTMLDivElement> {
@@ -99,8 +99,21 @@ export interface AnchorProps extends HTMLAttributes<HTMLAnchorElement> {
 }
 
 /* -------------------------------------------------- */
-/*                      PAGE PROPS                    */
+/*                      TABLE PROPS                   */
 /* -------------------------------------------------- */
+
+export interface BoardListKeys {
+  listId: String;
+  listTitle: String;
+  writerEmail: String;
+  listContent: String;
+  viewCount: number;
+  answerCount: number;
+  registerId: String;
+  registerDate: Date;
+  timeDiff?: number | string;
+  writer: { nickname: string };
+}
 
 export interface SignInProps {
   email: string | null;
