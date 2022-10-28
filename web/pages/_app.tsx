@@ -8,6 +8,7 @@ import { lightTheme, darkTheme } from "../styles/theme";
 
 import "../styles/font.css";
 import { GlobalStyle } from "../styles/GlobalStyle";
+import "react-quill/dist/quill.snow.css";
 import Layout from "../components/templates/layout";
 
 function MyApp({ Component, pageProps }: AppProps) {

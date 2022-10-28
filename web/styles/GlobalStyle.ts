@@ -86,6 +86,39 @@ export const GlobalStyle = createGlobalStyle`
     padding-bottom: 150px;
     width:70vw;
   }
+
+//-------------------------------------------//
+//                  EDITOR                   //
+//-------------------------------------------// 
+.quill-container {
+  height: 100%;
+}
+
+.quill-container.isShow .ql-toolbar {
+  display: none;
+}
+
+.quill-container.isShow .ql-container {
+  border: none;
+}
+
+.quill-container.isShow .ql-editor {
+  height: 100%;
+}
+
+.editor-height {
+  height: 100%;
+  min-height: 350px;
+}
+
+.ql-editor {
+  height: 350px;
+  overflow: auto;
+  font-family: "ibmLight";
+  font-size: 15px;
+  font-weight: normal;
+}
+
 //-------------------------------------------//
 //                  CLASS                    //
 //-------------------------------------------// 

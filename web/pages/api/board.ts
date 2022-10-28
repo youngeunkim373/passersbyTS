@@ -77,6 +77,36 @@ export default async function members(
         res
           .status(200)
           .json({ boardList: boardList, pageCount: getPageCountResult });
+    case "getBoardDetail":
+      try {
+        const listId: any = req.query.listId;
+
+        let option = {
+          select: {
+            listId: true,
+            listTitle: true,
+            writerEmail: true,
+            listContent: true,
+            viewCount: true,
+            answerCount: true,
+            registerDate: true,
+            writer: {
+              select: {
+                nickname: true,
+                userImage: true,
+              },
+            },
+          },
+          where: {
+            listId: listId,
+          },
+        };
+
+        const result: BoardListKeys[] = await prisma.BoardList.findUnique(
+          option
+        );
+
+        res.status(200).json(result);
       } catch (e) {
         console.error("Request error", e);
         res.status(500).json({ error: "Error while seleting data" });
