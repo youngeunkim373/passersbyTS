@@ -68,15 +68,20 @@ export default async function members(
 
         const result: BoardListKeys[] = await prisma.BoardList.findMany(option);
 
-        const boardList = result.map((row) =>
-          typeof row.timeDiff === "bigint"
-            ? { ...row, timeDiff: parseInt(String(row.timeDiff)) }
-            : { ...row }
-        );
+        // const boardList = result.map((row) =>
+        //   typeof row.timeDiff === "bigint"
+        //     ? { ...row, timeDiff: parseInt(String(row.timeDiff)) }
+        //     : { ...row }
+        // );
 
         res
           .status(200)
-          .json({ boardList: boardList, pageCount: getPageCountResult });
+          .json({ boardList: result, pageCount: getPageCountResult });
+      } catch (e) {
+        console.error("Request error", e);
+        res.status(500).json({ error: "Error while seleting data" });
+      }
+      break;
     case "getBoardDetail":
       try {
         const listId: any = req.query.listId;

@@ -38,7 +38,7 @@ const List = ({ pageCategory, list }: ListProps) => {
           >
             <TitleTableRow>
               <TitleTableCell align="left">
-                {parseInt(row.timeDiff) < 1440 && <NewIcon />}
+                {calcDate(row.registerDate).dateDiff < 1440 && <NewIcon />}
                 <TitleSpan>{row.listTitle}</TitleSpan>
               </TitleTableCell>
               <TableCell
@@ -52,7 +52,7 @@ const List = ({ pageCategory, list }: ListProps) => {
                 <PostInfoContainer>
                   {row.writer?.nickname}
                   <TimeDiffParagraph>
-                    {calcDate(row.registerDate)}
+                    {calcDate(row.registerDate).expression}
                   </TimeDiffParagraph>
                 </PostInfoContainer>
               </TableCell>
