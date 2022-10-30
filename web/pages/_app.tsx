@@ -3,12 +3,14 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "styled-components";
-import { lightTheme, darkTheme } from "../styles/theme";
+
 //import { wrapper } from "../store";
 
 import "../styles/font.css";
-import { GlobalStyle } from "../styles/GlobalStyle";
 import "react-quill/dist/quill.snow.css";
+import { GlobalStyle } from "../styles/globalStyle";
+import { lightTheme, darkTheme } from "../styles/theme";
+
 import Layout from "../components/templates/layout";
 
 function MyApp({ Component, pageProps }: AppProps) {
