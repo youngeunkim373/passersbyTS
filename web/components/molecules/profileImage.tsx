@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 interface ProfileImageProps {
-  image: string;
+  image?: string;
   width?: string;
   height?: string;
 }

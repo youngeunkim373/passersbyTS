@@ -8,15 +8,15 @@ export function calcDate(date: number | string | Date) {
 
   let expression;
   if (dateDiff < 60) {
-    expression = `${dateDiff}분 전`;
+    expression = `${Math.ceil(dateDiff)}분 전`;
   } else if (dateDiff < 1440) {
-    expression = `${Math.round(dateDiff / 60)}시간 전`;
+    expression = `${Math.ceil(dateDiff / 60)}시간 전`;
   } else if (dateDiff < 43200) {
-    expression = `${Math.round(dateDiff / 1440)}일 전`;
+    expression = `${Math.ceil(dateDiff / 1440)}일 전`;
   } else if (dateDiff < 525600) {
-    expression = `${Math.round(dateDiff / 43800)}달 전`;
+    expression = `${Math.ceil(dateDiff / 43800)}달 전`;
   } else {
-    expression = `${Math.round(dateDiff / 525600)}년 전`;
+    expression = `${Math.ceil(dateDiff / 525600)}년 전`;
   }
 
   return { expression: expression, dateDiff: dateDiff };

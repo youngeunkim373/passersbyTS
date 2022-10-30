@@ -1,5 +1,6 @@
 import { HTMLAttributes } from "react";
 import { Dispatch, SetStateAction } from "react";
+import { StreamOptions } from "stream";
 
 /* -------------------------------------------------- */
 /*                        LITERAL                     */
@@ -99,8 +100,19 @@ export interface AnchorProps extends HTMLAttributes<HTMLAnchorElement> {
 }
 
 /* -------------------------------------------------- */
-/*                      TABLE PROPS                   */
+/*                      TABLE KEYS                    */
 /* -------------------------------------------------- */
+
+export interface MembersKeys {
+  email: string;
+  password: string;
+  nickname: string;
+  sex: SexType;
+  age: string | number;
+  region: RegionType;
+  userRole: string;
+  userImage: string;
+}
 
 export interface BoardListKeys {
   listId: String;
@@ -112,15 +124,28 @@ export interface BoardListKeys {
   registerId: String;
   registerDate: Date;
   timeDiff?: number | string;
-  writer: { nickname: string };
+  boardComments?: BoardCommentKeys[];
+  boardNestedComments?: BoardCommentKeys[];
+  writer: MembersKeys;
 }
 
-export interface SignInProps {
-  email: string | null;
-  nickname: string | null;
-  sex: SexType | null;
-  age: string | number | null;
-  region: RegionType | null;
-  userRole: string | null;
-  userImage: string | null;
+export interface BoardCommentKeys {
+  listId: string;
+  commentSequence: number;
+  writerEmail: string;
+  commentContent: string;
+  depth: number;
+  registerId: string;
+  registerDate: Date;
+}
+
+/* -------------------------------------------------- */
+/*                    SESSION DATA                    */
+/* -------------------------------------------------- */
+
+export interface SessionDatas {
+  id: string;
+  email: string;
+  name: string;
+  image: string;
 }

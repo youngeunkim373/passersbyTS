@@ -1,25 +1,56 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import axios from "axios";
 import styled from "styled-components";
 
+import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import { Divider } from "@mui/material";
 
-import Title from "../../components/atoms/title";
 import Alert from "../../components/molecules/alert";
-import ProfileImage from "../../components/molecules/profileImage";
-import { calcDate } from "../../lib/utils/calcDate";
-import NewIcon from "../../components/atoms/newIcon";
+import CommentForm from "../../components/organisms/commentForm";
 import Editor from "../../components/organisms/editor";
+import NewIcon from "../../components/atoms/newIcon";
+import ProfileImage from "../../components/molecules/profileImage";
+import Title from "../../components/atoms/title";
+import { calcDate } from "../../lib/utils/calcDate";
+import { useRouter } from "next/router";
 
 const BoardDetail = (props: any) => {
   const [alert, setAlert] = useState({ open: false, text: "" });
   const [boardDetail, setBoardDetail] = useState(props.boardDetail);
+  const [boardComment, setBoardComment] = useState(props.boardComment.comments);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageCount, setPageCount] = useState(
+    props.boardComment.pageCount > 0 ? props.boardComment.pageCount : 1
+  );
+
+  const router = useRouter();
+  const listId = router.query.listId;
+
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    async function fetchBoardComment() {
+      await axios
+        .get(`${process.env.NEXT_PUBLIC_ENV_HOST}/api/board`, {
+          params: {
+            path: "getBoardComment",
+            listId: listId,
+            page: currentPage,
+          },
+        })
+        .then((res) => {
+          setBoardComment(res.data.comments);
+        })
+        .catch((error) => console.log(error.response));
+    }
+
+    fetchBoardComment();
+  }, [listId, currentPage]);
 
   return (
     <div id="list-page">
@@ -49,14 +80,20 @@ const BoardDetail = (props: any) => {
                 </PostInfoContainer>
               </TableCell>
             </TableRow>
-            <Divider />
             <TableRow>
-              <TableCell align="left">
+              <TableCell align="left" colSpan={2} sx={{ border: "0" }}>
                 <Editor value={boardDetail.listContent} readOnly={true} />
               </TableCell>
             </TableRow>
           </TableBody>
         </Table>
+        <CommentForm
+          comments={boardComment}
+          listWriter={boardDetail.writer}
+          pageCount={pageCount}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
       </TableContainer>
     </div>
   );
@@ -67,7 +104,7 @@ export default BoardDetail;
 export const getServerSideProps = async (context: any) => {
   const listId = context.query.listId;
 
-  const result = await axios.get(
+  const boardDetailResult = await axios.get(
     `${process.env.NEXT_PUBLIC_ENV_HOST}/api/board`,
     {
       params: {
@@ -77,9 +114,20 @@ export const getServerSideProps = async (context: any) => {
     }
   );
 
+  const boardCommentResult = await axios.get(
+    `${process.env.NEXT_PUBLIC_ENV_HOST}/api/board`,
+    {
+      params: {
+        path: "getBoardComment",
+        listId: listId,
+      },
+    }
+  );
+
   return {
     props: {
-      boardDetail: result.data,
+      boardDetail: boardDetailResult.data,
+      boardComment: boardCommentResult.data,
     },
   };
 };
@@ -105,7 +153,6 @@ const TimeDiffParagraph = styled.div`
 `;
 
 const TitleTableCell = styled(TableCell)`
-  border: 0;
   color: ${(props) => props.theme.table.color};
   padding-left: 30px;
   padding-right: 30px;

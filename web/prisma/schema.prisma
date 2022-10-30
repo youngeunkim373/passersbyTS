@@ -13,27 +13,51 @@ datasource db {
 }
 
 model Members {
-    email              String          @id
-    password           String          
-    nickname           String          @unique
-    sex                String          // F:여자 / M:남자
-    age                Int
-    region             String          //         
-    userRole           String          // seller / user / admin
-    userImage          String?         
-    registerId         String            
-    registerDate       DateTime        @updatedAt   
-    boardLists         BoardList[]    
+    email                     String          @id
+    password                  String          
+    nickname                  String          @unique
+    sex                       String          // F:여자 / M:남자
+    age                       Int
+    region                    String          //         
+    userRole                  String          // seller / user / admin
+    userImage                 String?         
+    registerId                String            
+    registerDate              DateTime        @updatedAt   
+       
+    boardLists                BoardList[]    
+    boardComments             BoardComment[]  
 }
 
 model BoardList {
-    listId             String          @id
-    listTitle          String          
-    writerEmail        String          
-    writer             Members?        @relation(fields: [writerEmail], references: [email])
-    listContent        String          @db.LongText
-    viewCount          Decimal         @db.Decimal(15, 0)
-    answerCount        Decimal         @db.Decimal(15, 0)
-    registerId         String            
-    registerDate       DateTime        @updatedAt   
+    listId                    String          @id
+    listTitle                 String          
+    writerEmail               String          
+    listContent               String          @db.LongText
+    viewCount                 Decimal         @db.Decimal(15, 0)
+    answerCount               Decimal         @db.Decimal(15, 0)
+    registerId                String            
+    registerDate              DateTime        @updatedAt
+       
+    boardComments             BoardComment[]  @relation("boardComments")    
+    boardNestedComments       BoardComment[]  @relation("boardNestedComments")        
+ 
+    writer                    Members?        @relation(fields: [writerEmail], references: [email])
 }
+
+model BoardComment {
+    listId                    String  
+    commentSequence           Decimal         @db.Decimal(15, 0)
+    nestedCommentSequence     Decimal         @db.Decimal(15, 0)   // 원댓글:0, 대댓글: 1이상
+    writerEmail               String     
+    commentContent            String
+       
+    registerId                String            
+    registerDate              DateTime        @updatedAt  
+            
+    post1                     BoardList?      @relation(name: "boardComments", fields: [listId], references: [listId], map: "like_comment_fk")  
+    post2                     BoardList?      @relation(name: "boardNestedComments", fields: [listId], references: [listId], map: "like_nestedComment_fk")      
+    writer                    Members?        @relation(fields: [writerEmail], references: [email])
+
+    @@id([listId, commentSequence, nestedCommentSequence])
+}
+

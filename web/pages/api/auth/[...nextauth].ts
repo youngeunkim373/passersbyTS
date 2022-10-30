@@ -2,11 +2,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { verifyPassword } from "../../../lib/utils/hashPassword";
 import prisma from "../../../lib/db/prisma";
-
-interface signInProps {
-  email: string;
-  password: string;
-}
+import { MembersProps } from "../../../types/globalTypes";
 
 export default NextAuth({
   session: {
@@ -20,8 +16,8 @@ export default NextAuth({
       },
       authorize: async (credentials, _req) => {
         try {
-          const result: signInProps[] = await prisma.$queryRaw`
-          SELECT email, password     FROM Members
+          const result: MembersProps[] = await prisma.$queryRaw`
+          SELECT email, password, nickname, userImage      FROM Members
            WHERE email = ${credentials?.email}
         `;
 
@@ -37,6 +33,8 @@ export default NextAuth({
           return {
             id: result[0].email,
             email: result[0].email,
+            name: result[0].nickname,
+            image: result[0].userImage,
           };
         } catch (e) {
           // const errorMessage = e.response.data.message;
