@@ -3,18 +3,25 @@ import styled from "styled-components";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import AddIcon from "@mui/icons-material/Add";
 import BasicButton from "../atoms/basicButton";
-import BasicInput from "../atoms/basicInput";
+import CommentInput from "../molecules/commentInput";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ProfileImage from "../molecules/profileImage";
 import { SessionDatas } from "../../types/globalTypes";
 
 interface CommentAccordianProps {
+  commentSequence: string | number;
+  fetchComments: Function;
   loggedInUser?: SessionDatas;
+  pageCategory: string;
 }
 
-const CommentAccordian = ({ loggedInUser }: CommentAccordianProps) => {
+const CommentAccordian = ({
+  commentSequence,
+  fetchComments,
+  loggedInUser,
+  pageCategory,
+}: CommentAccordianProps) => {
   return (
     <StyledAccordion>
       <AccordionSummary
@@ -31,24 +38,12 @@ const CommentAccordian = ({ loggedInUser }: CommentAccordianProps) => {
           <ProfileContainer>
             <ProfileImage image={loggedInUser?.image} />
           </ProfileContainer>
-          <NestedCommentInputContainer>
-            <BasicInput
-              placeholder="댓글을 입력하세요."
-              type="text"
-              width="100%"
-            />
-          </NestedCommentInputContainer>
-          <StyledButton
-            type="button"
-            //onClick={handleSubmit}
-          >
-            <AddIcon
-              sx={{
-                fontSize: "35px",
-                color: "#9000FF",
-              }}
-            />
-          </StyledButton>
+          <CommentInput
+            commentSequence={commentSequence}
+            fetchComments={fetchComments}
+            name="nestedComment"
+            pageCategory={pageCategory}
+          />
         </NestedCommentSubmitContainer>
       </AccordionDetails>
     </StyledAccordion>
@@ -59,12 +54,6 @@ export default CommentAccordian;
 
 const ButtonContainer = styled.div`
   padding-left: 50px;
-`;
-
-const NestedCommentInputContainer = styled.div`
-  float: left;
-  padding-left: 30px;
-  width: 87%;
 `;
 
 const NestedCommentSubmitContainer = styled.div`
@@ -85,9 +74,4 @@ const StyledAccordion = styled(Accordion)`
   &:before {
     background: transparent;
   }
-`;
-
-const StyledButton = styled.button`
-  float: left;
-  padding-right: 10px;
 `;

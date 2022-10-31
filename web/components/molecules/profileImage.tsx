@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 interface ProfileImageProps {
-  image?: string;
+  image?: string | null;
   width?: string;
   height?: string;
 }
@@ -19,7 +19,7 @@ export default ProfileImage;
 const Container = styled.div<ProfileImageProps>`
   background: #ffe8f5;
   background-image: ${({ image }) =>
-    image && image !== "null"
+    image
       ? `url("/upload/profileImage/${image}")`
       : `url("/upload/profileImage/basicProfile.png")`};
   background-position: center;

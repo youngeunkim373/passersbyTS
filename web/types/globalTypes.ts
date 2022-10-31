@@ -63,6 +63,7 @@ export interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
 export interface InputProps extends HTMLAttributes<HTMLInputElement> {
   autoFocus?: boolean;
   lineHeight?: string;
+  name?: string;
   readOnly?: boolean;
   required?: boolean;
   submitOnEnter?: boolean;
@@ -144,8 +145,8 @@ export interface BoardCommentKeys {
 /* -------------------------------------------------- */
 
 export interface SessionDatas {
-  id: string;
-  email: string;
-  name: string;
-  image: string;
+  id?: string;
+  email?: string | null;
+  name?: string | null;
+  image?: string | null;
 }

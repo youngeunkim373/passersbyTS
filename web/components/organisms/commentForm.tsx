@@ -1,48 +1,57 @@
-import { Dispatch, SetStateAction } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import styled from "styled-components";
+import axios from "axios";
 
 import MessageIcon from "@mui/icons-material/Message";
-import AddIcon from "@mui/icons-material/Add";
-import ProfileImage from "../molecules/profileImage";
-import BasicInput from "../atoms/basicInput";
-import Pagination from "../molecules/pagination";
+import { Divider } from "@mui/material";
+
 import Comment from "../molecules/comment";
 import CommentAccordian from "./commentAccordian";
-import { Divider } from "@mui/material";
-import {
-  BoardCommentKeys,
-  MembersKeys,
-  SessionDatas,
-} from "../../types/globalTypes";
+import CommentInput from "../molecules/commentInput";
+import Pagination from "../molecules/pagination";
+import ProfileImage from "../molecules/profileImage";
+import { useRouter } from "next/router";
 
 interface CommentFormProps {
-  comments: BoardCommentKeys[];
-  listWriter: MembersKeys;
-  loggedInUser?: SessionDatas;
-  pageCount: number;
-  currentPage: number;
-  setCurrentPage: Dispatch<SetStateAction<number>>;
+  comment: any;
+  pageCategory: string;
 }
 
-const CommentForm = ({
-  comments,
-  listWriter,
-  loggedInUser,
-  pageCount,
-  currentPage,
-  setCurrentPage,
-}: CommentFormProps) => {
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+const CommentForm = ({ comment, pageCategory }: CommentFormProps) => {
+  const [comments, setComments] = useState(comment.comments);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageCount, setPageCount] = useState(
+    comment.pageCount > 0 ? comment.pageCount : 1
+  );
+
+  const { data: session, status } = useSession();
+  const loggedInUser = session?.user;
+
+  const router = useRouter();
+  const listId = router.query.listId;
+
+  const fetchComments = async () => {
+    await axios
+      .get(
+        `${process.env.NEXT_PUBLIC_ENV_HOST}/api/${pageCategory.toLowerCase()}`,
+        {
+          params: {
+            path: `get${pageCategory}Comments`,
+            listId: listId,
+            page: currentPage,
+          },
+        }
+      )
+      .then((res) => {
+        setComments(res.data.comments);
+      })
+      .catch((error) => console.log(error.response));
   };
 
   return (
     <>
-      <CommentFormContainer
-        encType="multi part/form-data"
-        onSubmit={handleSubmit}
-        method="POST"
-      >
+      <StyledCommentForm encType="multi part/form-data" method="POST">
         <CountContainer>
           <MessageIcon
             sx={{
@@ -57,37 +66,35 @@ const CommentForm = ({
           <ProfileContainer>
             <ProfileImage image={loggedInUser?.image} />
           </ProfileContainer>
-          <CommentInputContainer>
-            <BasicInput type="text" width="100%" />
-          </CommentInputContainer>
-          <AddButton type="submit">
-            <AddIcon
-              sx={{
-                fontSize: "35px",
-                color: "#9000FF",
-              }}
-            />
-          </AddButton>
+          <CommentInput
+            fetchComments={fetchComments}
+            name="comment"
+            pageCategory={pageCategory}
+          />
         </CommentSubmitContainer>
-        {comments.map((comment: any) =>
-          comment.nestedCommentSequence === "0" ? (
-            <div
-              key={`${comment.commentSequence}}_${comment.nestedCommentSequence}`}
-            >
-              <Comment comment={comment} />
-              <CommentAccordian loggedInUser={loggedInUser} />
-              <Divider />
-              <br />
-            </div>
-          ) : (
-            <NestedCommentsContainer
-              key={`${comment.commentSequence}}_${comment.nestedCommentSequence}`}
-            >
-              <Comment comment={comment} />
-            </NestedCommentsContainer>
-          )
-        )}
-      </CommentFormContainer>
+        {comments.map((comment: any) => (
+          <div
+            key={`${comment.commentSequence}}_${comment.nestedCommentSequence}`}
+          >
+            {comment.nestedCommentSequence === "0" ? (
+              <CommentsContainer>
+                <Comment comment={comment} />
+                <CommentAccordian
+                  commentSequence={comment.commentSequence}
+                  fetchComments={fetchComments}
+                  loggedInUser={loggedInUser}
+                  pageCategory={pageCategory}
+                />
+              </CommentsContainer>
+            ) : (
+              <NestedCommentsContainer>
+                <Comment comment={comment} />
+              </NestedCommentsContainer>
+            )}
+            <Divider />
+          </div>
+        ))}
+      </StyledCommentForm>
       <PaginationContainer>
         <Pagination
           pageCount={pageCount}
@@ -101,7 +108,7 @@ const CommentForm = ({
 
 export default CommentForm;
 
-const CommentFormContainer = styled.form`
+const StyledCommentForm = styled.form`
   padding: 50px 50px 10px 50px;
 `;
 
@@ -119,28 +126,19 @@ const CommentSubmitContainer = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 30px;
-  padding-bottom: 50px;
+  padding-bottom: 20px;
 `;
 
 const ProfileContainer = styled.div`
   float: left;
 `;
 
-const CommentInputContainer = styled.div`
-  padding-left: 30px;
-  padding-right: 10px;
-  width: 100%;
-`;
-
-const AddButton = styled.button`
-  cursor: pointer;
-  float: left;
-  padding-right: 10px;
+const CommentsContainer = styled.div`
+  padding-top: 30px;
 `;
 
 const NestedCommentsContainer = styled.div`
-  padding-left: 65px;
-  padding-bottom: 30px;
+  padding: 30px 0px 20px 65px;
 `;
 
 const PaginationContainer = styled.div`

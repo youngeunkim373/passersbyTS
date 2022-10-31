@@ -8,6 +8,7 @@ const BasicInput = (
     defaultValue,
     id,
     lineHeight,
+    name,
     onChange,
     onKeyPress,
     placeholder,
@@ -31,6 +32,7 @@ const BasicInput = (
       defaultValue={defaultValue}
       id={id}
       lineHeight={lineHeight}
+      name={name}
       onChange={onChange}
       onKeyPress={handleKeyPress}
       placeholder={placeholder}
