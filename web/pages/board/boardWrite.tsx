@@ -1,5 +1,7 @@
 import React, { useRef, useState } from "react";
+import { useSession } from "next-auth/react";
 import styled from "styled-components";
+import axios from "axios";
 
 import CloseIcon from "@mui/icons-material/Close";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
@@ -11,6 +13,7 @@ import Editor from "../../components/organisms/editor";
 import PushButton from "../../components/atoms/pushButton";
 import Title from "../../components/atoms/title";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 interface InputItem {
   id: number;
@@ -18,9 +21,16 @@ interface InputItem {
 
 const BoardWrite = () => {
   const [alert, setAlert] = useState({ open: false, text: "" });
+  const [content, setContent] = useState("");
   const [choices, setChoices] = React.useState<InputItem[]>([]);
   const [yesOrNos, setYesOrNos] = React.useState<InputItem[]>([]);
 
+  const { data: session, status } = useSession();
+  const loggedInUser = session?.user;
+
+  const router = useRouter();
+
+  const titleInputRef = useRef<HTMLInputElement>(null);
   const inputId = useRef<number>(1);
 
   function addInput(): void {
@@ -80,8 +90,50 @@ const BoardWrite = () => {
     setYesOrNos([]);
   }
 
-  const handleSubmit = async () => {
-    console.log("submit!");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const title = titleInputRef.current!.value;
+
+    if (!content) {
+      setAlert({
+        open: true,
+        text: "내용을 입력하세요.",
+      });
+      return;
+    }
+
+    const config = {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    };
+
+    let answers: { sequence: number; content: string }[] = [];
+    for (var answer of document.getElementsByName("choice")) {
+      answers.push({
+        sequence: answers.length,
+        content: (answer as HTMLInputElement).value,
+      });
+    }
+
+    await axios
+      .post(
+        "/api/board",
+        JSON.stringify({
+          path: "createBoardContent",
+          listTitle: title,
+          writerEmail: loggedInUser!.email,
+          listContent: content,
+          answers: answers,
+        }),
+        config
+      )
+      .then((res) => {
+        router.push("/board");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -96,7 +148,14 @@ const BoardWrite = () => {
         {alert.text}
       </Alert>
       <BasicContainer>
-        <BasicInput type="text" placeholder="제목을 입력하세요." width="100%" />
+        <BasicInput
+          type="text"
+          placeholder="제목을 입력하세요."
+          ref={titleInputRef}
+          width="100%"
+          required={true}
+          autoFocus={true}
+        />
       </BasicContainer>
       <BasicContainer>
         <BasicButton type="button" onClick={addInput}>
@@ -121,8 +180,9 @@ const BoardWrite = () => {
               <ChoicesContainer key={choice.id}>
                 <InputContainer>
                   <BasicInput
-                    type="text"
+                    name="choice"
                     placeholder="내용을 입력하세요."
+                    type="text"
                     width="100%"
                   />
                 </InputContainer>
@@ -136,21 +196,21 @@ const BoardWrite = () => {
             yesOrNos.map((yesOrNo: InputItem) => (
               <YesOrNosContainerWithCloseIcon key={yesOrNo.id}>
                 <YesOrNosContainer>
-                  <StyledButton type="button" color="#5f00ff">
+                  <StyledButton color="#5f00ff" name="choice" type="button">
                     <SportsScoreIcon
                       sx={{ color: "#5f00ff", transform: "scaleX(-1)" }}
                     />
                     &nbsp;찬성
                   </StyledButton>
-                  <div style={{ float: "left" }}>
+                  <FlagImageContainer>
                     <Image
                       src="/images/crossedFlags.png"
                       alt="flags"
                       width="100px"
                       height="55px"
                     />
-                  </div>
-                  <StyledButton type="button" color="#ff0046">
+                  </FlagImageContainer>
+                  <StyledButton color="#ff0046" name="choice" type="button">
                     반대&nbsp;
                     <SportsScoreIcon
                       sx={{
@@ -173,7 +233,7 @@ const BoardWrite = () => {
             ))}
         </div>
       </BasicContainer>
-      <Editor />
+      <Editor value={content} onChange={setContent} />
       <PushButtonContainer>
         <PushButton type="submit">등록하기</PushButton>
       </PushButtonContainer>
@@ -239,4 +299,9 @@ const StyledButton = styled.button`
       color: ${({ color }) => color};
     }
   }
+`;
+
+const FlagImageContainer = styled.div`
+  float: left;
+  padding: 10px;
 `;

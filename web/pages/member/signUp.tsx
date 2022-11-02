@@ -201,7 +201,6 @@ const SignUp: React.FC = () => {
           type="text"
           id="email"
           placeholder="이메일을 입력하세요."
-          submitOnEnter={true}
           required={true}
           ref={emailInputRef}
           autoFocus={true}
@@ -229,7 +228,6 @@ const SignUp: React.FC = () => {
           type="password"
           id="password"
           placeholder="비밀번호를 입력하세요."
-          submitOnEnter={true}
           required={true}
           ref={passwordInputRef}
         />
@@ -240,7 +238,6 @@ const SignUp: React.FC = () => {
           type="password"
           id="confirm"
           placeholder="비밀번호를 한 번 더 입력하세요."
-          submitOnEnter={true}
           required={true}
           ref={confirmInputRef}
         />
@@ -251,7 +248,6 @@ const SignUp: React.FC = () => {
           type="text"
           id="nickname"
           placeholder="닉네임을 입력하세요."
-          submitOnEnter={true}
           required={true}
           ref={nicknameInputRef}
         />
@@ -262,7 +258,6 @@ const SignUp: React.FC = () => {
           type="number"
           id="age"
           placeholder="나이를 입력하세요."
-          submitOnEnter={true}
           required={true}
           ref={ageInputRef}
         />

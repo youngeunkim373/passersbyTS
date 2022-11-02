@@ -1,5 +1,7 @@
 import prisma from "../../lib/db/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
+import fs from "fs";
+
 import { BoardListKeys, BoardCommentKeys } from "../../types/globalTypes";
 import getCommentPageCount from "./utils/getCommentPageCount";
 import getListPageCount from "./utils/getListPageCount";
@@ -174,7 +176,6 @@ export default async function members(
       break;
     case "createBoardComment":
       try {
-        const table: any = req.body.table;
         const name: any = req.body.name;
         const listId: any = req.body.listId;
         const commentSequence: any = req.body.commentSequence;
@@ -208,6 +209,85 @@ export default async function members(
           `;
 
         res.status(200).json({ result });
+      } catch (e) {
+        console.error("Request error", e);
+        res.status(500).json({ error: "Error while seleting data" });
+      }
+      break;
+    case "createBoardContent":
+      try {
+        const listTitle: any = req.body.listTitle;
+        const writerEmail: any = req.body.writerEmail;
+        const listContent: any = req.body.listContent.replaceAll(
+          "/upload/temporary/",
+          "/upload/board/"
+        );
+        const answers: any = req.body.answers;
+
+        fs.readdir("./public/upload/temporary/", (err, files) => {
+          for (var i = 0; i < files.length; i++) {
+            if (files[i].includes(writerEmail)) {
+              fs.rename(
+                `./public/upload/temporary/${files[i]}`,
+                `./public/upload/board/${files[i]}`,
+                function (err) {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    console.log("Successfully renamed the directory.");
+                  }
+                }
+              );
+            }
+          }
+        });
+
+        const newListIdResult: { newListId: string }[] = await prisma.$queryRaw`
+              SELECT  CONCAT( DATE_FORMAT(CURDATE(), '%Y%m%d')
+                             ,LPAD(ifnull(RIGHT(MAX(listId),5),0)+1, 5, 0))     AS newListId
+                FROM BoardList
+               WHERE 1 = 1
+                 AND DATE_FORMAT(registerDate, '%Y-%m-%d') = CURDATE()
+        `;
+        const newListId = newListIdResult[0].newListId;
+
+        const boardListResult = await prisma.$executeRaw`
+              INSERT INTO BoardList
+                     (
+                      listId, listTitle, writerEmail, listContent, viewCount, answerCount, registerId,  registerDate   
+                     )
+              VALUES
+                     (
+                       ${newListId}
+                      ,${listTitle}
+                      ,${writerEmail}
+                      ,${listContent}
+                      ,0
+                      ,0
+                      ,${writerEmail}
+                      ,NOW()
+                     )
+        `;
+
+        for (var i = 0; i < answers.length; i++) {
+          let boardAnswerResult = await prisma.$executeRaw`
+                INSERT INTO BoardAnswer
+                       (
+                        listId, answerSequence, answerContent, answerSelectionCount, registerId,      registerDate   
+                       )
+                VALUES
+                       (
+                         ${newListId}
+                        ,${answers[i].sequence}
+                        ,${answers[i].content}
+                        ,0
+                        ,${writerEmail}
+                        ,NOW()
+                       )
+          `;
+        }
+
+        res.status(200).json({ boardListResult });
       } catch (e) {
         console.error("Request error", e);
         res.status(500).json({ error: "Error while seleting data" });
