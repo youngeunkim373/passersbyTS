@@ -56,12 +56,13 @@ model BoardComment {
 }
 
 model BoardAnswer {
-    listId                    String  
+    listId                    String
+    answerCategory            String            
     answerSequence            Decimal         @db.Decimal(15, 0)
     answerContent             String          @db.LongText
     answerSelectionCount      Decimal         @db.Decimal(15, 0)
     registerId                String            
-    registerDate              DateTime        @updatedAt   
+    registerDate              DateTime        @updatedAt    
 
     @@id([listId, answerSequence])
 }

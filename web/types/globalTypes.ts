@@ -140,6 +140,16 @@ export interface BoardCommentKeys {
   registerDate: Date;
 }
 
+export interface BoardAnswerKeys {
+  listId: string;
+  answerCategory: string;
+  answerSequence: number;
+  answerContent: string;
+  answerSelectionCount: number;
+  registerId: string;
+  registerDate: Date;
+}
+
 /* -------------------------------------------------- */
 /*                    SESSION DATA                    */
 /* -------------------------------------------------- */

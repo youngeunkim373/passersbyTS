@@ -2,7 +2,11 @@ import prisma from "../../lib/db/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 
-import { BoardListKeys, BoardCommentKeys } from "../../types/globalTypes";
+import {
+  BoardListKeys,
+  BoardCommentKeys,
+  BoardAnswerKeys,
+} from "../../types/globalTypes";
 import getCommentPageCount from "./utils/getCommentPageCount";
 import getListPageCount from "./utils/getListPageCount";
 
@@ -174,6 +178,36 @@ export default async function members(
         res.status(500).json({ error: "Error while seleting data" });
       }
       break;
+    case "getBoardAnswers":
+      try {
+        const listId: any = req.query.listId;
+
+        let option = {
+          select: {
+            answerCategory: true,
+            answerSequence: true,
+            answerContent: true,
+          },
+          where: {
+            listId: listId,
+          },
+          orderBy: [
+            {
+              answerSequence: "asc",
+            },
+          ],
+        };
+
+        const result: BoardAnswerKeys[] = await prisma.BoardAnswer.findMany(
+          option
+        );
+
+        res.status(200).json({ result });
+      } catch (e) {
+        console.error("Request error", e);
+        res.status(500).json({ error: "Error while seleting data" });
+      }
+      break;
     case "createBoardComment":
       try {
         const name: any = req.body.name;
@@ -273,11 +307,12 @@ export default async function members(
           let boardAnswerResult = await prisma.$executeRaw`
                 INSERT INTO BoardAnswer
                        (
-                        listId, answerSequence, answerContent, answerSelectionCount, registerId,      registerDate   
+                        listId, answerCategory, answerSequence, answerContent, answerSelectionCount, registerId,      registerDate   
                        )
                 VALUES
                        (
                          ${newListId}
+                        ,${answers[i].category}
                         ,${answers[i].sequence}
                         ,${answers[i].content}
                         ,0

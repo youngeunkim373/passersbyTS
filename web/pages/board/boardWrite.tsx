@@ -1,10 +1,10 @@
 import React, { useRef, useState } from "react";
+import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import styled from "styled-components";
 import axios from "axios";
 
 import CloseIcon from "@mui/icons-material/Close";
-import SportsScoreIcon from "@mui/icons-material/SportsScore";
 
 import Alert from "../../components/molecules/alert";
 import BasicButton from "../../components/atoms/basicButton";
@@ -12,8 +12,7 @@ import BasicInput from "../../components/atoms/basicInput";
 import Editor from "../../components/organisms/editor";
 import PushButton from "../../components/atoms/pushButton";
 import Title from "../../components/atoms/title";
-import Image from "next/image";
-import { useRouter } from "next/router";
+import YesOrNoButtons from "../../components/molecules/yesOrNoButtons";
 
 interface InputItem {
   id: number;
@@ -108,11 +107,17 @@ const BoardWrite = () => {
       withCredentials: true,
     };
 
-    let answers: { sequence: number; content: string }[] = [];
+    let answers: {
+      category: string;
+      sequence: number;
+      content: string;
+    }[] = [];
     for (var answer of document.getElementsByName("choice")) {
       answers.push({
+        category:
+          answer.id === "yes" || answer.id === "no" ? "yesOrno" : "choices",
         sequence: answers.length,
-        content: (answer as HTMLInputElement).value,
+        content: (answer as HTMLInputElement).value || answer.id,
       });
     }
 
@@ -195,30 +200,7 @@ const BoardWrite = () => {
           {yesOrNos &&
             yesOrNos.map((yesOrNo: InputItem) => (
               <YesOrNosContainerWithCloseIcon key={yesOrNo.id}>
-                <YesOrNosContainer>
-                  <StyledButton color="#5f00ff" name="choice" type="button">
-                    <SportsScoreIcon
-                      sx={{ color: "#5f00ff", transform: "scaleX(-1)" }}
-                    />
-                    &nbsp;찬성
-                  </StyledButton>
-                  <FlagImageContainer>
-                    <Image
-                      src="/images/crossedFlags.png"
-                      alt="flags"
-                      width="100px"
-                      height="55px"
-                    />
-                  </FlagImageContainer>
-                  <StyledButton color="#ff0046" name="choice" type="button">
-                    반대&nbsp;
-                    <SportsScoreIcon
-                      sx={{
-                        color: "#ff0046",
-                      }}
-                    />
-                  </StyledButton>
-                </YesOrNosContainer>
+                <YesOrNoButtons />
                 <CloseIcon
                   onClick={removeButton}
                   sx={{
@@ -247,27 +229,10 @@ const BasicContainer = styled.div`
   padding-top: 30px;
 `;
 
-const PushButtonContainer = styled.div`
-  padding-top: 50px;
-  text-align: center;
-`;
-
 const ChoicesContainer = styled.div`
   align-items: center;
   display: flex;
   padding: 10px;
-`;
-
-const YesOrNosContainer = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  margin: 0 auto;
-`;
-
-const YesOrNosContainerWithCloseIcon = styled.div`
-  position: relative;
 `;
 
 const InputContainer = styled.div`
@@ -275,33 +240,11 @@ const InputContainer = styled.div`
   width: 100%;
 `;
 
-const StyledButton = styled.button`
-  align-items: center;
-  background: ${({ color }) => color};
-  border: ${({ color }) => "3px solid" + color};
-  border-radius: 30px;
-  color: white;
-  display: flex;
-  float: left;
-  font-family: ibmRegular;
-  font-size: 20px;
-  font-weight: bold;
-  padding: 8px 20px;
-  svg {
-    color: white;
-  }
-
-  &:hover {
-    background: white;
-    color: ${({ color }) => color};
-
-    svg {
-      color: ${({ color }) => color};
-    }
-  }
+const PushButtonContainer = styled.div`
+  padding-top: 50px;
+  text-align: center;
 `;
 
-const FlagImageContainer = styled.div`
-  float: left;
-  padding: 10px;
+const YesOrNosContainerWithCloseIcon = styled.div`
+  position: relative;
 `;
