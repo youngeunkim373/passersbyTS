@@ -51,7 +51,6 @@ const ChangePassword = (props: { email: string }) => {
         config
       )
       .then((res) => {
-        console.log(res.data);
         router.push("/member/signIn");
       })
       .catch((error) => console.log(error.response));

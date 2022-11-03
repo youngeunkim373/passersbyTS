@@ -74,6 +74,7 @@ export interface InputProps extends HTMLAttributes<HTMLInputElement> {
 
 export interface LabelProps extends HTMLAttributes<HTMLLabelElement> {
   children: React.ReactNode;
+  fontSize?: string;
 }
 
 export interface SelectProps extends HTMLAttributes<HTMLDivElement> {

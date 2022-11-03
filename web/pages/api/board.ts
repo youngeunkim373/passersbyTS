@@ -249,6 +249,109 @@ export default async function members(
         res.status(500).json({ error: "Error while seleting data" });
       }
       break;
+    case "getBoardStats":
+      try {
+        const listId: any = req.query.listId;
+        const respondentEmail: any = req.query.respondentEmail;
+
+        const StatsResult = await prisma.$queryRaw`
+        SELECT  REPLACE(A.answerContent, '&nbsp;', '')            AS answerContent
+               ,IFNULL(A.answerSelectionCount, 0)                 AS answerSelectionCount
+               ,IFNULL(B.respondentSex_f, 0)                      AS respondentSex_f
+               ,IFNULL(B.respondentSex_m, 0)                      AS respondentSex_m
+               ,IFNULL(B.respondentAge_0, 0)                      AS espondentAge_0
+               ,IFNULL(B.respondentAge_10, 0)                     AS espondentAge_10
+               ,IFNULL(B.respondentAge_20, 0)                     AS espondentAge_20
+               ,IFNULL(B.respondentAge_30, 0)                     AS espondentAge_30
+               ,IFNULL(B.respondentAge_40, 0)                     AS espondentAge_40
+               ,IFNULL(B.respondentAge_50, 0)                     AS espondentAge_50
+               ,IFNULL(B.respondentAge_60, 0)                     AS espondentAge_60
+               ,IFNULL(B.respondentAge_70, 0)                     AS espondentAge_70
+               ,IFNULL(B.respondentAge_80, 0)                     AS espondentAge_80
+               ,IFNULL(B.respondentAge_90, 0)                     AS espondentAge_90
+               ,IFNULL(B.respondentAge_100, 0)                    AS espondentAge_100
+               ,IFNULL(B.respondentRegion_seoul, 0)               AS respondnetRegion_seoul      
+               ,IFNULL(B.respondentRegion_gyeonggi, 0)            AS respondnetRegion_gyeonggi   
+               ,IFNULL(B.respondentRegion_gwangju, 0)             AS respondnetRegion_gwangju    
+               ,IFNULL(B.respondentRegion_daegu, 0)               AS respondnetRegion_daegu      
+               ,IFNULL(B.respondentRegion_daejeon, 0)             AS respondnetRegion_daejeon    
+               ,IFNULL(B.respondentRegion_busan, 0)               AS respondnetRegion_busan      
+               ,IFNULL(B.respondentRegion_incheon, 0)             AS respondnetRegion_incheon    
+               ,IFNULL(B.respondentRegion_ulsan, 0)               AS respondnetRegion_ulsan      
+               ,IFNULL(B.respondentRegion_sejong, 0)              AS respondnetRegion_sejong     
+               ,IFNULL(B.respondentRegion_jeju, 0)                AS respondnetRegion_jeju       
+               ,IFNULL(B.respondentRegion_gangwon, 0)             AS respondnetRegion_gangwon    
+               ,IFNULL(B.respondentRegion_gyeongsang, 0)          AS respondnetRegion_gyeongsang 
+               ,IFNULL(B.respondentRegion_jeolla, 0)              AS respondnetRegion_jeolla     
+               ,IFNULL(B.respondentRegion_chungcheong, 0)         AS respondnetRegion_chungcheong
+          FROM BoardAnswer A
+          LEFT OUTER JOIN BoardAnswerStats B
+                  ON B.listId = A.listId
+                 AND B.answerSequence = A.answerSequence
+         WHERE A.listId = ${listId}
+        `;
+
+        const myAnswerResult: {
+          answerSequence: number;
+          answerContent: string;
+        }[] = await prisma.$queryRaw`
+        SELECT  answerSequence
+               ,(SELECT answerContent     FROM BoardAnswer
+                  WHERE listId = A.listId
+                    AND answerSequence = A.answerSequence)  AS answerContent
+          FROM BoardAnswerLog A
+         WHERE A.listId = ${listId}
+           AND A.respondentEmail = ${respondentEmail}      
+        `;
+
+        res
+          .status(200)
+          .json({ StatsResult, myAnswerResult: myAnswerResult[0] });
+      } catch (e) {
+        console.error("Request error", e);
+        res.status(500).json({ error: "Error while seleting data" });
+      }
+      break;
+    case "createBoardComment":
+      try {
+        const name: any = req.body.name;
+        const listId: any = req.body.listId;
+        const commentSequence: any = req.body.commentSequence;
+        const writerEmail: any = req.body.writerEmail;
+        const commentContent: any = req.body.commentContent;
+
+        const result = await prisma.$executeRaw`
+            INSERT INTO BoardComment
+                   (
+                    listId, commentSequence, nestedCommentSequence, writerEmail, commentContent, registerId, registerDate
+                   )
+            VALUES
+                   (
+                     ${listId}
+                    ,IF( ${name} = 'comment'
+                        ,(SELECT IFNULL(MAX(commentSequence),0) + 1     FROM BoardComment as subtable
+                           WHERE listId = ${listId})
+                        ,${commentSequence}
+                    )
+                    ,IF( ${name} = 'comment'
+                        ,0
+                        ,(SELECT IFNULL(MAX(nestedCommentSequence),0) + 1     FROM BoardComment as subtable
+                           WHERE listId = ${listId}
+                             AND commentSequence = ${commentSequence})
+                    )            
+                    ,${writerEmail}
+                    ,${commentContent}
+                    ,${writerEmail}
+                    ,NOW()
+                   )
+            `;
+
+        res.status(200).json({ result });
+      } catch (e) {
+        console.error("Request error", e);
+        res.status(500).json({ error: "Error while seleting data" });
+      }
+      break;
     case "createBoardContent":
       try {
         const listTitle: any = req.body.listTitle;
@@ -308,14 +411,22 @@ export default async function members(
           let boardAnswerResult = await prisma.$executeRaw`
                 INSERT INTO BoardAnswer
                        (
-                        listId, answerCategory, answerSequence, answerContent, answerSelectionCount, registerId,      registerDate   
+                        listId, answerCategory, answerSequence, answerContent, answerSelectionCount, registerId, registerDate   
                        )
                 VALUES
                        (
                          ${newListId}
                         ,${answers[i].category}
                         ,${answers[i].sequence}
-                        ,${answers[i].content}
+                        ,${
+                          answers[i].category === "yesOrNo" &&
+                          answers[i].sequence === 0
+                            ? "찬성"
+                            : answers[i].category === "yesOrNo" &&
+                              answers[i].sequence === 1
+                            ? "반대"
+                            : answers[i].content
+                        }
                         ,0
                         ,${writerEmail}
                         ,NOW()
@@ -362,6 +473,14 @@ export default async function members(
                 ,${respondentEmail}
                 ,NOW()
                )
+        `;
+
+        const answerResult = await prisma.$executeRaw`
+        UPDATE BoardAnswer
+           SET answerSelectionCount = IFNULL(answerSelectionCount, 0) + 1
+         WHERE 1 = 1
+           AND listId = ${listId}
+           AND answerSequence = ${answerSequence}
         `;
 
         const statsResult = await prisma.$executeRaw`
@@ -461,7 +580,7 @@ export default async function members(
           ,respondentRegion_chungcheong = respondentRegion_chungcheong + IF(${region} = 'Chungcheong', 1, 0);                                 
         `;
 
-        res.status(200).json({ logResult, statsResult });
+        res.status(200).json({ logResult, answerResult, statsResult });
       } catch (e) {
         console.error("Request error", e);
         res.status(500).json({ error: "Error while seleting data" });

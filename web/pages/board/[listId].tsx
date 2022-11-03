@@ -25,18 +25,20 @@ import Title from "../../components/atoms/title";
 import YesOrNoButtons from "../../components/molecules/yesOrNoButtons";
 import { calcDate } from "../../lib/utils/calcDate";
 import { BoardAnswerKeys } from "../../types/globalTypes";
+import FullStatsSection from "../../components/organisms/FullStatsSection";
 
 const BoardDetail: React.FC = (props: any) => {
   const [alert, setAlert] = useState({ open: false, text: "" });
   const [boardDetail, setBoardDetail] = useState(props.boardDetail);
   const [boardAnswers, setBoardAnswers] = useState(props.boardAnswers);
   const [selectedAnswer, setSelectedAnswer] = useState("");
+  const [chartReload, setChartReload] = useState(false);
 
   const { data: session, status } = useSession();
   const loggedInUser = session?.user;
 
   const router = useRouter();
-  const listId = router.query.listId;
+  const listId = router.query.listId!.toString();
 
   const onClickMakeAnswer = async (e: React.MouseEvent) => {
     if (status !== "authenticated") {
@@ -77,6 +79,7 @@ const BoardDetail: React.FC = (props: any) => {
             open: true,
             text: "답변이 완료되었습니다.",
           });
+          setChartReload(true);
         }
       })
       .catch((error) => {
@@ -125,7 +128,6 @@ const BoardDetail: React.FC = (props: any) => {
           </AnswerButtonContainer>
         </RadioGroup>
       </StyledFormControl>
-
       <TableContainer component={Paper}>
         <Table aria-label="simple table">
           <TableBody>
@@ -155,6 +157,11 @@ const BoardDetail: React.FC = (props: any) => {
             </TableRow>
           </TableBody>
         </Table>
+        <FullStatsSection
+          chartReload={chartReload}
+          listId={listId}
+          loggedInUser={loggedInUser}
+        />
         <CommentForm comment={props.boardComments} pageCategory="Board" />
       </TableContainer>
     </div>

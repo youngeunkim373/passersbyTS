@@ -115,7 +115,9 @@ const BoardWrite = () => {
     for (var answer of document.getElementsByName("choice")) {
       answers.push({
         category:
-          answer.id === "yes" || answer.id === "no" ? "yesOrNo" : "choices",
+          (answer as HTMLInputElement | HTMLButtonElement).type! === "button"
+            ? "yesOrNo"
+            : "choices",
         sequence: answers.length,
         content: (answer as HTMLInputElement).value || answer.id,
       });

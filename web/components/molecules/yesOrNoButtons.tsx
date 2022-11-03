@@ -13,7 +13,7 @@ const YesOrNoButtons = ({ onClick, selectedAnswer }: YesOrNoButtonsProps) => {
       <StyledButton
         color="#5f00ff"
         id="0"
-        name="yesOrNo"
+        name="choice"
         onClick={onClick}
         type="button"
       >
@@ -21,7 +21,7 @@ const YesOrNoButtons = ({ onClick, selectedAnswer }: YesOrNoButtonsProps) => {
           selectedAnswer={selectedAnswer}
           sx={{ color: "#5f00ff", transform: "scaleX(-1)" }}
         />
-        &nbsp;찬성
+        찬성
       </StyledButton>
       <FlagImageContainer>
         <Image
@@ -34,11 +34,11 @@ const YesOrNoButtons = ({ onClick, selectedAnswer }: YesOrNoButtonsProps) => {
       <StyledButton
         color="#ff0046"
         id="1"
-        name="yesOrNo"
+        name="choice"
         onClick={onClick}
         type="button"
       >
-        반대&nbsp;
+        반대
         <RightSportsScoreIcon
           selectedAnswer={selectedAnswer}
           sx={{
