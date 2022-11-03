@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import axios from "axios";
 import styled from "styled-components";
 
@@ -13,27 +15,81 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 
+import Alert from "../../components/molecules/alert";
 import BasicButton from "../../components/atoms/basicButton";
 import CommentForm from "../../components/organisms/commentForm";
 import Editor from "../../components/organisms/editor";
 import NewIcon from "../../components/atoms/newIcon";
 import ProfileImage from "../../components/molecules/profileImage";
 import Title from "../../components/atoms/title";
+import YesOrNoButtons from "../../components/molecules/yesOrNoButtons";
 import { calcDate } from "../../lib/utils/calcDate";
 import { BoardAnswerKeys } from "../../types/globalTypes";
-import YesOrNoButtons from "../../components/molecules/yesOrNoButtons";
 
 const BoardDetail: React.FC = (props: any) => {
+  const [alert, setAlert] = useState({ open: false, text: "" });
   const [boardDetail, setBoardDetail] = useState(props.boardDetail);
   const [boardAnswers, setBoardAnswers] = useState(props.boardAnswers);
+  const [selectedAnswer, setSelectedAnswer] = useState("");
 
-  const onClickMakeAnswer = (e: React.MouseEvent) => {
-    console.log(e);
+  const { data: session, status } = useSession();
+  const loggedInUser = session?.user;
+
+  const router = useRouter();
+  const listId = router.query.listId;
+
+  const onClickMakeAnswer = async (e: React.MouseEvent) => {
+    if (status !== "authenticated") {
+      setAlert({
+        open: true,
+        text: "답변은 로그인 후 입력 가능합니다.",
+      });
+      return;
+    }
+
+    if (!selectedAnswer) {
+      setAlert({
+        open: true,
+        text: "답변을 먼저 선택하세요.",
+      });
+      return;
+    }
+
+    const config = {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    };
+
+    await axios
+      .post(
+        "/api/board",
+        JSON.stringify({
+          path: "makeBoardAnswer",
+          listId: listId,
+          answerSequence: selectedAnswer,
+          respondentEmail: loggedInUser!.email,
+        }),
+        config
+      )
+      .then((res) => {
+        if (res.data.logResult > 0 && res.data.statsResult > 0) {
+          setAlert({
+            open: true,
+            text: "답변이 완료되었습니다.",
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
     <div id="list-page">
       <Title>게시판</Title>
+      <Alert open={alert.open} setOpen={setAlert}>
+        {alert.text}
+      </Alert>
       <StyledFormControl>
         <RadioGroup
           aria-labelledby="demo-radio-buttons-group-label"
@@ -48,17 +104,25 @@ const BoardDetail: React.FC = (props: any) => {
                   value={answer.answerSequence}
                   control={<Radio />}
                   label={answer.answerContent}
+                  onChange={(e: React.SyntheticEvent) =>
+                    setSelectedAnswer((e.target as HTMLInputElement).value)
+                  }
                 />
               ))}
-              <AnswerButtonContainer>
-                <BasicButton type="button" onClick={onClickMakeAnswer}>
-                  답변하기
-                </BasicButton>
-              </AnswerButtonContainer>
             </>
           ) : (
-            <YesOrNoButtons />
+            <YesOrNoButtons
+              selectedAnswer={selectedAnswer}
+              onClick={(e: React.SyntheticEvent) =>
+                setSelectedAnswer((e.currentTarget as HTMLButtonElement).id)
+              }
+            />
           )}
+          <AnswerButtonContainer>
+            <BasicButton type="button" onClick={onClickMakeAnswer}>
+              답변하기
+            </BasicButton>
+          </AnswerButtonContainer>
         </RadioGroup>
       </StyledFormControl>
 

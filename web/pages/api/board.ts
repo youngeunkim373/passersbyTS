@@ -9,6 +9,7 @@ import {
 } from "../../types/globalTypes";
 import getCommentPageCount from "./utils/getCommentPageCount";
 import getListPageCount from "./utils/getListPageCount";
+import { StepIconClassKey } from "@mui/material";
 
 export default async function members(
   req: NextApiRequest,
@@ -323,6 +324,144 @@ export default async function members(
         }
 
         res.status(200).json({ boardListResult });
+      } catch (e) {
+        console.error("Request error", e);
+        res.status(500).json({ error: "Error while seleting data" });
+      }
+      break;
+    case "makeBoardAnswer":
+      try {
+        const listId: any = req.body.listId;
+        const answerSequence: any = req.body.answerSequence;
+        const respondentEmail: any = req.body.respondentEmail;
+
+        const findRespondentInfo: {
+          age: number;
+          sex: string;
+          region: string;
+        }[] = await prisma.$queryRaw`
+        SELECT age, sex, region     FROM Members
+         WHERE 1 = 1
+           AND email = ${respondentEmail}  
+        `;
+        const { age, sex, region } = findRespondentInfo[0];
+
+        const logResult = await prisma.$executeRaw`
+        INSERT INTO BoardAnswerLog
+               (
+                listId, answerSequence, respondentEmail, respondentAge, respondentSex, respondentRegion, registerId, registerDate
+               )
+        VALUES
+               (
+                 ${listId}
+                ,${answerSequence}
+                ,${respondentEmail}
+                ,${age}
+                ,${sex}
+                ,${region}
+                ,${respondentEmail}
+                ,NOW()
+               )
+        `;
+
+        const statsResult = await prisma.$executeRaw`
+        INSERT INTO BoardAnswerStats
+               (
+                 listId
+                ,answerSequence                    
+                ,respondentAge_0             
+                ,respondentAge_10            
+                ,respondentAge_20            
+                ,respondentAge_30            
+                ,respondentAge_40            
+                ,respondentAge_50            
+                ,respondentAge_60            
+                ,respondentAge_70            
+                ,respondentAge_80            
+                ,respondentAge_90            
+                ,respondentAge_100    
+                ,respondentSex_f             
+                ,respondentSex_m                             
+                ,respondentRegion_seoul      
+                ,respondentRegion_gyeonggi   
+                ,respondentRegion_gwangju    
+                ,respondentRegion_daegu      
+                ,respondentRegion_daejeon    
+                ,respondentRegion_busan      
+                ,respondentRegion_incheon    
+                ,respondentRegion_ulsan      
+                ,respondentRegion_sejong     
+                ,respondentRegion_jeju       
+                ,respondentRegion_gangwon    
+                ,respondentRegion_gyeongsang 
+                ,respondentRegion_jeolla     
+                ,respondentRegion_chungcheong
+                ,registerDate                
+               )
+        VALUES
+               (
+                 ${listId}
+                ,${answerSequence}
+                ,IF(${age} < 10, 1, 0)
+                ,IF(${age} BETWEEN 10 AND 19, 1, 0)
+                ,IF(${age} BETWEEN 20 AND 29, 1, 0)
+                ,IF(${age} BETWEEN 30 AND 39, 1, 0)
+                ,IF(${age} BETWEEN 40 AND 49, 1, 0)
+                ,IF(${age} BETWEEN 50 AND 59, 1, 0)
+                ,IF(${age} BETWEEN 60 AND 69, 1, 0)
+                ,IF(${age} BETWEEN 70 AND 79, 1, 0)
+                ,IF(${age} BETWEEN 80 AND 89, 1, 0)
+                ,IF(${age} BETWEEN 90 AND 99, 1, 0)
+                ,IF(${age} > 99, 1, 0)
+                ,IF(${sex} = 'F', 1, 0)
+                ,IF(${sex} = 'M', 1, 0)                    
+                ,IF(${region} = 'Seoul', 1, 0)
+                ,IF(${region} = 'Gyeonggi', 1, 0)
+                ,IF(${region} = 'Gwangju', 1, 0)
+                ,IF(${region} = 'Daegu', 1, 0)
+                ,IF(${region} = 'Daejeon', 1, 0)
+                ,IF(${region} = 'Busan', 1, 0)
+                ,IF(${region} = 'Incheon', 1, 0)
+                ,IF(${region} = 'Ulsan', 1, 0)
+                ,IF(${region} = 'Sejong', 1, 0)
+                ,IF(${region} = 'Jeju', 1, 0)
+                ,IF(${region} = 'Gangwon', 1, 0)
+                ,IF(${region} = 'Gyeongsang', 1, 0)
+                ,IF(${region} = 'Jeolla', 1, 0)
+                ,IF(${region} = 'Chungcheong', 1, 0)
+                ,NOW()
+               )
+        ON DUPLICATE KEY UPDATE 
+           respondentAge_0   = respondentAge_0   + IF(${age} < 10, 1, 0)
+          ,respondentAge_10  = respondentAge_10  + IF(${age} BETWEEN 10 AND 19, 1, 0)
+          ,respondentAge_20  = respondentAge_20  + IF(${age} BETWEEN 20 AND 29, 1, 0)
+          ,respondentAge_30  = respondentAge_30  + IF(${age} BETWEEN 30 AND 39, 1, 0)
+          ,respondentAge_40  = respondentAge_40  + IF(${age} BETWEEN 40 AND 49, 1, 0)
+          ,respondentAge_50  = respondentAge_50  + IF(${age} BETWEEN 50 AND 59, 1, 0)
+          ,respondentAge_60  = respondentAge_60  + IF(${age} BETWEEN 60 AND 69, 1, 0)
+          ,respondentAge_70  = respondentAge_70  + IF(${age} BETWEEN 70 AND 79, 1, 0)
+          ,respondentAge_80  = respondentAge_80  + IF(${age} BETWEEN 80 AND 89, 1, 0)
+          ,respondentAge_90  = respondentAge_90  + IF(${age} BETWEEN 90 AND 99, 1, 0)
+          ,respondentAge_100 = respondentAge_100 + IF(${age} > 99, 1, 0)
+          ,respondentSex_f = respondentSex_f + IF(${sex} = 'F', 1, 0)
+          ,respondentSex_m = respondentSex_m + IF(${sex} = 'M', 1, 0)
+          ,respondentRegion_seoul       = respondentRegion_seoul       + IF(${region} = 'Seoul', 1, 0)
+          ,respondentRegion_gyeonggi    = respondentRegion_gyeonggi    + IF(${region} = 'Gyeonggi', 1, 0)
+          ,respondentRegion_gwangju     = respondentRegion_gwangju     + IF(${region} = 'Gwangju', 1, 0)
+          ,respondentRegion_daegu       = respondentRegion_daegu       + IF(${region} = 'Daegu', 1, 0)
+          ,respondentRegion_daejeon     = respondentRegion_daejeon     + IF(${region} = 'Daejeon', 1, 0)
+          ,respondentRegion_busan       = respondentRegion_busan       + IF(${region} = 'Busan', 1, 0)
+          ,respondentRegion_incheon     = respondentRegion_incheon     + IF(${region} = 'Incheon', 1, 0)
+          ,respondentRegion_ulsan       = respondentRegion_ulsan       + IF(${region} = 'Ulsan', 1, 0)
+          ,respondentRegion_sejong      = respondentRegion_sejong      + IF(${region} = 'Sejong', 1, 0)
+          ,respondentRegion_jeju        = respondentRegion_jeju        + IF(${region} = 'Jeju', 1, 0)
+          ,respondentRegion_gangwon     = respondentRegion_gangwon     + IF(${region} = 'Gangwon', 1, 0)
+          ,respondentRegion_gyeongsang  = respondentRegion_gyeongsang  + IF(${region} = 'Gyeongsang', 1, 0)
+          ,respondentRegion_jeolla      = respondentRegion_jeolla      + IF(${region} = 'Jeolla', 1, 0)
+          ,respondentRegion_chungcheong = respondentRegion_chungcheong + IF(${region} = 'Chungcheong', 1, 0);                                 
+        `;
+
+        res.status(200).json({ logResult, statsResult });
       } catch (e) {
         console.error("Request error", e);
         res.status(500).json({ error: "Error while seleting data" });

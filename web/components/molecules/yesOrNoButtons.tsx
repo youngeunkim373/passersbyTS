@@ -1,17 +1,26 @@
-import styled from "styled-components";
 import Image from "next/image";
-
+import styled from "styled-components";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
 
 interface YesOrNoButtonsProps {
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  onClick?: React.MouseEventHandler<HTMLElement>;
+  selectedAnswer?: string;
 }
 
-const YesOrNoButtons = ({ onClick }: YesOrNoButtonsProps) => {
+const YesOrNoButtons = ({ onClick, selectedAnswer }: YesOrNoButtonsProps) => {
   return (
     <YesOrNosContainer>
-      <StyledButton color="#5f00ff" id="yes" name="choice" type="button">
-        <SportsScoreIcon sx={{ color: "#5f00ff", transform: "scaleX(-1)" }} />
+      <StyledButton
+        color="#5f00ff"
+        id="0"
+        name="yesOrNo"
+        onClick={onClick}
+        type="button"
+      >
+        <LeftSportsScoreIcon
+          selectedAnswer={selectedAnswer}
+          sx={{ color: "#5f00ff", transform: "scaleX(-1)" }}
+        />
         &nbsp;찬성
       </StyledButton>
       <FlagImageContainer>
@@ -22,9 +31,16 @@ const YesOrNoButtons = ({ onClick }: YesOrNoButtonsProps) => {
           height="55px"
         />
       </FlagImageContainer>
-      <StyledButton color="#ff0046" id="no" name="choice" type="button">
+      <StyledButton
+        color="#ff0046"
+        id="1"
+        name="yesOrNo"
+        onClick={onClick}
+        type="button"
+      >
         반대&nbsp;
-        <SportsScoreIcon
+        <RightSportsScoreIcon
+          selectedAnswer={selectedAnswer}
           sx={{
             color: "#ff0046",
           }}
@@ -52,10 +68,12 @@ const StyledButton = styled.button`
   font-family: ibmRegular;
   font-size: 20px;
   font-weight: bold;
+  justify-content: center;
   padding: 8px 20px;
   svg {
     color: white;
   }
+  width: 120px;
 
   &:hover {
     background: white;
@@ -65,6 +83,16 @@ const StyledButton = styled.button`
       color: ${({ color }) => color};
     }
   }
+`;
+
+const LeftSportsScoreIcon = styled(SportsScoreIcon)<YesOrNoButtonsProps>`
+  display: ${({ selectedAnswer }) =>
+    selectedAnswer === "0" ? "inline" : "none"};
+`;
+
+const RightSportsScoreIcon = styled(SportsScoreIcon)<YesOrNoButtonsProps>`
+  display: ${({ selectedAnswer }) =>
+    selectedAnswer === "1" ? "inline" : "none"};
 `;
 
 const YesOrNosContainer = styled.div`

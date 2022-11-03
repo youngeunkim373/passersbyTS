@@ -13,56 +13,111 @@ datasource db {
 }
 
 model Members {
-    email                     String          @id
-    password                  String          
-    nickname                  String          @unique
-    sex                       String          // F:여자 / M:남자
-    age                       Int
-    region                    String          //         
-    userRole                  String          // seller / user / admin
-    userImage                 String?         
-    registerId                String            
-    registerDate              DateTime        @updatedAt   
-       
-    boardLists                BoardList[]    
-    boardComments             BoardComment[]  
+    email                            String          @id
+    password                         String          
+    nickname                         String          @unique
+    sex                              String          // F:여자 / M:남자
+    age                              Int
+    region                           String          //         
+    userRole                         String          // seller / user / admin
+    userImage                        String?         
+    registerId                       String            
+    registerDate                     DateTime        @updatedAt   
+              
+    boardLists                       BoardList[]    
+    boardComments                    BoardComment[]  
+    boardAnswers                     BoardAnswerLog[]  
 }
 
 model BoardList {
-    listId                    String          @id
-    listTitle                 String          
-    writerEmail               String          
-    listContent               String          @db.LongText
-    viewCount                 Decimal         @db.Decimal(15, 0)
-    answerCount               Decimal         @db.Decimal(15, 0)
-    registerId                String            
-    registerDate              DateTime        @updatedAt        
- 
-    writer                    Members?        @relation(fields: [writerEmail], references: [email])
+    listId                           String          @id
+    listTitle                        String          
+    writerEmail                      String          
+    listContent                      String          @db.LongText
+    viewCount                        Decimal         @db.Decimal(15, 0)
+    answerCount                      Decimal         @db.Decimal(15, 0)
+    registerId                       String            
+    registerDate                     DateTime        @updatedAt        
+        
+    writer                           Members?        @relation(fields: [writerEmail], references: [email])
 }
 
 model BoardComment {
-    listId                    String  
-    commentSequence           Decimal         @db.Decimal(15, 0)
-    nestedCommentSequence     Decimal         @db.Decimal(15, 0)   // 원댓글:0, 대댓글: 1이상
-    writerEmail               String     
-    commentContent            String
-    registerId                String            
-    registerDate              DateTime        @updatedAt  
-            
-    writer                    Members?        @relation(fields: [writerEmail], references: [email])
+    listId                           String  
+    commentSequence                  Decimal         @db.Decimal(15, 0)
+    nestedCommentSequence            Decimal         @db.Decimal(15, 0)   // 원댓글:0, 대댓글: 1이상
+    writerEmail                      String     
+    commentContent                   String
+    registerId                       String            
+    registerDate                     DateTime        @updatedAt  
+                   
+    writer                           Members?        @relation(fields: [writerEmail], references: [email])
 
     @@id([listId, commentSequence, nestedCommentSequence])
 }
 
 model BoardAnswer {
-    listId                    String
-    answerCategory            String            
-    answerSequence            Decimal         @db.Decimal(15, 0)
-    answerContent             String          @db.LongText
-    answerSelectionCount      Decimal         @db.Decimal(15, 0)
-    registerId                String            
-    registerDate              DateTime        @updatedAt    
+    listId                           String
+    answerCategory                   String            
+    answerSequence                   Decimal         @db.Decimal(15, 0)
+    answerContent                    String          @db.LongText
+    answerSelectionCount             Decimal         @db.Decimal(15, 0)
+    registerId                       String            
+    registerDate                     DateTime        @updatedAt  
+
+    boardAnswersStats                BoardAnswerStats[]  
+
+    @@id([listId, answerSequence])
+}
+
+model BoardAnswerLog {
+    listId                           String
+    answerSequence                   Decimal         @db.Decimal(15, 0)    
+    respondentEmail                  String               
+    respondentAge                    String
+    respondentSex                    String
+    respondentRegion                 String
+    registerId                       String            
+    registerDate                     DateTime        @updatedAt    
+       
+    respondent                       Members?        @relation(fields: [respondentEmail], references: [email])  
+
+    @@id([listId, respondentEmail])
+}
+
+model BoardAnswerStats {
+    listId                           String             
+    answerSequence                   Decimal         @db.Decimal(15, 0)
+    respondentSex_f                  Decimal         @db.Decimal(15, 0)    
+    respondentSex_m                  Decimal         @db.Decimal(15, 0)     
+    respondentAge_0                  Decimal         @db.Decimal(15, 0)     
+    respondentAge_10                 Decimal         @db.Decimal(15, 0)     
+    respondentAge_20                 Decimal         @db.Decimal(15, 0)     
+    respondentAge_30                 Decimal         @db.Decimal(15, 0)     
+    respondentAge_40                 Decimal         @db.Decimal(15, 0)     
+    respondentAge_50                 Decimal         @db.Decimal(15, 0)     
+    respondentAge_60                 Decimal         @db.Decimal(15, 0)     
+    respondentAge_70                 Decimal         @db.Decimal(15, 0)     
+    respondentAge_80                 Decimal         @db.Decimal(15, 0)     
+    respondentAge_90                 Decimal         @db.Decimal(15, 0)     
+    respondentAge_100                Decimal         @db.Decimal(15, 0)     
+    respondentRegion_seoul           Decimal         @db.Decimal(15, 0)  
+    respondentRegion_gyeonggi        Decimal         @db.Decimal(15, 0)  
+    respondentRegion_gwangju         Decimal         @db.Decimal(15, 0)  
+    respondentRegion_daegu           Decimal         @db.Decimal(15, 0)  
+    respondentRegion_daejeon         Decimal         @db.Decimal(15, 0)  
+    respondentRegion_busan           Decimal         @db.Decimal(15, 0)  
+    respondentRegion_incheon         Decimal         @db.Decimal(15, 0)  
+    respondentRegion_ulsan           Decimal         @db.Decimal(15, 0)  
+    respondentRegion_sejong          Decimal         @db.Decimal(15, 0)  
+    respondentRegion_jeju            Decimal         @db.Decimal(15, 0)  
+    respondentRegion_gangwon         Decimal         @db.Decimal(15, 0)  
+    respondentRegion_gyeongsang      Decimal         @db.Decimal(15, 0)  
+    respondentRegion_jeolla          Decimal         @db.Decimal(15, 0)  
+    respondentRegion_chungcheong     Decimal         @db.Decimal(15, 0)  
+    registerDate                     DateTime        @updatedAt 
+
+    answerList                       BoardAnswer?    @relation(fields: [listId, answerSequence], references: [listId, answerSequence])  
 
     @@id([listId, answerSequence])
 }
