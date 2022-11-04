@@ -3,21 +3,28 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 
-import type { ButtonProps, AnchorProps } from "../../types/globalTypes";
-
 import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
+import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 
+import type { AnchorProps, ButtonProps } from "../../types/globalTypes";
+
 type Anchor = "top" | "left" | "bottom" | "right";
+
+interface drawerListKeys {
+  koreanMenu: string;
+  englishMenu: string;
+  icon: any;
+  onClick?: React.MouseEventHandler<HTMLElement>;
+}
 
 interface IconMenuProps {
   direction: Anchor;
-  drawerList: any[];
+  drawerList: drawerListKeys[];
   icon: any;
 }
 
@@ -56,15 +63,7 @@ export default function IconMenu({
       setState({ ...state, [anchor]: open });
     };
 
-  const list = (
-    anchor: Anchor,
-    drawerList: {
-      koreanMenu: string;
-      englishMenu: string;
-      icon?: any;
-      onClick?: React.MouseEventHandler<HTMLElement>;
-    }[]
-  ) => (
+  const list = (anchor: Anchor, drawerList: drawerListKeys[]) => (
     <Box
       sx={{
         width: anchor === "top" || anchor === "bottom" ? "auto" : 250,
@@ -117,19 +116,19 @@ export default function IconMenu({
           </Button>
           <ThemeDrawer
             anchor={anchor}
+            BackdropProps={{
+              sx: {
+                backgroundColor: "transparent",
+              },
+            }}
             open={state[anchor]}
-            onClose={toggleDrawer(anchor, false)}
             PaperProps={{
               sx: {
                 top: "70px",
                 boxShadow: "none",
               },
             }}
-            BackdropProps={{
-              sx: {
-                backgroundColor: "transparent",
-              },
-            }}
+            onClose={toggleDrawer(anchor, false)}
           >
             {list(anchor, drawerList)}
           </ThemeDrawer>
@@ -140,7 +139,7 @@ export default function IconMenu({
 }
 
 const EventTextMenu = styled.button<ButtonProps>`
-  color: ${(props) => props.theme.textMenu.color};
+  color: ${({ theme }) => theme.global.component.color};
   font-family: ibmRegular;
   font-size: 20px;
   font-weight: bold;
@@ -148,7 +147,7 @@ const EventTextMenu = styled.button<ButtonProps>`
 
 const LinkTextMenu = styled.a<LinkProps>`
   color: ${({ englishMenu, path, theme }) =>
-    `/${englishMenu}` === path ? "#9000ff" : theme.textMenu.color};
+    `/${englishMenu}` === path ? "#9000ff" : theme.global.component.color};
   font-family: ibmRegular;
   font-size: 20px;
   font-weight: bold;
@@ -157,7 +156,7 @@ const LinkTextMenu = styled.a<LinkProps>`
 const ThemeDrawer = styled(Drawer)`
   .css-1qvuuif-MuiPaper-root-MuiDrawer-paper,
   .css-14ukx6z-MuiPaper-root-MuiDrawer-paper {
-    background: ${(props) => props.theme.menu.bgColor};
+    background: ${({ theme }) => theme.menu.bgColor};
   }
 `;
 
@@ -168,5 +167,5 @@ const ThemeListItem = styled(ListItem)`
 `;
 
 const ThemeListItemIcon = styled(ListItemIcon)`
-  color: ${(props) => props.theme.menuIcon.color};
+  color: ${({ theme }) => theme.menuIcon.color};
 `;

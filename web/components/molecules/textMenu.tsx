@@ -41,25 +41,25 @@ const TextMenu = ({ koreanMenu, englishMenu, onClick }: TextMenuProps) => {
 export default TextMenu;
 
 const EventTextMenu = styled.button<ButtonProps>`
+  color: ${({ theme }) => theme.global.component.color};
   font-family: ibmRegular;
   font-size: 20px;
   font-weight: bold;
-  color: #101820;
 `;
 
 const LinkTextMenu = styled.a<LinkProps>`
+  color: ${({ englishMenu, path, theme }) =>
+    `/${englishMenu}` === path ? "#9000ff" : theme.global.component.color};
   font-family: ibmRegular;
   font-size: 20px;
   font-weight: bold;
-  color: ${({ englishMenu, path, theme }) =>
-    `/${englishMenu}` === path ? "#9000ff" : theme.textMenu.color};
   margin-left: 30px;
 `;
 
 const TextDecoration = styled.span`
+  color: ${({ theme }) => theme.global.component.color};
   font-family: ibmRegular;
   font-size: 20px;
   font-weight: bold;
-  color: ${(props) => props.theme.textMenu.color};
   padding-left: 30px;
 `;

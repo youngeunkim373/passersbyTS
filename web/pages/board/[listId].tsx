@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import axios from "axios";
@@ -9,30 +10,33 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Paper from "@mui/material/Paper";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TableRow from "@mui/material/TableRow";
 
 import Alert from "../../components/molecules/alert";
 import BasicButton from "../../components/atoms/basicButton";
 import CommentForm from "../../components/organisms/commentForm";
-import Editor from "../../components/organisms/editor";
-import NewIcon from "../../components/atoms/newIcon";
-import ProfileImage from "../../components/molecules/profileImage";
+import FullStatsSection from "../../components/organisms/FullStatsSection";
+import ListDetail from "../../components/organisms/listDetatil";
 import Title from "../../components/atoms/title";
 import YesOrNoButtons from "../../components/molecules/yesOrNoButtons";
-import { calcDate } from "../../lib/utils/calcDate";
-import { BoardAnswerKeys } from "../../types/globalTypes";
-import FullStatsSection from "../../components/organisms/FullStatsSection";
+import {
+  BoardAnswerKeys,
+  BoardListKeys,
+  GetBoardCommentProps,
+} from "../../types/globalTypes";
 
-const BoardDetail: React.FC = (props: any) => {
+interface BoardDetailProps {
+  boardAnswers: BoardAnswerKeys[];
+  boardComments: GetBoardCommentProps;
+  boardDetail: BoardListKeys;
+}
+
+const BoardDetail = (props: BoardDetailProps) => {
   const [alert, setAlert] = useState({ open: false, text: "" });
   const [boardDetail, setBoardDetail] = useState(props.boardDetail);
   const [boardAnswers, setBoardAnswers] = useState(props.boardAnswers);
-  const [selectedAnswer, setSelectedAnswer] = useState("");
   const [chartReload, setChartReload] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState("");
 
   const { data: session, status } = useSession();
   const loggedInUser = session?.user;
@@ -128,49 +132,22 @@ const BoardDetail: React.FC = (props: any) => {
           </AnswerButtonContainer>
         </RadioGroup>
       </StyledFormControl>
-      <TableContainer component={Paper}>
-        <Table aria-label="simple table">
-          <TableBody>
-            <TableRow>
-              <TitleTableCell align="left">
-                {calcDate(boardDetail.registerDate).dateDiff < 1440 && (
-                  <NewIcon />
-                )}
-                <TitleSpan>{boardDetail.listTitle}</TitleSpan>
-              </TitleTableCell>
-              <TableCell align="left">
-                <ProfileImageContainer>
-                  <ProfileImage image={boardDetail.writer?.userImage} />
-                </ProfileImageContainer>
-                <PostInfoContainer>
-                  {boardDetail.writer?.nickname}
-                  <TimeDiffParagraph>
-                    {calcDate(boardDetail.registerDate).expression}
-                  </TimeDiffParagraph>
-                </PostInfoContainer>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align="left" colSpan={2} sx={{ border: "0" }}>
-                <Editor value={boardDetail.listContent} readOnly={true} />
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+      <ThemeTableContainer component={Paper}>
+        <ListDetail listDetail={boardDetail} />
         <FullStatsSection
           chartReload={chartReload}
           listId={listId}
           loggedInUser={loggedInUser}
         />
         <CommentForm comment={props.boardComments} pageCategory="Board" />
-      </TableContainer>
+      </ThemeTableContainer>
     </div>
   );
 };
 
 export default BoardDetail;
 
-export const getServerSideProps = async (context: any) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const listId = context.query.listId;
 
   const boardDetailResult = await axios.get(
@@ -218,22 +195,8 @@ const AnswerButtonContainer = styled.div`
   padding-top: 20px;
 `;
 
-const PostInfoContainer = styled.div`
-  color: ${(props) => props.theme.table.color};
-  float: right;
-  font-family: ibmLight;
-  font-size: 17px;
-  font-weight: bold;
-  padding-right: 15px;
-  padding-top: 2px;
-`;
-
-const ProfileImageContainer = styled.div`
-  float: right;
-`;
-
 const StyledFormControl = styled(FormControl)`
-  background: rgba(255, 255, 255, 0.6);
+  background: ${({ theme }) => theme.global.component.bgColor};
   border-radius: 15px;
   margin-bottom: 50px;
   margin-top: 20px;
@@ -256,21 +219,6 @@ const StyledFormControlLabel = styled(FormControlLabel)`
   }
 `;
 
-const TimeDiffParagraph = styled.div`
-  font-size: 12px;
-  font-weight: normal;
-  padding-top: 10px;
-`;
-
-const TitleSpan = styled.span`
-  float: left;
-`;
-
-const TitleTableCell = styled(TableCell)`
-  color: ${(props) => props.theme.table.color};
-  padding-left: 30px;
-  padding-right: 30px;
-  font-family: ibmLight;
-  font-size: 17px;
-  font-weight: bold;
+const ThemeTableContainer = styled(TableContainer)<{ component: any }>`
+  background: ${({ theme }) => theme.global.component.bgColor};
 `;

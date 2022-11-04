@@ -6,8 +6,8 @@ export const GlobalStyle = createGlobalStyle`
 /*-------------------------------------------*/
     html,
     body {
-      background: ${(props) => props.theme.bgColor};
-      color: ${(props) => props.theme.color};
+      background: ${({ theme }) => theme.global.layout.bgColor};
+      color: ${({ theme }) => theme.global.layout.color};
       font-family: "ibmLight";
       font-size: 17px;
       font-weight: bold;
@@ -97,16 +97,25 @@ export const GlobalStyle = createGlobalStyle`
     width: 50vw;
   }
 
-//-------------------------------------------//
-//                  EDITOR                   //
-//-------------------------------------------// 
+/*-------------------------------------------*/
+/*                  EDITOR                   */
+/*-------------------------------------------*/ 
 .quill-container {
-  background: white;
+  background: ${({ theme }) => theme.global.component.bgColor};
+  color: ${({ theme }) => theme.global.component.color};
   height: 100%;
+}
+
+.quill-container .ql-toolbar {
+  border: ${({ theme }) => theme.global.component.border};
 }
 
 .quill-container.isShow .ql-toolbar {
   display: none;
+}
+
+.quill-container .ql-container {
+  border: ${({ theme }) => theme.global.component.border};
 }
 
 .quill-container.isShow .ql-container {
@@ -126,7 +135,7 @@ export const GlobalStyle = createGlobalStyle`
   height: 350px;
   overflow: auto;
   font-family: "ibmLight";
-  font-size: 15px;
+  font-size: 19px;
   font-weight: normal;
 }
 `;

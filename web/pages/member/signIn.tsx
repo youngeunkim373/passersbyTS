@@ -118,7 +118,7 @@ const PasswordLabelContainer = styled(LabelContainer)`
 `;
 
 const FindUserContainer = styled.div`
-  color: ${(props) => props.theme.color};
+  color: ${({ theme }) => theme.global.component.color};
   cursor: pointer;
   float: right;
   padding-bottom: 50px;

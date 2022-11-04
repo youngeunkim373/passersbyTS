@@ -9,8 +9,6 @@ const BasicInput = (
     id,
     lineHeight,
     name,
-    onChange,
-    onKeyPress,
     placeholder,
     readOnly = false,
     required = false,
@@ -18,12 +16,14 @@ const BasicInput = (
     type,
     value,
     width,
+    onChange,
+    onKeyPress,
   }: InputProps,
-  ref: any
+  ref: React.Ref<HTMLInputElement>
 ) => {
-  const handleKeyPress = (e: any) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!submitOnEnter && e.key === "Enter") e.preventDefault();
-    if (typeof onKeyPress === "function") onKeyPress(e.key);
+    if (typeof onKeyPress === "function") onKeyPress(e);
   };
 
   return (
@@ -33,8 +33,6 @@ const BasicInput = (
       id={id}
       lineHeight={lineHeight}
       name={name}
-      onChange={onChange}
-      onKeyPress={handleKeyPress}
       placeholder={placeholder}
       readOnly={readOnly}
       ref={ref}
@@ -42,17 +40,19 @@ const BasicInput = (
       type={type}
       value={value}
       width={width}
+      onChange={onChange}
+      onKeyPress={handleKeyPress}
     />
   );
 };
 export default forwardRef(BasicInput);
 
 const StyledInput = styled.input<InputProps>`
-  background: ${(props) => props.theme.basicInput.bgColor};
-  border: ${(props) => props.theme.basicInput.border};
+  background: ${({ theme }) => theme.global.component.bgColor};
+  border: ${({ theme }) => theme.global.component.border};
   border-radius: 5px;
   box-sizing: border-box;
-  color: ${(props) => props.theme.basicInput.color};
+  color: ${({ theme }) => theme.global.component.color};
   font-family: "ibmLight";
   font-size: 15px;
   line-height: ${({ lineHeight }) => (lineHeight ? lineHeight : "50px")};

@@ -1,11 +1,12 @@
 import { Dispatch, SetStateAction } from "react";
+import styled from "styled-components";
 
 import Dialog from "@mui/material/Dialog";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
-import type { BoxProps } from "../../types/globalTypes";
 import SmallBox from "../atoms/smallBox";
 import { ModalContainer } from "../atoms/styled/simpleStyled";
+import type { BoxProps } from "../../types/globalTypes";
 
 interface AlertProps extends BoxProps {
   open: boolean;
@@ -20,15 +21,15 @@ const Alert = ({ children, open = false, setOpen }: AlertProps) => {
   return (
     <ModalContainer>
       <Dialog
+        open={open}
         PaperProps={{
           sx: { borderRadius: "7px", background: "transparent" },
         }}
-        open={open}
         onClose={handleClose}
       >
         <SmallBox>
           <ErrorOutlineIcon />
-          <b className="PL30">{children}</b>
+          <StyledBold>{children}</StyledBold>
         </SmallBox>
       </Dialog>
     </ModalContainer>
@@ -36,3 +37,7 @@ const Alert = ({ children, open = false, setOpen }: AlertProps) => {
 };
 
 export default Alert;
+
+const StyledBold = styled.b`
+  padding-left: 30px;
+`;

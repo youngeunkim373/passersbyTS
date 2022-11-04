@@ -2,53 +2,54 @@ import "styled-components";
 
 declare module "styled-components" {
   export interface DefaultTheme {
-    basicButton: {
-      bgColor: string;
-    };
-    basicInput: {
-      bgColor: string;
-      border: string;
-      color: string;
-    };
-    basicLabel: {
-      color: string;
-    };
     basicSelect: {
-      bgColor: string;
-      color: string;
+      hoverBgColor: string;
     };
-    basicText: {
-      color: string;
-    };
-    bgColor: string;
+
     box: {
-      bgColor: string;
-      color: string;
+      smallBox: {
+        bgColor: string;
+        color: string;
+        shadow: string;
+      };
+      findUser: {
+        divider: string;
+      };
+      simpleBox: {
+        bgColor: string;
+      };
     };
-    color: string;
-    findUser: {
-      bgColor: string;
-    };
+
     menu: {
       bgColor: string;
-      color: string;
     };
+
     menuIcon: {
       color: string;
     };
-    textMenu: {
-      color: string;
-    };
+
     table: {
-      bgColor: string;
-      color: string;
-      hover: string;
       border: string;
     };
+
     pagination: {
       page: string;
       arrow: string;
       circle: string;
+    };
+
+    global: {
+      component: {
+        bgColor: string;
+        color: string;
+        border: string;
+        pointBgColor: string;
+        pointColor: string;
+      };
+      layout: {
+        bgColor: string;
+        color: string;
+      };
     };
   }
 }

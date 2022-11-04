@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import axios from "axios";
 
@@ -106,10 +107,10 @@ const ChangePassword = (props: { email: string }) => {
 
 export default ChangePassword;
 
-export const getServerSideProps = async (context: any) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const { params } = context;
 
-  const email = String(params.changePassword);
+  const email = String(params!.changePassword);
 
   return {
     props: {

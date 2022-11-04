@@ -7,7 +7,6 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
-import { Divider } from "@mui/material";
 
 import NewIcon from "../atoms/newIcon";
 import ProfileImage from "../molecules/profileImage";
@@ -15,11 +14,11 @@ import { BoardListKeys } from "../../types/globalTypes";
 import { calcDate } from "../../lib/utils/calcDate";
 
 interface ListProps {
-  pageCategory: string;
   list: BoardListKeys[];
+  pageCategory: string;
 }
 
-const List = ({ pageCategory, list }: ListProps) => {
+const List = ({ list, pageCategory }: ListProps) => {
   const router = useRouter();
 
   const onClickTableRow = (listId: string) => {
@@ -29,7 +28,7 @@ const List = ({ pageCategory, list }: ListProps) => {
   return (
     <TableContainer component={Paper} sx={{ marginTop: "50px" }}>
       <StyledTable aria-label="simple table">
-        {list.map((row: any) => (
+        {list.map((row: BoardListKeys) => (
           <StyledTableBody
             key={row.listId}
             onClick={(e) => {
@@ -73,41 +72,9 @@ const List = ({ pageCategory, list }: ListProps) => {
 
 export default List;
 
-const StyledTable = styled(Table)`
-  background: ${(props) => props.theme.table.bgColor};
-`;
-
-const StyledTableBody = styled(TableBody)`
-  border: ${(props) => "1px solid " + props.theme.table.bgColor};
-  cursor: pointer;
-
-  &:hover {
-    background: ${(props) => props.theme.table.hover};
-  }
-`;
-
-const TitleTableRow = styled(TableRow)`
-  height: 20px;
-`;
-
-const ContentTableRow = styled(TitleTableRow)`
-  height: 50px;
-  border-bottom: ${(props) => "1px solid " + props.theme.table.border};
-`;
-
-const TitleTableCell = styled(TableCell)`
-  border: 0;
-  color: ${(props) => props.theme.table.color};
-  padding-left: 30px;
-  padding-right: 30px;
-  font-family: ibmLight;
-  font-size: 17px;
-  font-weight: bold;
-`;
-
 const ContentTableCell = styled(TableCell)`
   border: 0;
-  color: ${(props) => props.theme.table.color};
+  color: ${({ theme }) => theme.global.component.color};
   font-family: ibmLight;
   font-size: 17px;
   font-weight: normal;
@@ -116,16 +83,8 @@ const ContentTableCell = styled(TableCell)`
   padding-top: 0px;
 `;
 
-const TitleSpan = styled.span`
-  float: left;
-`;
-
-const ProfileImageContainer = styled.div`
-  float: right;
-`;
-
 const PostInfoContainer = styled.div`
-  color: ${(props) => props.theme.table.color};
+  color: ${({ theme }) => theme.global.component.color};
   float: right;
   font-family: ibmLight;
   font-size: 17px;
@@ -134,8 +93,48 @@ const PostInfoContainer = styled.div`
   padding-top: 2px;
 `;
 
+const ProfileImageContainer = styled.div`
+  float: right;
+`;
+
+const StyledTable = styled(Table)`
+  background: ${({ theme }) => theme.global.component.bgColor};
+`;
+
+const StyledTableBody = styled(TableBody)`
+  border: ${({ theme }) => "1px solid " + theme.global.component.bgColor};
+  cursor: pointer;
+
+  &:hover {
+    background: ${({ theme }) => theme.global.component.pointBgColor};
+  }
+`;
+
 const TimeDiffParagraph = styled.div`
   font-size: 12px;
   font-weight: normal;
   padding-top: 10px;
+`;
+
+const TitleSpan = styled.span`
+  float: left;
+`;
+
+const TitleTableCell = styled(TableCell)`
+  border: 0;
+  color: ${({ theme }) => theme.global.component.color};
+  font-family: ibmLight;
+  font-size: 17px;
+  font-weight: bold;
+  padding-left: 30px;
+  padding-right: 30px;
+`;
+
+const TitleTableRow = styled(TableRow)`
+  height: 20px;
+`;
+
+const ContentTableRow = styled(TitleTableRow)`
+  border-bottom: ${({ theme }) => theme.table.border};
+  height: 50px;
 `;

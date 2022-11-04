@@ -13,7 +13,7 @@ export default async function members(
   switch (path) {
     case "sendEmail":
       try {
-        const email: any = req.query.email;
+        const email: string = String(req.query.email);
         const checkMembershipResult: any = await checkMembership(email);
 
         let verifyNumber = null;
@@ -41,8 +41,8 @@ export default async function members(
       break;
     case "checkMembership":
       try {
-        const email: any = req.query.email;
-        const radio: any = req.query.radio;
+        const email: string = String(req.query.email);
+        const radio: string = String(req.query.radio);
 
         const checkMembershipResult: any = await checkMembership(email);
 

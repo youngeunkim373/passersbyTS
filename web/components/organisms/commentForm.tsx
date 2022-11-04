@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import styled from "styled-components";
 import axios from "axios";
+import styled from "styled-components";
 
 import MessageIcon from "@mui/icons-material/Message";
 import { Divider } from "@mui/material";
@@ -11,10 +12,13 @@ import CommentAccordian from "./commentAccordian";
 import CommentInput from "../molecules/commentInput";
 import Pagination from "../molecules/pagination";
 import ProfileImage from "../molecules/profileImage";
-import { useRouter } from "next/router";
+import {
+  BoardCommentKeys,
+  GetBoardCommentProps,
+} from "../../types/globalTypes";
 
 interface CommentFormProps {
-  comment: any;
+  comment: GetBoardCommentProps;
   pageCategory: string;
 }
 
@@ -24,14 +28,15 @@ const CommentForm = ({ comment, pageCategory }: CommentFormProps) => {
   const [pageCount, setPageCount] = useState(
     comment.pageCount > 0 ? comment.pageCount : 1
   );
+  const [totalComment, setTotalComment] = useState(comment.commentCount);
 
   const { data: session, status } = useSession();
   const loggedInUser = session?.user;
 
   const router = useRouter();
-  const listId = router.query.listId;
+  const listId: string = router.query.listId!.toString();
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     await axios
       .get(
         `${process.env.NEXT_PUBLIC_ENV_HOST}/api/${pageCategory.toLowerCase()}`,
@@ -45,9 +50,15 @@ const CommentForm = ({ comment, pageCategory }: CommentFormProps) => {
       )
       .then((res) => {
         setComments(res.data.comments);
+        setPageCount(res.data.pageCount);
+        setTotalComment(res.data.commentCount);
       })
       .catch((error) => console.log(error.response));
-  };
+  }, [currentPage, listId, pageCategory]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments, currentPage]);
 
   return (
     <>
@@ -55,12 +66,12 @@ const CommentForm = ({ comment, pageCategory }: CommentFormProps) => {
         <CountContainer>
           <MessageIcon
             sx={{
-              fontSize: "25px",
               color: "#9000FF",
+              fontSize: "25px",
               paddingTop: "7px",
             }}
           />
-          <CountSpan>댓글: test개</CountSpan>
+          <CountSpan>댓글: {totalComment}개</CountSpan>
         </CountContainer>
         <CommentSubmitContainer>
           <ProfileContainer>
@@ -72,7 +83,7 @@ const CommentForm = ({ comment, pageCategory }: CommentFormProps) => {
             pageCategory={pageCategory}
           />
         </CommentSubmitContainer>
-        {comments.map((comment: any) => (
+        {comments.map((comment: BoardCommentKeys) => (
           <div
             key={`${comment.commentSequence}}_${comment.nestedCommentSequence}`}
           >
@@ -91,14 +102,14 @@ const CommentForm = ({ comment, pageCategory }: CommentFormProps) => {
                 <Comment comment={comment} />
               </NestedCommentsContainer>
             )}
-            <Divider />
+            <StyledDivider />
           </div>
         ))}
       </StyledCommentForm>
       <PaginationContainer>
         <Pagination
-          pageCount={pageCount}
           currentPage={currentPage}
+          pageCount={pageCount}
           setCurrentPage={setCurrentPage}
         />
       </PaginationContainer>
@@ -108,8 +119,16 @@ const CommentForm = ({ comment, pageCategory }: CommentFormProps) => {
 
 export default CommentForm;
 
-const StyledCommentForm = styled.form`
-  padding: 50px 50px 10px 50px;
+const CommentsContainer = styled.div`
+  padding-top: 30px;
+`;
+
+const CommentSubmitContainer = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 20px;
+  padding-top: 30px;
 `;
 
 const CountContainer = styled.div`
@@ -121,27 +140,26 @@ const CountSpan = styled.span`
   padding-left: 10px;
 `;
 
-const CommentSubmitContainer = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  padding-top: 30px;
-  padding-bottom: 20px;
+const NestedCommentsContainer = styled.div`
+  padding: 30px 0px 20px 65px;
+`;
+
+const PaginationContainer = styled.div`
+  background: ${({ theme }) => theme.global.component.bgColor};
+  padding-bottom: 50px;
+  padding-top: 20px;
 `;
 
 const ProfileContainer = styled.div`
   float: left;
 `;
 
-const CommentsContainer = styled.div`
-  padding-top: 30px;
+const StyledCommentForm = styled.form`
+  background: ${({ theme }) => theme.global.component.bgColor};
+  color: ${({ theme }) => theme.global.component.color};
+  padding: 50px 50px 10px 50px;
 `;
 
-const NestedCommentsContainer = styled.div`
-  padding: 30px 0px 20px 65px;
-`;
-
-const PaginationContainer = styled.div`
-  padding-bottom: 50px;
-  padding-top: 20px;
+const StyledDivider = styled(Divider)`
+  background: ${({ theme }) => theme.box.findUser.divider};
 `;

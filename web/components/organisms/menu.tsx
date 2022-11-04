@@ -1,30 +1,34 @@
-import Link from "next/link";
+import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSession, signOut } from "next-auth/react";
 import styled from "styled-components";
 
-import useMediaQuery from "@mui/material/useMediaQuery";
-import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import SettingsIcon from "@mui/icons-material/Settings";
 import AnnouncementIcon from "@mui/icons-material/Announcement";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import LightModeIcon from "@mui/icons-material/LightMode";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
-import LightModeIcon from "@mui/icons-material/LightMode";
+import MenuIcon from "@mui/icons-material/Menu";
 import NightlightRoundIcon from "@mui/icons-material/NightlightRound";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import SettingsIcon from "@mui/icons-material/Settings";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
+import Alert from "../molecules/alert";
 import IconMenu from "../molecules/iconMenu";
 import TextMenu from "../molecules/textMenu";
 
 interface MenuProps {
   isDark: boolean;
-  toggleDarkMode: () => void;
+  toggleDarkMode: () => Promise<void>;
 }
 
 const Menu = ({ isDark, toggleDarkMode }: MenuProps) => {
+  const [alert, setAlert] = useState({ open: false, text: "" });
+
   const { data: session, status } = useSession();
   const router = useRouter();
   const matches = useMediaQuery("(max-width:750px)");
@@ -34,17 +38,28 @@ const Menu = ({ isDark, toggleDarkMode }: MenuProps) => {
     router.replace("/");
   };
 
+  const checkAuth = async () => {
+    setAlert({
+      open: true,
+      text: "로그인 후 이용 가능한 메뉴입니다.",
+    });
+    return;
+  };
+
   return (
     <MenuContainer>
+      <Alert open={alert.open} setOpen={setAlert}>
+        {alert.text}
+      </Alert>
       <LogoContainer>
         <Link href="/">
           <>
             <LogoImageContainer>
               <Image
-                src="/images/symbol.png"
                 alt="Home"
-                width="70px"
                 height="70px"
+                src="/images/symbol.png"
+                width="70px"
               />
             </LogoImageContainer>
             <TitleSpan>길 가는 사람들</TitleSpan>
@@ -55,7 +70,6 @@ const Menu = ({ isDark, toggleDarkMode }: MenuProps) => {
         <HamburgerMenuContainer>
           <IconMenu
             direction="right"
-            icon={MenuIcon}
             drawerList={[
               {
                 koreanMenu: "회원가입",
@@ -84,16 +98,18 @@ const Menu = ({ isDark, toggleDarkMode }: MenuProps) => {
                 englishMenu: "board",
                 icon: <AssignmentIcon />,
               },
-              status === "authenticated" && {
-                koreanMenu: "프로필",
-                englishMenu: "profile",
-                icon: <AccountCircleIcon />,
-              },
-              // {
-              //   koreanMenu: "설정",
-              //   englishMenu: "setting",
-              //   icon: <SettingsIcon />,
-              // },
+              status === "authenticated"
+                ? {
+                    koreanMenu: "프로필",
+                    englishMenu: "profile",
+                    icon: <AccountCircleIcon />,
+                  }
+                : {
+                    koreanMenu: "프로필",
+                    englishMenu: "profile",
+                    icon: <AccountCircleIcon />,
+                    onClick: checkAuth,
+                  },
               {
                 koreanMenu: "밝기",
                 englishMenu: "brightness",
@@ -101,6 +117,7 @@ const Menu = ({ isDark, toggleDarkMode }: MenuProps) => {
                 onClick: toggleDarkMode,
               },
             ]}
+            icon={MenuIcon}
           />
         </HamburgerMenuContainer>
       ) : (
@@ -145,18 +162,19 @@ const Menu = ({ isDark, toggleDarkMode }: MenuProps) => {
             <SettingMenuRightSide>
               <IconMenu
                 direction="top"
-                icon={SettingsIcon}
                 drawerList={[
-                  {
-                    koreanMenu: "프로필",
-                    englishMenu: "profile",
-                    icon: <AccountCircleIcon />,
-                  },
-                  // {
-                  //   koreanMenu: "설정",
-                  //   englishMenu: "setting",
-                  //   icon: <SettingsIcon />,
-                  // },
+                  status === "authenticated"
+                    ? {
+                        koreanMenu: "프로필",
+                        englishMenu: "profile",
+                        icon: <AccountCircleIcon />,
+                      }
+                    : {
+                        koreanMenu: "프로필",
+                        englishMenu: "profile",
+                        icon: <AccountCircleIcon />,
+                        onClick: checkAuth,
+                      },
                   {
                     koreanMenu: "밝기",
                     englishMenu: "brightness",
@@ -164,6 +182,7 @@ const Menu = ({ isDark, toggleDarkMode }: MenuProps) => {
                     onClick: toggleDarkMode,
                   },
                 ]}
+                icon={SettingsIcon}
               />
             </SettingMenuRightSide>
           </SettingMenuContainer>
@@ -175,13 +194,11 @@ const Menu = ({ isDark, toggleDarkMode }: MenuProps) => {
 
 export default Menu;
 
-const MenuContainer = styled.div`
-  align-items: center;
-  background: ${(props) => props.theme.menu.bgColor};
+const HamburgerMenuContainer = styled.div`
   display: flex;
-  height: 70px;
-  min-width: 400px;
-  width: 100vw;
+  justify-content: flex-end;
+  padding-right: 30px;
+  width: 100%;
 `;
 
 const LogoContainer = styled.div`
@@ -198,18 +215,13 @@ const LogoImageContainer = styled.div`
   padding: 10px 10px 0px 10px;
 `;
 
-const HamburgerMenuContainer = styled.div`
+const MenuContainer = styled.div`
+  align-items: center;
+  background: ${({ theme }) => theme.menu.bgColor};
   display: flex;
-  justify-content: flex-end;
-  padding-right: 30px;
-  width: 100%;
-`;
-
-const TextMenuContainer = styled.div`
-  float: left;
-  min-width: 200px;
-  text-align: center;
-  width: 60vw;
+  height: 70px;
+  min-width: 400px;
+  width: 100vw;
 `;
 
 const SettingMenuContainer = styled.div`
@@ -228,6 +240,13 @@ const SettingMenuLeftSide = styled.div`
 
 const SettingMenuRightSide = styled.div`
   float: right;
+`;
+
+const TextMenuContainer = styled.div`
+  float: left;
+  min-width: 200px;
+  text-align: center;
+  width: 60vw;
 `;
 
 const TitleSpan = styled.span`

@@ -1,6 +1,9 @@
 import prisma from "../../../lib/db/prisma";
 
-export default async function getListPageCount(table: string, search?: string) {
+export default async function getListPageCount(
+  table: string,
+  search?: string
+): Promise<number | unknown> {
   try {
     const option = {
       where: {

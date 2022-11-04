@@ -3,19 +3,19 @@ import styled from "styled-components";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
 
 interface YesOrNoButtonsProps {
-  onClick?: React.MouseEventHandler<HTMLElement>;
   selectedAnswer?: string;
+  onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
-const YesOrNoButtons = ({ onClick, selectedAnswer }: YesOrNoButtonsProps) => {
+const YesOrNoButtons = ({ selectedAnswer, onClick }: YesOrNoButtonsProps) => {
   return (
     <YesOrNosContainer>
       <StyledButton
         color="#5f00ff"
         id="0"
         name="choice"
-        onClick={onClick}
         type="button"
+        onClick={onClick}
       >
         <LeftSportsScoreIcon
           selectedAnswer={selectedAnswer}
@@ -25,18 +25,18 @@ const YesOrNoButtons = ({ onClick, selectedAnswer }: YesOrNoButtonsProps) => {
       </StyledButton>
       <FlagImageContainer>
         <Image
-          src="/images/crossedFlags.png"
           alt="flags"
-          width="100px"
           height="55px"
+          src="/images/crossedFlags.png"
+          width="100px"
         />
       </FlagImageContainer>
       <StyledButton
         color="#ff0046"
         id="1"
         name="choice"
-        onClick={onClick}
         type="button"
+        onClick={onClick}
       >
         반대
         <RightSportsScoreIcon
@@ -55,6 +55,11 @@ export default YesOrNoButtons;
 const FlagImageContainer = styled.div`
   float: left;
   padding: 10px;
+
+  img {
+    filter: ${({ theme }) =>
+      theme.global.component.bgColor === "#151515" ? "invert()" : ""};
+  }
 `;
 
 const StyledButton = styled.button`
@@ -70,9 +75,6 @@ const StyledButton = styled.button`
   font-weight: bold;
   justify-content: center;
   padding: 8px 20px;
-  svg {
-    color: white;
-  }
   width: 120px;
 
   &:hover {
@@ -82,6 +84,10 @@ const StyledButton = styled.button`
     svg {
       color: ${({ color }) => color};
     }
+  }
+
+  svg {
+    color: white;
   }
 `;
 

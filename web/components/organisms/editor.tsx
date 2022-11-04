@@ -1,19 +1,21 @@
-import { useMemo, useRef } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef } from "react";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
-import clsx from "clsx";
 import axios from "axios";
-import ReactQuill from "react-quill";
+import clsx from "clsx";
+import ReactQuill, { Quill } from "react-quill";
+//import { ImageResize } from "quill-image-resize-module";
+//Quill.register("modules/imageResize", ImageResize);
 
 interface EditorProps {
-  className?: any;
-  forwardedRef?: any;
+  className?: string;
+  forwardedRef?: React.Ref<any>;
   modules?: any;
-  onChange?: any;
   placeholder?: string;
   readOnly?: boolean;
   theme?: string;
-  value?: any;
+  value?: string;
+  onChange?: Dispatch<SetStateAction<string>>;
 }
 
 const DynamicReactQuill = dynamic(
@@ -33,18 +35,18 @@ function Editor({ readOnly, value, onChange }: EditorProps) {
   const quillRef = useRef<ReactQuill>();
 
   const imageHandler = () => {
-    const input: any = document.getElementById("imageUpload");
+    const input = document.getElementById("imageUpload")! as HTMLInputElement;
     input!.click();
 
     const changeListener = async () => {
-      const files = Object.values(input.files);
+      const files = Object.values(input.files!);
 
       const formData = new FormData();
       if (loggedInUser?.email) {
         formData.append("email", loggedInUser!.email!);
       }
 
-      Object.values(files).forEach((file: any) => {
+      Object.values(files).forEach((file: File) => {
         formData.append("file", file);
         formData.append("image", encodeURIComponent(file.name));
       });
@@ -93,6 +95,9 @@ function Editor({ readOnly, value, onChange }: EditorProps) {
           },
         }),
       },
+      //ImageResize: {
+      //parchment: Quill.import("parchment"),
+      //},
     };
   }, [readOnly]);
 
@@ -104,18 +109,18 @@ function Editor({ readOnly, value, onChange }: EditorProps) {
         })}
         forwardedRef={quillRef}
         modules={modules}
-        onChange={onChange}
         placeholder="내용을 입력하세요."
         readOnly={readOnly}
         theme="snow"
         value={value}
+        onChange={onChange}
       />
       <input
-        id="imageUpload"
-        type="file"
         accept="image/*"
+        id="imageUpload"
         multiple
         style={{ display: "none" }}
+        type="file"
       />
     </>
   );

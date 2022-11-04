@@ -117,13 +117,13 @@ export interface MembersKeys {
 }
 
 export interface BoardListKeys {
-  listId: String;
-  listTitle: String;
-  writerEmail: String;
-  listContent: String;
+  listId: string;
+  listTitle: string;
+  writerEmail: string;
+  listContent: string;
   viewCount: number;
   answerCount: number;
-  registerId: String;
+  registerId: string;
   registerDate: Date;
   timeDiff?: number | string;
   boardComments?: BoardCommentKeys[];
@@ -139,6 +139,8 @@ export interface BoardCommentKeys {
   depth: number;
   registerId: string;
   registerDate: Date;
+  writer: MembersKeys;
+  nestedCommentSequence: number | string;
 }
 
 export interface BoardAnswerKeys {
@@ -160,4 +162,14 @@ export interface SessionDatas {
   email?: string | null;
   name?: string | null;
   image?: string | null;
+}
+
+/* -------------------------------------------------- */
+/*                      APT RESULT                    */
+/* -------------------------------------------------- */
+
+export interface GetBoardCommentProps {
+  comments: BoardCommentKeys[];
+  pageCount: number;
+  commentCount: number;
 }

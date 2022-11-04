@@ -1,103 +1,105 @@
 import { DefaultTheme } from "styled-components";
 
 export const lightTheme: DefaultTheme = {
-  basicButton: {
-    bgColor: "#ffffff",
-  },
-  basicInput: {
-    bgColor: "#ffffff",
-    border: "1px solid #cccccc",
-    color: "#151515",
-  },
-  basicLabel: {
-    color: "#9000ff",
-  },
   basicSelect: {
-    bgColor: "#fffaff",
-    color: "#151515",
+    hoverBgColor: "#FFEBFF",
   },
-  basicText: {
-    color: "#151515",
-  },
-  bgColor: "#F5F5F5",
+
   box: {
-    bgColor: "#fffaff",
-    color: "#6f30c9",
+    smallBox: {
+      bgColor: "#FFEBFF",
+      color: "#6f30c9",
+      shadow: "5px 15px 20px 5px #eaeaea",
+    },
+    findUser: {
+      divider: "#FCFCFC",
+    },
+    simpleBox: {
+      bgColor: "#F0F0F0",
+    },
   },
-  color: "#101820",
-  findUser: {
-    bgColor: "#eaeaea",
-  },
+
   menu: {
     bgColor: "#ffffff",
-    color: "#101820",
   },
+
   menuIcon: {
     color: "#5D5D5D",
   },
-  textMenu: {
-    color: "#101820",
-  },
+
   table: {
-    bgColor: "#ffffff",
-    color: "#101820",
-    hover: "#fff7ff",
-    border: "#eaeaea",
+    border: "1px solid #eaeaea",
   },
+
   pagination: {
     page: "#5D5D5D",
-    arrow: "#BDBDBD",
+    arrow: "#5D5D5D",
     circle: "rgba(0, 0, 0, 0.08)",
+  },
+
+  global: {
+    component: {
+      bgColor: "#ffffff",
+      border: "1px solid #cccccc",
+      color: "#151515",
+      pointBgColor: "#fff7ff",
+      pointColor: "#9000ff",
+    },
+    layout: {
+      bgColor: "#F5F5F5",
+      color: "#151515",
+    },
   },
 };
 
 export const darkTheme: DefaultTheme = {
-  basicButton: {
-    bgColor: "#151515",
-  },
-  basicInput: {
-    bgColor: "#151515",
-    border: "1px solid #5D5D5D",
-    color: "#BDBDBD",
-  },
-  basicLabel: {
-    color: "#ffffff",
-  },
   basicSelect: {
-    bgColor: "#151515",
-    color: "#BDBDBD",
+    hoverBgColor: "#363636",
   },
-  basicText: {
-    color: "#ffffff",
-  },
-  bgColor: "#242424",
+
   box: {
-    bgColor: "#353535",
-    color: "#BDBDBD",
+    smallBox: {
+      bgColor: "#474747",
+      color: "#F6F6F6",
+      shadow: "5px 15px 20px 5px #000000",
+    },
+    findUser: {
+      divider: "#353535",
+    },
+    simpleBox: {
+      bgColor: "#353535",
+    },
   },
-  color: "#ffffff",
-  findUser: {
-    bgColor: "#242424",
-  },
+
   menu: {
     bgColor: "#353535",
-    color: "#ffffff",
   },
+
   menuIcon: {
     color: "#fffaff",
   },
-  textMenu: {
-    color: "#ffffff",
-  },
+
   table: {
-    bgColor: "#151515",
-    color: "#ffffff",
-    hover: "#242424",
-    border: "#353535",
+    border: "1px solid #353535",
   },
+
   pagination: {
     page: "#ffffff",
     arrow: "#ffffff",
     circle: "rgba(255, 255, 255, 0.1)",
+  },
+
+  global: {
+    component: {
+      bgColor: "#151515",
+      border: "1px solid #5D5D5D",
+      color: "#F6F6F6",
+      pointBgColor: "#1C1C1C",
+      pointColor: "#ffffff",
+    },
+    layout: {
+      bgColor: "#242424",
+      color: "#F6F6F6",
+    },
   },
 };

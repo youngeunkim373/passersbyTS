@@ -5,14 +5,14 @@ import Page from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
 interface PaginationProps {
-  pageCount: number;
   currentPage: number;
+  pageCount: number;
   setCurrentPage: Dispatch<SetStateAction<number>>;
 }
 
 const Pagination = ({
-  pageCount,
   currentPage,
+  pageCount,
   setCurrentPage,
 }: PaginationProps) => {
   const onChangePage = (e: React.ChangeEvent<unknown>, page: number): void => {
@@ -23,9 +23,9 @@ const Pagination = ({
     <Container>
       <ThemeStack spacing={2}>
         <ThemePage
-          page={currentPage}
-          count={pageCount}
           color="standard"
+          count={pageCount}
+          page={currentPage}
           onChange={onChangePage}
         />
       </ThemeStack>
@@ -41,20 +41,20 @@ const Container = styled.div`
   margin: 5px;
 `;
 
-const ThemeStack = styled(Stack)`
-  color: ${(props) => props.theme.table.color};
-`;
-
 const ThemePage = styled(Page)`
   .css-yuzg60-MuiButtonBase-root-MuiPaginationItem-root {
-    color: ${(props) => props.theme.pagination.page};
+    color: ${({ theme }) => theme.pagination.page};
   }
 
   .css-yuzg60-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
-    background: ${(props) => props.theme.pagination.circle};
+    background: ${({ theme }) => theme.pagination.circle};
   }
 
   .css-g2z002-MuiSvgIcon-root-MuiPaginationItem-icon {
     color: ${(props) => props.theme.pagination.arrow};
   }
+`;
+
+const ThemeStack = styled(Stack)`
+  color: ${({ theme }) => theme.global.component.color};
 `;

@@ -10,13 +10,13 @@ export default MediumBox;
 
 const StyledBox = styled(Box)<BoxProps>`
   align-items: center;
-  background: ${(props) => props.theme.box.bgColor};
+  background: ${({ theme }) => theme.global.component.pointBgColor};
   //box-shadow: 5px 15px 20px 5px #eaeaea;
-  color: ${(props) => props.theme.box.color};
+  color: ${({ theme }) => theme.global.component.color};
   display: flex;
-  min-width: 500px;
   max-width: 1000px;
   min-height: 400px;
+  min-width: 500px;
   overflow: hidden;
   text-align: center;
   word-break: break-all;

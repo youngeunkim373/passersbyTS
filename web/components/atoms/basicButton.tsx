@@ -12,11 +12,11 @@ const BasicButton = ({
   if (onClick && type !== "submit") {
     return (
       <StyledButton
-        type={type}
-        onClick={onClick}
-        width={width}
-        height={height}
         fontSize={fontSize}
+        height={height}
+        type={type}
+        width={width}
+        onClick={onClick}
       >
         {children}
       </StyledButton>
@@ -24,7 +24,7 @@ const BasicButton = ({
   }
 
   return (
-    <StyledButton type={type} width={width} height={height} fontSize={fontSize}>
+    <StyledButton fontSize={fontSize} height={height} type={type} width={width}>
       {children}
     </StyledButton>
   );
@@ -33,7 +33,7 @@ const BasicButton = ({
 export default BasicButton;
 
 const StyledButton = styled.button<ButtonProps>`
-  background: ${(props) => props.theme.basicButton.bgColor};
+  background: ${({ theme }) => theme.global.component.bgColor};
   border: 2px solid #9000ff;
   border-radius: 20px;
   color: #9000ff;

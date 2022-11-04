@@ -10,9 +10,9 @@ export default SmallBox;
 
 const StyledBox = styled(Box)<BoxProps>`
   align-items: center;
-  background: ${(props) => props.theme.box.bgColor};
-  box-shadow: 5px 15px 20px 5px #eaeaea;
-  color: ${(props) => props.theme.box.color};
+  background: ${({ theme }) => theme.box.smallBox.bgColor};
+  box-shadow: ${({ theme }) => theme.box.smallBox.shadow};
+  color: ${(props) => props.theme.box.smallBox.color};
   display: flex;
   height: auto;
   max-width: 450px;

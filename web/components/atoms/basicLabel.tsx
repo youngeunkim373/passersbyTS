@@ -8,7 +8,7 @@ const BasicLabel = ({ children, fontSize }: LabelProps) => {
 export default BasicLabel;
 
 const StyledLabel = styled.h1<LabelProps>`
-  color: ${(props) => props.theme.basicLabel.color};
+  color: ${({ theme }) => theme.global.component.pointColor};
   font-family: ibmLight;
   font-size: ${({ fontSize }) => (fontSize ? fontSize : "17px")};
   font-weight: 700;

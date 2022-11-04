@@ -3,9 +3,10 @@ import styled from "styled-components";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import BasicButton from "../atoms/basicButton";
 import CommentInput from "../molecules/commentInput";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ProfileImage from "../molecules/profileImage";
 import { SessionDatas } from "../../types/globalTypes";
 
@@ -18,15 +19,15 @@ interface CommentAccordianProps {
 
 const CommentAccordian = ({
   commentSequence,
-  fetchComments,
   loggedInUser,
   pageCategory,
+  fetchComments,
 }: CommentAccordianProps) => {
   return (
     <StyledAccordion>
       <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
+        expandIcon={<ExpandMoreIcon />}
         id="panel1a-header"
       >
         <ButtonContainer>
@@ -68,10 +69,14 @@ const ProfileContainer = styled.div`
 `;
 
 const StyledAccordion = styled(Accordion)`
+  background: transparent;
   box-shadow: none;
   padding-bottom: 15px;
 
   &:before {
     background: transparent;
+  }
+  .css-yw020d-MuiAccordionSummary-expandIconWrapper {
+    color: ${({ theme }) => theme.global.component.pointColor};
   }
 `;

@@ -13,11 +13,11 @@ const PushButton = ({
   if (onClick && type !== "submit") {
     return (
       <StyledButton
-        type={type}
-        onClick={onClick}
-        width={width}
-        height={height}
         fontSize={fontSize}
+        height={height}
+        type={type}
+        width={width}
+        onClick={onClick}
       >
         <StyledSpan>{children}</StyledSpan>
       </StyledButton>
@@ -25,7 +25,7 @@ const PushButton = ({
   }
 
   return (
-    <StyledButton type={type} width={width} height={height} fontSize={fontSize}>
+    <StyledButton fontSize={fontSize} height={height} type={type} width={width}>
       <StyledSpan>{children}</StyledSpan>
     </StyledButton>
   );
@@ -44,9 +44,9 @@ const StyledButton = styled(Button)<ButtonProps>`
   padding: 0;
 
   &:hover {
+    background: #6F30C9;
     transform: translateY(5px);
     transition: transform 0.25s cubic-bezier(.3, .7, .4, 1.5);
-    background: #6F30C9;
   },
 `;
 

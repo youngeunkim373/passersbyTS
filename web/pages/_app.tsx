@@ -3,7 +3,6 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "styled-components";
-
 //import { wrapper } from "../store";
 
 import "../styles/font.css";

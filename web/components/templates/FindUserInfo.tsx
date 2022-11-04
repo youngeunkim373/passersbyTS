@@ -10,23 +10,22 @@ import { Divider } from "@mui/material";
 import Alert from "../molecules/alert";
 import BasicInput from "../atoms/basicInput";
 import PushButton from "../atoms/pushButton";
-
 import { checkEmail } from "../../lib/utils/checkEmail";
 
 const FindUserInfo = () => {
   const [alert, setAlert] = useState({ open: false, text: "" });
-  const [radio, setRadio] = useState({ english: "email", korean: "이메일" });
   const [checkMembership, setCheckMembership] = useState({
     isShow: false,
     check: 0,
   });
+  const [radio, setRadio] = useState({ english: "email", korean: "이메일" });
 
   const emailInputRef = useRef<HTMLInputElement>(null);
 
   const onButtonClick = async (e: React.FormEvent) => {
     setCheckMembership({
-      isShow: false,
       check: 0,
+      isShow: false,
     });
 
     const email = emailInputRef.current?.value;
@@ -63,65 +62,49 @@ const FindUserInfo = () => {
         {alert.text}
       </Alert>
       <RadioGroup
-        row
         aria-labelledby="demo-row-radio-buttons-group-label"
-        name="row-radio-buttons-group"
         defaultValue="email"
+        name="row-radio-buttons-group"
+        row
       >
         <RadioContainer>
-          <FormControlLabel
-            value="email"
-            control={
-              <Radio
-                sx={{
-                  "&.Mui-checked": {
-                    color: "#6F30C9",
-                  },
-                }}
-              />
-            }
+          <ThemeFormControlLabel
+            control={<Radio />}
             label="이메일 찾기"
+            value="email"
             onClick={() => {
               setRadio({ english: "email", korean: "이메일" });
               setCheckMembership({
-                isShow: false,
                 check: 0,
+                isShow: false,
               });
             }}
           />
-          <FormControlLabel
-            value="password"
-            control={
-              <Radio
-                sx={{
-                  "&.Mui-checked": {
-                    color: "#6F30C9",
-                  },
-                }}
-              />
-            }
+          <ThemeFormControlLabel
+            control={<Radio />}
             label="비밀번호 찾기"
+            value="password"
             onClick={() => {
               setRadio({ english: "password", korean: "비밀번호" });
               setCheckMembership({
-                isShow: false,
                 check: 0,
+                isShow: false,
               });
             }}
           />
         </RadioContainer>
       </RadioGroup>
-      <Divider variant="middle" />
+      <ThemeDivider variant="middle" />
       <SearchContainer>
         <h2>{radio.korean} 찾기</h2>
         <div>
           <BasicInput
-            type="text"
+            autoFocus={true}
             id="email"
             placeholder="이메일을 입력하세요."
-            required={true}
             ref={emailInputRef}
-            autoFocus={true}
+            required={true}
+            type="text"
           />
         </div>
         <ResultContainer isShow={checkMembership.isShow}>
@@ -150,8 +133,14 @@ const FindUserInfo = () => {
 
 export default FindUserInfo;
 
+const ButtonContainer = styled.div`
+  margin: 0 auto;
+  padding-top: 30px;
+  padding-bottom: 50px;
+`;
+
 const Container = styled.div`
-  font-family: "ibmLight";
+  font-family: ibmLight;
   font-size: 17px;
   font-weight: bold;
   margin: 0 auto;
@@ -163,24 +152,36 @@ const RadioContainer = styled.div`
   padding-bottom: 30px;
 `;
 
-const SearchContainer = styled.div`
-  padding-top: 30px;
-`;
-
-interface ResultContainerProps {
-  isShow: boolean;
-}
-
-const ResultContainer = styled.div<ResultContainerProps>`
-  background: ${(props) => props.theme.findUser.bgColor};
+const ResultContainer = styled.div<{ isShow: boolean }>`
+  background: ${({ theme }) => theme.box.simpleBox.bgColor};
   display: ${({ isShow }) => (isShow ? "block" : "none")};
   margin: 30px;
   padding: 30px;
   width: 370px;
 `;
 
-const ButtonContainer = styled.div`
-  margin: 0 auto;
+const SearchContainer = styled.div`
   padding-top: 30px;
-  padding-bottom: 50px;
+`;
+
+const ThemeDivider = styled(Divider)`
+  background: ${({ theme }) => theme.box.findUser.divider};
+`;
+
+const ThemeFormControlLabel = styled(FormControlLabel)`
+  color: ${({ theme }) => theme.global.component.color};
+
+  .css-ahj2mt-MuiTypography-root {
+    font-family: ibmLight;
+    font-size: 17px;
+    font-weight: bold;
+  }
+
+  .css-vqmohf-MuiButtonBase-root-MuiRadio-root {
+    color: ${({ theme }) => theme.global.component.color};
+  }
+
+  .css-vqmohf-MuiButtonBase-root-MuiRadio-root.Mui-checked {
+    color: #9000ff;
+  }
 `;

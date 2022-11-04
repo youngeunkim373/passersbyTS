@@ -1,32 +1,33 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import styled from "styled-components";
 import axios from "axios";
+import styled from "styled-components";
 
 import AddIcon from "@mui/icons-material/Add";
+
 import Alert from "../molecules/alert";
 import BasicInput from "../atoms/basicInput";
 
 interface CommentInputProps {
   commentSequence?: string | number;
-  fetchComments: Function;
   name: string;
   pageCategory: string;
+  fetchComments: Function;
 }
 
 const CommentInput = ({
   commentSequence = 0,
-  fetchComments,
   name,
   pageCategory,
+  fetchComments,
 }: CommentInputProps) => {
   const [alert, setAlert] = useState({ open: false, text: "" });
 
   const { data: session, status } = useSession();
 
   const router = useRouter();
-  const listId = router.query.listId;
+  const listId = router.query.listId!.toString();
 
   const commentInputRef = useRef<HTMLInputElement>(null);
 
@@ -70,7 +71,7 @@ const CommentInput = ({
         config
       )
       .then((res) => {
-        fetchComments(res.data);
+        fetchComments(res.data.pageCount);
         commentInputRef.current!.value = "";
       })
       .catch((error) => {
@@ -105,14 +106,14 @@ const CommentInput = ({
 
 export default CommentInput;
 
-const CommentInputContainer = styled.div`
-  padding-left: 30px;
-  padding-right: 10px;
-  width: 100%;
-`;
-
 const AddButton = styled.button`
   cursor: pointer;
   float: left;
   padding-right: 10px;
+`;
+
+const CommentInputContainer = styled.div`
+  padding-left: 30px;
+  padding-right: 10px;
+  width: 100%;
 `;

@@ -5,13 +5,13 @@ import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 
 interface SearchBarProps {
-  setSearch: Dispatch<SetStateAction<string>>;
   setCurrentPage?: Dispatch<SetStateAction<number>>;
+  setSearch: Dispatch<SetStateAction<string>>;
 }
 
 export default function SearchBar({
-  setSearch,
   setCurrentPage,
+  setSearch,
 }: SearchBarProps) {
   const onPressEnter = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -28,8 +28,8 @@ export default function SearchBar({
         <SearchIcon sx={{ color: "#9000ff" }} />
       </SearchIconWrapper>
       <StyledInputBase
-        placeholder="검색어를 입력하세요."
         inputProps={{ "aria-label": "search" }}
+        placeholder="검색어를 입력하세요."
         onKeyPress={onPressEnter}
       />
     </StyledSearch>
@@ -37,16 +37,17 @@ export default function SearchBar({
 }
 
 const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  //backgroundColor: alpha(theme.palette.common.white, 0.15),
   backgroundColor: "white",
+  borderRadius: theme.shape.borderRadius,
+  marginLeft: 0,
+  paddingRight: 0,
+  position: "relative",
+  width: "100%",
+
+  //backgroundColor: alpha(theme.palette.common.white, 0.15),
   // "&:hover": {
   //   backgroundColor: alpha(theme.palette.common.white, 0.25),
   // },
-  paddingRight: 0,
-  marginLeft: 0,
-  width: "100%",
 
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(1),
@@ -54,23 +55,19 @@ const Search = styled("div")(({ theme }) => ({
   },
 }));
 
-const StyledSearch = SCstyled(Search)`
-  background: ${(props) => props.theme.table.bgColor};
-  color: ${(props) => props.theme.table.color};
-`;
-
 const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
   alignItems: "center",
+  display: "flex",
+  height: "100%",
   justifyContent: "center",
+  padding: theme.spacing(0, 2),
+  pointerEvents: "none",
+  position: "absolute",
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
+  fontFamily: "ibmLight",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
@@ -85,3 +82,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+
+const StyledSearch = SCstyled(Search)`
+  background: ${({ theme }) => theme.global.component.bgColor};
+  color: ${({ theme }) => theme.global.component.color};
+`;

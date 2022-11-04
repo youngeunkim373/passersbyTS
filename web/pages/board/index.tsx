@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import axios from "axios";
@@ -13,6 +14,12 @@ import Title from "../../components/atoms/title";
 import List from "../../components/organisms/list";
 import Pagination from "../../components/molecules/pagination";
 import PushButton from "../../components/atoms/pushButton";
+import { BoardListKeys } from "../../types/globalTypes";
+
+interface BoardListProps {
+  boardList: BoardListKeys[];
+  pageCount: number;
+}
 
 const criteriaList = {
   registerDate: "최신순",
@@ -20,7 +27,7 @@ const criteriaList = {
   answerCount: "답변수",
 };
 
-const BoardList = (props: any) => {
+const BoardList = (props: BoardListProps) => {
   const [alert, setAlert] = useState({ open: false, text: "" });
   const [boardList, setBoardList] = useState(props.boardList);
   const [criteria, setCriteria] = useState("registerDate");
@@ -53,9 +60,9 @@ const BoardList = (props: any) => {
         .get(`${process.env.NEXT_PUBLIC_ENV_HOST}/api/board`, {
           params: {
             path: "getBoardList",
+            criteria: criteria,
             page: currentPage,
             search: search,
-            criteria: criteria,
           },
         })
         .then((res) => {
@@ -107,8 +114,8 @@ const BoardList = (props: any) => {
       </PaginationContainer>
       <PushButtonContainer>
         <PushButton type="button" onClick={onButtonClick}>
+          글쓰기&nbsp;
           <CreateIcon />
-          글쓰기
         </PushButton>
       </PushButtonContainer>
     </div>
@@ -117,12 +124,14 @@ const BoardList = (props: any) => {
 
 export default BoardList;
 
-export const getServerSideProps = async (context: any) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const result = await axios.get(
     `${process.env.NEXT_PUBLIC_ENV_HOST}/api/board`,
     {
       params: {
         path: "getBoardList",
+        criteria: "registerDate",
+        page: 1,
       },
     }
   );
@@ -153,4 +162,14 @@ const PushButtonContainer = styled.div`
   top: 85%;
   right: 4.5%;
   z-index: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    left: 3px;
+    position: relative;
+    top: 5px;
+  }
 `;

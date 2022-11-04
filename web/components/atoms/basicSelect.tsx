@@ -1,4 +1,4 @@
-import { useState, forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import styled from "styled-components";
 import type { SelectProps } from "../../types/globalTypes";
 
@@ -11,7 +11,7 @@ const BasicSelect = (
     options,
     setOption,
   }: SelectProps,
-  ref: any
+  ref: React.Ref<HTMLLabelElement>
 ) => {
   const [isShowOptions, setShowOptions] = useState(false);
   const [currentOption, setCurrentOption] = useState(currentValue);
@@ -49,9 +49,10 @@ export default forwardRef(BasicSelect);
 const Container = styled.div<SelectProps>`
   align-items: center;
   align-self: center;
-  background: ${(props) => props.theme.basicSelect.bgColor};
+  background: ${({ theme }) => theme.global.component.bgColor};
+  border: ${({ theme }) => theme.global.component.border};
   border-radius: 8px;
-  color: ${(props) => props.theme.basicSelect.color};
+  color: ${({ theme }) => theme.global.component.color};
   cursor: pointer;
   display: flex;
   height: 35px;
@@ -68,12 +69,12 @@ const Container = styled.div<SelectProps>`
       : "300px"};
 
   ::before {
-    content: "⌵";
-    position: absolute;
-    top: -4px;
-    right: 8px;
     color: #9000ff;
+    content: "⌵";
     font-size: 20px;
+    position: absolute;
+    right: 8px;
+    top: -4px;
   }
 `;
 
@@ -82,13 +83,24 @@ const SelectedOption = styled.label`
   margin-left: 10px;
 `;
 
+const SelectItem = styled.li`
+  font-size: 16px;
+  padding: 6px 0px;
+  transition: background-color 0.1s ease-in;
+
+  &:hover {
+    background: ${({ theme }) => theme.basicSelect.hoverBgColor};
+  }
+`;
+
 const SelectList = styled.ul<{
   isShowOptions?: boolean;
   options: { [k: string]: string };
 }>`
-  background: ${(props) => props.theme.basicSelect.bgColor};
+  background: ${({ theme }) => theme.global.component.bgColor};
+  border: ${({ theme }) => theme.global.component.border};
   border-radius: 8px;
-  color: ${(props) => props.theme.basicSelect.color};
+  color: ${({ theme }) => theme.global.component.color};
   display: ${({ isShowOptions }) => (isShowOptions ? "block" : "none")};
   height: ${({ options }) =>
     Object.keys(options).length >= 5
@@ -97,8 +109,8 @@ const SelectList = styled.ul<{
   left: 0;
   list-style: none;
   margin-top: 23px;
-  min-width: 100px;
   max-width: 400px;
+  min-width: 100px;
   overflow: ${({ options }) =>
     Object.keys(options).length >= 5 ? "auto" : "hidden"};
   padding: 0px;
@@ -126,15 +138,5 @@ const SelectList = styled.ul<{
 
   ::-webkit-scrollbar-track {
     background: rgba(144, 0, 255, 0.1);
-  }
-`;
-
-const SelectItem = styled.li`
-  font-size: 16px;
-  padding: 6px 0px;
-  transition: background-color 0.1s ease-in;
-
-  &:hover {
-    background: #ffe8f5;
   }
 `;

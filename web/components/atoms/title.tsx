@@ -8,7 +8,7 @@ const Title = ({ children, color }: TitleProps) => {
 export default Title;
 
 const StyledH1 = styled.h1<TitleProps>`
-  color: ${(props) => props.theme.basicText.color};
+  color: ${({ theme }) => theme.global.component.color};
   font-family: "ibmRegular";
   font-size: 34px;
   font-weight: bold;

@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Chart } from "react-google-charts";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
+import { Chart } from "react-google-charts";
+import { ThemeContext } from "styled-components";
 
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
-import BasicLabel from "../atoms/basicLabel";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { SessionDatas } from "../../types/globalTypes";
 import { Divider } from "@mui/material";
+
+import BasicLabel from "../atoms/basicLabel";
+import { SessionDatas } from "../../types/globalTypes";
 
 const colors = [
   "#FEE19F",
@@ -46,6 +48,12 @@ const FullStatsSection = ({
   const [region, setRegion] = useState<(string | number)[][]>();
   const [answerCount, setAnswerCount] = useState(0);
   const [myAnswer, setMyAnswer] = useState(null);
+
+  const themeContext = useContext(ThemeContext);
+  const currentTheme =
+    themeContext.global.component.bgColor === "#ffffff"
+      ? "lightTheme"
+      : "darkTheme";
 
   useEffect(() => {
     const allArray: (string | number)[][] = [["answer", "count"]];
@@ -165,7 +173,7 @@ const FullStatsSection = ({
   }, [listId, loggedInUser?.email, chartReload]);
 
   return (
-    <Accordion
+    <ThemeAccordion
       sx={{
         borderBottom: "1px solid #cccccc",
         boxShadow: "none",
@@ -173,8 +181,8 @@ const FullStatsSection = ({
       }}
     >
       <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
+        expandIcon={<ExpandMoreIcon />}
         id="panel1a-header"
       >
         <BasicLabel fontSize="22px">통계 보기</BasicLabel>
@@ -192,50 +200,131 @@ const FullStatsSection = ({
               <Chart
                 chartType="PieChart"
                 data={all}
+                height="400px"
                 options={{
                   title: "전체 답변",
+                  colors: colors,
                   is3D: true,
                   sliceVisibilityThreshold: 0,
-                  colors: colors,
+                  backgroundColor: "transparent",
+                  legend: {
+                    textStyle: {
+                      color:
+                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
+                    },
+                  },
+                  titleTextStyle: {
+                    color:
+                      currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
+                  },
                 }}
                 width="100%"
-                height="400px"
               />
               <Chart
                 chartType="BarChart"
                 data={sex}
+                height="400px"
                 options={{
                   title: "성별별 답변",
+                  backgroundColor: "transparent",
                   chartArea: { width: "50%" },
-                  isStacked: true,
                   colors: colors,
+                  hAxis: {
+                    textStyle: {
+                      color:
+                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
+                    },
+                  },
+                  isStacked: true,
+                  legend: {
+                    textStyle: {
+                      color:
+                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
+                    },
+                  },
+                  titleTextStyle: {
+                    color:
+                      currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
+                  },
+                  vAxis: {
+                    textStyle: {
+                      color:
+                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
+                    },
+                  },
                 }}
                 width="100%"
-                height="400px"
               />
               <Chart
                 chartType="BarChart"
                 data={age}
+                height="400px"
                 options={{
                   title: "연령별 답변",
+                  backgroundColor: "transparent",
                   chartArea: { width: "50%" },
-                  isStacked: true,
                   colors: colors,
+                  isStacked: true,
+                  hAxis: {
+                    textStyle: {
+                      color:
+                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
+                    },
+                  },
+                  legend: {
+                    textStyle: {
+                      color:
+                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
+                    },
+                  },
+                  titleTextStyle: {
+                    color:
+                      currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
+                  },
+                  vAxis: {
+                    textStyle: {
+                      color:
+                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
+                    },
+                  },
                 }}
                 width="100%"
-                height="400px"
               />
               <Chart
                 chartType="BarChart"
                 data={region}
+                height="400px"
                 options={{
                   title: "지역별 답변",
+                  backgroundColor: "transparent",
                   chartArea: { width: "50%" },
-                  isStacked: true,
                   colors: colors,
+                  hAxis: {
+                    textStyle: {
+                      color:
+                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
+                    },
+                  },
+                  isStacked: true,
+                  legend: {
+                    textStyle: {
+                      color:
+                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
+                    },
+                  },
+                  titleTextStyle: {
+                    color:
+                      currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
+                  },
+
+                  vAxis: {
+                    textStyle: {
+                      color:
+                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
+                    },
+                  },
                 }}
                 width="100%"
-                height="400px"
               />
             </div>
           </div>
@@ -243,18 +332,17 @@ const FullStatsSection = ({
           <AnswerContainer>아직 답변이 등록되지 않았습니다.</AnswerContainer>
         )}
       </AccordionDetails>
-    </Accordion>
+    </ThemeAccordion>
   );
 };
 
 export default FullStatsSection;
 
 const AnswerContainer = styled.div`
-  background: #eaeaea;
+  background: ${({ theme }) => theme.box.simpleBox.bgColor};
   font-family: "ibmLight";
   font-size: 17px;
   font-weight: bold;
-  //margin: 10px 0px;
   padding: 30px;
   text-align: center;
 `;
@@ -263,4 +351,14 @@ const MyAnswerParagraph = styled.p`
   font-family: "ibmLight";
   font-size: 17px;
   font-weight: bold;
+`;
+
+const ThemeAccordion = styled(Accordion)`
+  background: ${({ theme }) => theme.global.component.bgColor};
+  border-bottom: ${({ theme }) => theme.global.component.border};
+  color: ${({ theme }) => theme.global.component.color};
+
+  .css-yw020d-MuiAccordionSummary-expandIconWrapper {
+    color: ${({ theme }) => theme.global.component.pointColor};
+  }
 `;

@@ -1,17 +1,17 @@
 import styled from "styled-components";
 
 interface ProfileImageProps {
+  height?: string;
   image?: string | null;
   width?: string;
-  height?: string;
 }
 
 const ProfileImage = ({
+  height = "55px",
   image,
   width = "55px",
-  height = "55px",
 }: ProfileImageProps) => {
-  return <Container id="image" image={image} width={width} height={height} />;
+  return <Container height={height} id="image" image={image} width={width} />;
 };
 
 export default ProfileImage;

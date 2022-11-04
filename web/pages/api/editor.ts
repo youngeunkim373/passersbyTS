@@ -29,7 +29,7 @@ const app = nextConnect({
 app.post(
   uploadImage.array("file", 5),
   async (req: any, res: NextApiResponse) => {
-    const urlArr: any = {};
+    const urlArr: { [k: number]: string } = {};
     for (var i = 0; i < req.files.length; i++) {
       urlArr[i] = `/upload/temporary/${req.files[i].filename}`;
     }
