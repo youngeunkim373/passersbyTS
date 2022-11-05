@@ -22,75 +22,79 @@ export default async function members(
       switch (path) {
         case "getBoardList":
           try {
-            const criteria: string = String(req.query.criteria);
-            const currentPage: number = Number(req.query.page);
-            const search: string = String(req.query?.search);
-            const take: number = Number(req.query.take);
+            const result: any = await prisma.BoardList.findMany();
+            res.status(200).json({ boardList: result, pageCount: 1 });
+            return;
 
-            const orderBy =
-              criteria === "viewCount"
-                ? { viewCount: "desc" }
-                : criteria === "answerCount"
-                ? {
-                    answerCount: "desc",
-                  }
-                : { registerDate: "desc" };
+            // const criteria: string = String(req.query.criteria);
+            // const currentPage: number = Number(req.query.page);
+            // const search: string = String(req.query?.search);
+            // const take: number = Number(req.query.take);
 
-            const getPageCountResult: number | unknown = await getListPageCount(
-              "BoardList",
-              search ? search : ""
-            );
+            // const orderBy =
+            //   criteria === "viewCount"
+            //     ? { viewCount: "desc" }
+            //     : criteria === "answerCount"
+            //     ? {
+            //         answerCount: "desc",
+            //       }
+            //     : { registerDate: "desc" };
 
-            let option = {
-              skip: Math.round((currentPage - 1) * +take),
-              take: take,
-              select: {
-                listId: true,
-                listTitle: true,
-                writerEmail: true,
-                listContent: true,
-                viewCount: true,
-                answerCount: true,
-                registerDate: true,
-                writer: {
-                  select: {
-                    nickname: true,
-                    userImage: true,
-                  },
-                },
-              },
-              orderBy: orderBy,
-              ...(search !== "undefined" && {
-                where: {
-                  OR: [
-                    {
-                      listTitle: {
-                        contains: search,
-                      },
-                    },
-                    {
-                      listContent: {
-                        contains: search,
-                      },
-                    },
-                  ],
-                },
-              }),
-            };
-
-            const result: BoardListKeys[] = await prisma?.BoardList.findMany(
-              option
-            );
-
-            // const boardList = result.map((row) =>
-            //   typeof row.timeDiff === "bigint"
-            //     ? { ...row, timeDiff: parseInt(String(row.timeDiff)) }
-            //     : { ...row }
+            // const getPageCountResult: number | unknown = await getListPageCount(
+            //   "BoardList",
+            //   search ? search : ""
             // );
 
-            res
-              .status(200)
-              .json({ boardList: result, pageCount: getPageCountResult });
+            // let option = {
+            //   skip: Math.round((currentPage - 1) * +take),
+            //   take: take,
+            //   select: {
+            //     listId: true,
+            //     listTitle: true,
+            //     writerEmail: true,
+            //     listContent: true,
+            //     viewCount: true,
+            //     answerCount: true,
+            //     registerDate: true,
+            //     writer: {
+            //       select: {
+            //         nickname: true,
+            //         userImage: true,
+            //       },
+            //     },
+            //   },
+            //   orderBy: orderBy,
+            //   ...(search !== "undefined" && {
+            //     where: {
+            //       OR: [
+            //         {
+            //           listTitle: {
+            //             contains: search,
+            //           },
+            //         },
+            //         {
+            //           listContent: {
+            //             contains: search,
+            //           },
+            //         },
+            //       ],
+            //     },
+            //   }),
+            // };
+
+            // const result: BoardListKeys[] = await prisma.BoardList.findMany(
+            //   option
+            // );
+
+            // // const boardList = result.map((row) =>
+            // //   typeof row.timeDiff === "bigint"
+            // //     ? { ...row, timeDiff: parseInt(String(row.timeDiff)) }
+            // //     : { ...row }
+            // // );
+
+            // res
+            //   .status(200)
+            //   .json({ boardList: result, pageCount: getPageCountResult });
           } catch (e) {
             console.error("Request error", e);
             res
