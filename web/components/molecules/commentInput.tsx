@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 import AddIcon from "@mui/icons-material/Add";
 
-import Alert from "../molecules/alert";
+import Alert from "./alert";
 import BasicInput from "../atoms/basicInput";
 
 interface CommentInputProps {
