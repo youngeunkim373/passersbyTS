@@ -48,7 +48,6 @@ const Home = (props: HomeProps) => {
           },
         })
         .then((res) => {
-          console.log(res.data);
           if (res.data.boardList.length > 0) {
             setBoardList(res.data.boardList);
           }

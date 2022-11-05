@@ -3,11 +3,11 @@ import styled from "styled-components";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
 
 interface YesOrNoButtonsProps {
-  selectedAnswer?: string;
+  $selectedAnswer?: string;
   onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
-const YesOrNoButtons = ({ selectedAnswer, onClick }: YesOrNoButtonsProps) => {
+const YesOrNoButtons = ({ $selectedAnswer, onClick }: YesOrNoButtonsProps) => {
   return (
     <YesOrNosContainer>
       <StyledButton
@@ -18,7 +18,7 @@ const YesOrNoButtons = ({ selectedAnswer, onClick }: YesOrNoButtonsProps) => {
         onClick={onClick}
       >
         <LeftSportsScoreIcon
-          selectedAnswer={selectedAnswer}
+          $selectedAnswer={$selectedAnswer}
           sx={{ color: "#5f00ff", transform: "scaleX(-1)" }}
         />
         찬성
@@ -40,7 +40,7 @@ const YesOrNoButtons = ({ selectedAnswer, onClick }: YesOrNoButtonsProps) => {
       >
         반대
         <RightSportsScoreIcon
-          selectedAnswer={selectedAnswer}
+          $selectedAnswer={$selectedAnswer}
           sx={{
             color: "#ff0046",
           }}
@@ -65,7 +65,7 @@ const FlagImageContainer = styled.div`
 const StyledButton = styled.button`
   align-items: center;
   background: ${({ color }) => color};
-  border: ${({ color }) => "3px solid" + color};
+  border: ${({ color }) => "3px solid " + color};
   border-radius: 30px;
   color: white;
   display: flex;
@@ -92,13 +92,13 @@ const StyledButton = styled.button`
 `;
 
 const LeftSportsScoreIcon = styled(SportsScoreIcon)<YesOrNoButtonsProps>`
-  display: ${({ selectedAnswer }) =>
-    selectedAnswer === "0" ? "inline" : "none"};
+  display: ${({ $selectedAnswer }) =>
+    $selectedAnswer === "0" ? "inline" : "none"};
 `;
 
 const RightSportsScoreIcon = styled(SportsScoreIcon)<YesOrNoButtonsProps>`
-  display: ${({ selectedAnswer }) =>
-    selectedAnswer === "1" ? "inline" : "none"};
+  display: ${({ $selectedAnswer }) =>
+    $selectedAnswer === "1" ? "inline" : "none"};
 `;
 
 const YesOrNosContainer = styled.div`
