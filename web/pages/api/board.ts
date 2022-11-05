@@ -18,6 +18,7 @@ export default async function members(
 
   switch (method) {
     case "GET":
+    case "get":
       switch (path) {
         case "getBoardList":
           try {
@@ -302,6 +303,7 @@ export default async function members(
       }
       break;
     case "POST":
+    case "post":
       switch (path) {
         case "createBoardComment":
           try {

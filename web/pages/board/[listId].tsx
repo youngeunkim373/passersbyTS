@@ -119,7 +119,7 @@ const BoardDetail = (props: BoardDetailProps) => {
             </>
           ) : (
             <YesOrNoButtons
-              selectedAnswer={selectedAnswer}
+              $selectedAnswer={selectedAnswer}
               onClick={(e: React.SyntheticEvent) =>
                 setSelectedAnswer((e.currentTarget as HTMLButtonElement).id)
               }
