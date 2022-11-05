@@ -78,9 +78,10 @@ export default async function members(
               }),
             };
 
-            const result: BoardListKeys[] = await prisma.BoardList.findMany(
-              option
-            );
+            const result: BoardListKeys[] = await prisma.BoardList
+              .findMany
+              //option
+              ();
 
             // const boardList = result.map((row) =>
             //   typeof row.timeDiff === "bigint"
