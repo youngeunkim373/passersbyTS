@@ -9,7 +9,7 @@ import { Divider } from "@mui/material";
 
 import Alert from "../components/molecules/alert";
 import BasicButton from "../components/atoms/basicButton";
-import FullCarousel from "../components/molecules/FullCarousel";
+import FullCarousel from "../components/molecules/fullCarousel";
 import List from "../components/organisms/list";
 import PushButton from "../components/atoms/pushButton";
 import SmallBox from "../components/atoms/smallBox";
@@ -169,11 +169,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 const BannerContainer = styled.div`
-  background-position: 85%;
+  background-position: 85% 30px;
   background-repeat: no-repeat;
   background-size: contain;
-  height: 380px;
+  height: 400px;
   min-width: 1200px;
+  padding: 10px 0px;
+  width: 100%;
 `;
 
 const BannerMainContent = styled.p`
