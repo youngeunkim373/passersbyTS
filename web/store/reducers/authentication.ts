@@ -1,21 +1,21 @@
-import type { SignInProps } from "../../types/sessionTypes";
+import { MembersKeys } from "../../types/globalTypes";
 import { SIGNIN, SIGNOUT } from "../actions/authenticationTypes";
 
-const initialState: SignInProps = {
-  email: null,
-  nickname: null,
-  sex: null,
-  age: null,
-  region: null,
-  userRole: null,
-  userImage: null,
+const initialState: MembersKeys = {
+  email: "",
+  nickname: "",
+  sex: "",
+  age: "",
+  region: "",
+  userRole: "",
+  userImage: "",
 };
 
 const auth = (
   state = initialState,
   action: {
     type: string;
-    data: SignInProps;
+    data: MembersKeys;
   }
 ) => {
   switch (action.type) {
@@ -23,13 +23,13 @@ const auth = (
       return action.data;
     case SIGNOUT:
       return {
-        email: null,
-        nickname: null,
-        sex: null,
-        age: null,
-        region: null,
-        userRole: null,
-        userImage: null,
+        email: "",
+        nickname: "",
+        sex: "",
+        age: "",
+        region: "",
+        userRole: "",
+        userImage: "",
       };
     default:
       return state;

@@ -63,6 +63,7 @@ const BoardList = (props: BoardListProps) => {
             criteria: criteria,
             page: currentPage,
             search: search,
+            take: 10,
           },
         })
         .then((res) => {
@@ -132,6 +133,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         path: "getBoardList",
         criteria: "registerDate",
         page: 1,
+        take: 10,
       },
     }
   );

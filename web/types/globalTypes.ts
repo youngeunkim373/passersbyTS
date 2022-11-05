@@ -107,13 +107,13 @@ export interface AnchorProps extends HTMLAttributes<HTMLAnchorElement> {
 
 export interface MembersKeys {
   email: string;
-  password: string;
+  password?: string;
   nickname: string;
-  sex: SexType;
+  sex: SexType | "";
   age: string | number;
-  region: RegionType;
+  region: RegionType | "";
   userRole: string;
-  userImage: string;
+  userImage?: string;
 }
 
 export interface BoardListKeys {

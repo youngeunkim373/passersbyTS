@@ -23,7 +23,7 @@ import TextMenu from "../molecules/textMenu";
 
 interface MenuProps {
   isDark: boolean;
-  toggleDarkMode: () => Promise<void>;
+  toggleDarkMode: () => void;
 }
 
 const Menu = ({ isDark, toggleDarkMode }: MenuProps) => {
@@ -53,17 +53,17 @@ const Menu = ({ isDark, toggleDarkMode }: MenuProps) => {
       </Alert>
       <LogoContainer>
         <Link href="/">
-          <>
-            <LogoImageContainer>
-              <Image
-                alt="Home"
-                height="70px"
-                src="/images/symbol.png"
-                width="70px"
-              />
-            </LogoImageContainer>
-            <TitleSpan>길 가는 사람들</TitleSpan>
-          </>
+          <LogoImageContainer>
+            <Image
+              alt="Home"
+              height="70px"
+              src="/images/symbol.png"
+              width="70px"
+            />
+          </LogoImageContainer>
+        </Link>
+        <Link href="/">
+          <TitleSpan>길 가는 사람들</TitleSpan>
         </Link>
       </LogoContainer>
       {matches ? (

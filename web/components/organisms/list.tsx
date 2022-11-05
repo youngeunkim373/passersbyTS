@@ -26,7 +26,10 @@ const List = ({ list, pageCategory }: ListProps) => {
   };
 
   return (
-    <TableContainer component={Paper} sx={{ marginTop: "50px" }}>
+    <TableContainer
+      component={Paper}
+      sx={{ marginTop: "50px", minWidth: "600px" }}
+    >
       <StyledTable aria-label="simple table">
         {list.map((row: BoardListKeys) => (
           <StyledTableBody

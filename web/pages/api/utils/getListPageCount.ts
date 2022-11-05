@@ -6,20 +6,22 @@ export default async function getListPageCount(
 ): Promise<number | unknown> {
   try {
     const option = {
-      where: {
-        OR: [
-          {
-            listTitle: {
-              contains: search,
+      ...(search !== "undefined" && {
+        where: {
+          OR: [
+            {
+              listTitle: {
+                contains: search,
+              },
             },
-          },
-          {
-            listContent: {
-              contains: search,
+            {
+              listContent: {
+                contains: search,
+              },
             },
-          },
-        ],
-      },
+          ],
+        },
+      }),
     };
 
     const result: number = await prisma?.[table].count(option);

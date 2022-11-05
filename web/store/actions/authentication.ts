@@ -1,4 +1,4 @@
-import type { SignInProps } from "../../types/sessionTypes";
+import { MembersKeys } from "../../types/globalTypes";
 import { SIGNIN, SIGNOUT } from "./authenticationTypes";
 
 export const signIn = ({
@@ -9,7 +9,7 @@ export const signIn = ({
   region,
   userRole,
   userImage,
-}: SignInProps) => {
+}: MembersKeys) => {
   return {
     type: SIGNIN,
     data: {

@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { verifyPassword } from "../../../lib/utils/hashPassword";
 import prisma from "../../../lib/db/prisma";
-import { MembersProps } from "../../../types/globalTypes";
+import { MembersKeys } from "../../../types/globalTypes";
 
 export default NextAuth({
   session: {
@@ -16,14 +16,14 @@ export default NextAuth({
       },
       authorize: async (credentials, _req) => {
         try {
-          const result: MembersProps[] = await prisma.$queryRaw`
+          const result: MembersKeys[] = await prisma.$queryRaw`
           SELECT email, password, nickname, userImage      FROM Members
            WHERE email = ${credentials?.email}
         `;
 
           const isValid = await verifyPassword(
             credentials!.password,
-            result[0].password
+            result[0].password!
           );
 
           if (!isValid) {

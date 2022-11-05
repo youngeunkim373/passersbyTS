@@ -24,6 +24,7 @@ export default async function members(
             const criteria: string = String(req.query.criteria);
             const currentPage: number = Number(req.query.page);
             const search: string = String(req.query?.search);
+            const take: number = Number(req.query.take);
 
             const orderBy =
               criteria === "viewCount"
@@ -36,12 +37,12 @@ export default async function members(
 
             const getPageCountResult: number | unknown = await getListPageCount(
               "BoardList",
-              search
+              search ? search : ""
             );
 
             let option = {
-              skip: Math.round((currentPage - 1) * 10),
-              take: 10,
+              skip: Math.round((currentPage - 1) * +take),
+              take: take,
               select: {
                 listId: true,
                 listTitle: true,
@@ -58,7 +59,7 @@ export default async function members(
                 },
               },
               orderBy: orderBy,
-              ...(search && {
+              ...(search !== "undefined" && {
                 where: {
                   OR: [
                     {
@@ -96,12 +97,15 @@ export default async function members(
               .json({ error: "An error occured while fetching data" });
           }
           break;
-        default:
-          res.status(500).json({ error: "Please check the path again!" });
-          break;
         case "getBoardDetail":
           try {
             const listId: string = String(req.query.listId);
+
+            const viewResult = await prisma.$executeRaw`
+            UPDATE BoardList
+               SET  viewCount = ifnull(viewCount, 0) + 1
+             WHERE listId = ${listId}
+            `;
 
             let option = {
               select: {
@@ -292,7 +296,11 @@ export default async function members(
               .json({ error: "An error occured while fetching data" });
           }
           break;
+        default:
+          res.status(500).json({ error: "Please check the path again!" });
+          break;
       }
+      break;
     case "POST":
       switch (path) {
         case "createBoardComment":
@@ -508,9 +516,14 @@ export default async function members(
             const answerResult = await prisma.$executeRaw`
               UPDATE BoardAnswer
                  SET answerSelectionCount = IFNULL(answerSelectionCount, 0) + 1
-               WHERE 1 = 1
-                 AND listId = ${listId}
+               WHERE listId = ${listId}
                  AND answerSequence = ${answerSequence}
+              `;
+
+            const answerCountResult = await prisma.$executeRaw`
+              UPDATE BoardList
+                 SET answerCount = IFNULL(answerCount, 0) + 1
+               WHERE listId = ${listId}    
               `;
 
             const statsResult = await prisma.$executeRaw`
@@ -616,7 +629,11 @@ export default async function members(
             res.status(500).json({ error: "Error while seleting data" });
           }
           break;
+        default:
+          res.status(500).json({ error: "Please check the path again!" });
+          break;
       }
+      break;
     default:
       res.status(403).json({ error: "Please check the method again!" });
       break;

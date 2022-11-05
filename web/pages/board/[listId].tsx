@@ -217,6 +217,10 @@ const StyledFormControlLabel = styled(FormControlLabel)`
     font-family: ibmLight;
     font-weight: bold;
   }
+
+  .css-vqmohf-MuiButtonBase-root-MuiRadio-root {
+    color: ${({ theme }) => theme.global.component.color};
+  }
 `;
 
 const ThemeTableContainer = styled(TableContainer)<{ component: any }>`
