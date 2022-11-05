@@ -95,7 +95,7 @@ export default async function members(
             console.error("Request error", e);
             res
               .status(404)
-              .json({ error: "An error occured while fetching data" });
+              .json({ error: "An error occured while fetching data!!!" });
           }
           break;
         case "getBoardDetail":

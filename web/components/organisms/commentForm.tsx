@@ -38,16 +38,13 @@ const CommentForm = ({ comment, pageCategory }: CommentFormProps) => {
 
   const fetchComments = useCallback(async () => {
     await axios
-      .get(
-        `${process.env.NEXT_PUBLIC_ENV_HOST}/api/${pageCategory.toLowerCase()}`,
-        {
-          params: {
-            path: `get${pageCategory}Comments`,
-            listId: listId,
-            page: currentPage,
-          },
-        }
-      )
+      .get(`/api/${pageCategory.toLowerCase()}`, {
+        params: {
+          path: `get${pageCategory}Comments`,
+          listId: listId,
+          page: currentPage,
+        },
+      })
       .then((res) => {
         setComments(res.data.comments);
         setPageCount(res.data.pageCount);

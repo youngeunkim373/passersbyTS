@@ -96,7 +96,7 @@ const FullStatsSection = ({
 
     async function fetchStats() {
       await axios
-        .get(`${process.env.NEXT_PUBLIC_ENV_HOST}/api/board`, {
+        .get("/api/board", {
           params: {
             path: "getBoardStats",
             listId: listId,

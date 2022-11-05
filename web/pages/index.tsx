@@ -39,7 +39,7 @@ const Home = (props: HomeProps) => {
   useEffect(() => {
     async function fetchBoardList() {
       await axios
-        .get(`${process.env.NEXT_PUBLIC_ENV_HOST}/api/board`, {
+        .get("/api/board", {
           params: {
             path: "getBoardList",
             criteria: criteria,
