@@ -78,9 +78,6 @@ export default async function members(
               }),
             };
 
-            res.status(200).json({ option });
-            return;
-
             const result: BoardListKeys[] = await prisma.BoardList.findMany(
               option
             );
@@ -91,9 +88,9 @@ export default async function members(
             //     : { ...row }
             // );
 
-            // res
-            //   .status(200)
-            //   .json({ boardList: result, pageCount: getPageCountResult });
+            res
+              .status(200)
+              .json({ boardList: result, pageCount: getPageCountResult });
           } catch (e) {
             console.error("Request error", e);
             res
