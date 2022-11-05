@@ -26,8 +26,7 @@ export default async function members(
             const currentPage: number = Number(req.query.page);
             const search: string = String(req.query?.search);
             const take: number = Number(req.query.take);
-            res.status(200).json({ criteria, currentPage, search, take });
-            return;
+
             const orderBy =
               criteria === "viewCount"
                 ? { viewCount: "desc" }
@@ -78,6 +77,9 @@ export default async function members(
                 },
               }),
             };
+
+            res.status(200).json({ getPageCountResult });
+            return;
 
             const result: BoardListKeys[] = await prisma.BoardList.findMany(
               option
