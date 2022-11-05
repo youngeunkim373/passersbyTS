@@ -80,7 +80,9 @@ const Home = (props: HomeProps) => {
         </h3>
         <br />
         <Link href="/member/signUp">
-          <PushButton>시작하기</PushButton>
+          <a>
+            <PushButton>시작하기</PushButton>
+          </a>
         </Link>
       </MembershipContainer>
       <BoardContainer>
