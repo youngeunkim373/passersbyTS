@@ -78,12 +78,13 @@ export default async function members(
               }),
             };
 
+            res.status(200).json({ option });
+            return;
+
             const result: BoardListKeys[] = await prisma.BoardList.findMany(
               option
             );
 
-            res.status(200).json({ result });
-            return;
             // const boardList = result.map((row) =>
             //   typeof row.timeDiff === "bigint"
             //     ? { ...row, timeDiff: parseInt(String(row.timeDiff)) }
