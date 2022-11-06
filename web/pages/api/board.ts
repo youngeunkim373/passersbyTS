@@ -401,23 +401,23 @@ export default async function members(
               content: string;
             }[] = req.body.answers;
 
-            // fs.readdir("./public/upload/temporary/", (err, files) => {
-            //   for (var i = 0; i < files.length; i++) {
-            //     if (files[i].includes(writerEmail)) {
-            //       fs.rename(
-            //         `./public/upload/temporary/${files[i]}`,
-            //         `./public/upload/board/${files[i]}`,
-            //         function (err) {
-            //           if (err) {
-            //             console.log(err);
-            //           } else {
-            //             console.log("Successfully renamed the directory.");
-            //           }
-            //         }
-            //       );
-            //     }
-            //   }
-            // });
+            fs.readdir("../public/upload/temporary/", (err, files) => {
+              for (var i = 0; i < files.length; i++) {
+                if (files[i].includes(writerEmail)) {
+                  fs.rename(
+                    `./public/upload/temporary/${files[i]}`,
+                    `./public/upload/board/${files[i]}`,
+                    function (err) {
+                      if (err) {
+                        console.log(err);
+                      } else {
+                        console.log("Successfully renamed the directory.");
+                      }
+                    }
+                  );
+                }
+              }
+            });
 
             const newListIdResult: { newListId: string }[] =
               await prisma.$queryRaw`
