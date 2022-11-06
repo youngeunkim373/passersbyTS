@@ -402,6 +402,8 @@ export default async function members(
             }[] = req.body.answers || [];
 
             fs.readdir("./public/upload/temporary/", (err, files) => {
+              console.log(files);
+              console.log(files.length);
               for (var i = 0; i < files.length; i++) {
                 if (files[i].includes(writerEmail)) {
                   fs.rename(
@@ -447,7 +449,6 @@ export default async function members(
                                )
                   `;
 
-            console.log(answers);
             for (var i = 0; i < answers.length; i++) {
               let boardAnswerResult = await prisma.$executeRaw`
                     INSERT INTO boardanswer
