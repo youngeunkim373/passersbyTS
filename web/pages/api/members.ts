@@ -27,7 +27,7 @@ export default async function members(
                         아래의 번호를 회원가입 화면의 인증번호란에 입력해주세요.<br/><br/>
                         인증번호: <b style="color: #9000ff"> ${verifyNumber}</b>
                        `;
-          sendEmail(from, email, subject, text);
+          await sendEmail(from, email, subject, text);
         }
 
         res.status(200).json({

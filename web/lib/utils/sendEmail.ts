@@ -102,7 +102,7 @@ export async function sendEmail(
   
   `;
 
-  const info = transporter.sendMail({
+  const info = await transporter.sendMail({
     from: from,
     to: to,
     subject: subject,
