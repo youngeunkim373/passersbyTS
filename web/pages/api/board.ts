@@ -399,9 +399,9 @@ export default async function members(
               category: string;
               sequence: number;
               content: string;
-            }[] = req.body.answers;
+            }[] = req.body.answers || [];
 
-            fs.readdir("../public/upload/temporary/", (err, files) => {
+            fs.readdir("./public/upload/temporary/", (err, files) => {
               for (var i = 0; i < files.length; i++) {
                 if (files[i].includes(writerEmail)) {
                   fs.rename(
@@ -447,31 +447,32 @@ export default async function members(
                                )
                   `;
 
+            console.log(answers);
             for (var i = 0; i < answers.length; i++) {
               let boardAnswerResult = await prisma.$executeRaw`
-                          INSERT INTO boardanswer
-                                 (
-                                  listId, answerCategory, answerSequence, answerContent, answerSelectionCount, registerId, registerDate
-                                 )
-                          VALUES
-                                 (
-                                   ${newListId}
-                                  ,${answers[i].category}
-                                  ,${answers[i].sequence}
-                                  ,${
-                                    answers[i].category === "yesOrNo" &&
-                                    answers[i].sequence === 0
-                                      ? "찬성"
-                                      : answers[i].category === "yesOrNo" &&
-                                        answers[i].sequence === 1
-                                      ? "반대"
-                                      : answers[i].content
-                                  }
-                                  ,0
-                                  ,${writerEmail}
-                                  ,NOW()
-                                 )
-                    `;
+                    INSERT INTO boardanswer
+                           (
+                            listId, answerCategory, answerSequence, answerContent, answerSelectionCount, registerId, registerDate
+                           )
+                    VALUES
+                           (
+                             ${newListId}
+                            ,${answers[i].category}
+                            ,${answers[i].sequence}
+                            ,${
+                              answers[i].category === "yesOrNo" &&
+                              answers[i].sequence === 0
+                                ? "찬성"
+                                : answers[i].category === "yesOrNo" &&
+                                  answers[i].sequence === 1
+                                ? "반대"
+                                : answers[i].content
+                            }
+                            ,0
+                            ,${writerEmail}
+                            ,NOW()
+                           )
+              `;
             }
 
             res.status(200).json({ boardListResult });
