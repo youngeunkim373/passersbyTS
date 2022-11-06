@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 import ProfileImage from "./profileImage";
@@ -13,10 +14,10 @@ const Comment = ({ comment }: CommentProps) => {
   return (
     <>
       <ProfileImageContainer>
-        <ProfileImage image={comment.writer.userImage} />
+        <ProfileImage image={comment.writer?.userImage} />
       </ProfileImageContainer>
       <CommentContainer>
-        {comment.writer.nickname}
+        {comment.writer!.nickname}
         <DateDiffSpan>{calcDate(comment.registerDate).expression}</DateDiffSpan>
         <ContentContainer>{autoLink(comment.commentContent)}</ContentContainer>
       </CommentContainer>

@@ -1,3 +1,4 @@
+import { Decimal } from "@prisma/client/runtime";
 import { HTMLAttributes } from "react";
 import { Dispatch, SetStateAction } from "react";
 import { StreamOptions } from "stream";
@@ -113,7 +114,7 @@ export interface MembersKeys {
   age: string | number;
   region: RegionType | "";
   userRole: string;
-  userImage?: string;
+  userImage: string | null;
 }
 
 export interface BoardListKeys {
@@ -121,35 +122,31 @@ export interface BoardListKeys {
   listTitle: string;
   writerEmail: string;
   listContent: string;
-  viewCount: number;
-  answerCount: number;
-  registerId: string;
+  viewCount: Decimal | number;
+  answerCount: Decimal | number;
+  registerId?: string;
   registerDate: Date;
-  timeDiff?: number | string;
-  boardComments?: BoardCommentKeys[];
-  boardNestedComments?: BoardCommentKeys[];
-  writer: MembersKeys;
+  writer: { nickname: string; userImage: string | null } | null;
 }
 
 export interface BoardCommentKeys {
   listId: string;
-  commentSequence: number;
+  commentSequence: Decimal | number;
+  nestedCommentSequence: Decimal | number | string;
   writerEmail: string;
   commentContent: string;
-  depth: number;
-  registerId: string;
+  registerId?: string;
   registerDate: Date;
-  writer: MembersKeys;
-  nestedCommentSequence: number | string;
+  writer?: { nickname: string; userImage: string | null } | null;
 }
 
 export interface BoardAnswerKeys {
   listId: string;
   answerCategory: string;
-  answerSequence: number;
+  answerSequence: Decimal | number;
   answerContent: string;
-  answerSelectionCount: number;
-  registerId: string;
+  answerSelectionCount: Decimal | number;
+  registerId?: string;
   registerDate: Date;
 }
 

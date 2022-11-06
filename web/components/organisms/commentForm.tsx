@@ -88,7 +88,7 @@ const CommentForm = ({ comment, pageCategory }: CommentFormProps) => {
               <CommentsContainer>
                 <Comment comment={comment} />
                 <CommentAccordian
-                  commentSequence={comment.commentSequence}
+                  commentSequence={Number(comment.commentSequence)}
                   fetchComments={fetchComments}
                   loggedInUser={loggedInUser}
                   pageCategory={pageCategory}

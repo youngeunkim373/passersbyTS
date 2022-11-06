@@ -107,7 +107,7 @@ const BoardDetail = (props: BoardDetailProps) => {
             <>
               {boardAnswers.map((answer: BoardAnswerKeys) => (
                 <StyledFormControlLabel
-                  key={answer.answerSequence}
+                  key={String(answer.answerSequence)}
                   value={answer.answerSequence}
                   control={<Radio />}
                   label={answer.answerContent}

@@ -27,7 +27,7 @@ export default async function members(
             const search: string = String(req.query?.search);
             const take: number = Number(req.query.take);
 
-            const orderBy =
+            const orderBy: { [k: string]: string } =
               criteria === "viewCount"
                 ? { viewCount: "desc" }
                 : criteria === "answerCount"
@@ -129,9 +129,8 @@ export default async function members(
               },
             };
 
-            const result: BoardListKeys[] = await prisma.boardlist.findUnique(
-              option
-            );
+            const result: BoardListKeys | null =
+              await prisma.boardlist.findUnique(option);
 
             res.status(200).json(result);
           } catch (e) {
@@ -176,7 +175,7 @@ export default async function members(
                 {
                   nestedCommentSequence: "asc",
                 },
-              ],
+              ] as any,
             };
 
             const result: BoardCommentKeys[] =
@@ -206,18 +205,19 @@ export default async function members(
 
             let option = {
               select: {
+                listId: true,
                 answerCategory: true,
                 answerSequence: true,
                 answerContent: true,
+                answerSelectionCount: true,
+                registerDate: true,
               },
               where: {
                 listId: listId,
               },
-              orderBy: [
-                {
-                  answerSequence: "asc",
-                },
-              ],
+              orderBy: {
+                answerSequence: "asc",
+              } as any,
             };
 
             const result: BoardAnswerKeys[] = await prisma.boardanswer.findMany(

@@ -75,7 +75,7 @@ export default async function members(
 
         const checkNicknameDuplication = await prisma?.members.findUnique({
           where: {
-            nickname: nickname,
+            nickname: String(nickname),
           },
           select: {
             email: true,
@@ -85,14 +85,14 @@ export default async function members(
         if (!checkNicknameDuplication) {
           const result = await prisma.members.create({
             data: {
-              email,
-              password,
-              nickname,
-              age,
-              sex,
-              region,
+              email: String(email),
+              password: String(password),
+              nickname: String(nickname),
+              age: Number(age),
+              sex: String(sex),
+              region: String(region),
               userRole: "user",
-              registerId: email,
+              registerId: String(email),
             },
           });
         }
