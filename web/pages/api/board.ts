@@ -401,14 +401,14 @@ export default async function members(
               content: string;
             }[] = req.body.answers || [];
 
-            fs.readdir("./public/upload/temporary/", (err, files) => {
+            fs.readdir("../../public/upload/temporary/", (err, files) => {
               console.log(files);
               console.log(files.length);
               for (var i = 0; i < files.length; i++) {
                 if (files[i].includes(writerEmail)) {
                   fs.rename(
-                    `./public/upload/temporary/${files[i]}`,
-                    `./public/upload/board/${files[i]}`,
+                    `../../public/upload/temporary/${files[i]}`,
+                    `../../public/upload/board/${files[i]}`,
                     function (err) {
                       if (err) {
                         console.log(err);
