@@ -402,18 +402,16 @@ export default async function members(
             }[] = req.body.answers || [];
 
             console.log("before reddir");
+            console.log(`${process.env.NEXT_PUBLIC_UPLOAD_URL}/temporary/`);
             fs.readdir(
-              // `${process.env.NEXT_PUBLIC_ENV_HOST}upload/temporary/`,
-              "./public/upload/temporary/",
+              `${process.env.NEXT_PUBLIC_UPLOAD_URL}/temporary/`,
               (err, files) => {
                 for (var i = 0; i < files.length; i++) {
                   console.log(files[i]);
                   if (files[i].includes(writerEmail)) {
                     fs.rename(
-                      // `${process.env.NEXT_PUBLIC_ENV_HOST}upload/temporary/${files[i]}`,
-                      // `${process.env.NEXT_PUBLIC_ENV_HOST}upload/board/${files[i]}`,
-                      `./public/upload/temporary/${files[i]}`,
-                      `./public/upload/board/${files[i]}`,
+                      `${process.env.NEXT_PUBLIC_UPLOAD_URL}/temporary/${files[i]}`,
+                      `${process.env.NEXT_PUBLIC_UPLOAD_URL}/board/${files[i]}`,
                       function (err) {
                         if (err) {
                           console.log(err);
