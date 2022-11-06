@@ -7,5 +7,5 @@ export default async function allDBAccess(
 ) {
   const table = "BoardList";
   const result: any = await prisma?.[table].findMany({});
-  res.status(200).json({ boardList: result });
+  res.status(200).json({ boardList: result, pageCount: 1 });
 }

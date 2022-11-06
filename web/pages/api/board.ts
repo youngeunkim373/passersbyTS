@@ -15,7 +15,6 @@ export default async function members(
 ) {
   const method: string = req.method!;
   const path: string = req.query.path || req.body.path;
-  console.log("1: " + method + "/" + path);
 
   switch (method) {
     case "GET":
@@ -79,7 +78,8 @@ export default async function members(
               }),
             };
 
-            const result: BoardListKeys[] = await prisma.BoardList.findMany(
+            const table = "BoardList";
+            const result: BoardListKeys[] = await prisma?.[table].findMany(
               option
             );
 
