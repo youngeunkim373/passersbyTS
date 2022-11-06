@@ -5,7 +5,6 @@ export default async function allDBAccess(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const table = "BoardList";
-  const result: any = await prisma?.[table].findMany({});
+  const result: any = await prisma.BoardList.findMany({});
   res.status(200).json({ boardList: result, pageCount: 1 });
 }
