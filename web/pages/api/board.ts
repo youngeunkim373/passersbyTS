@@ -401,17 +401,19 @@ export default async function members(
               content: string;
             }[] = req.body.answers || [];
 
+            console.log("before reddir");
             fs.readdir(
-              `${process.env.NEXT_PUBLIC_ENV_HOST}upload/temporary/`,
+              // `${process.env.NEXT_PUBLIC_ENV_HOST}upload/temporary/`,
+              "./public/upload/temporary/",
               (err, files) => {
                 for (var i = 0; i < files.length; i++) {
-                  console.log(
-                    `${process.env.NEXT_PUBLIC_ENV_HOST}upload/temporary/${files[i]}`
-                  );
+                  console.log(files[i]);
                   if (files[i].includes(writerEmail)) {
                     fs.rename(
-                      `${process.env.NEXT_PUBLIC_ENV_HOST}upload/temporary/${files[i]}`,
-                      `${process.env.NEXT_PUBLIC_ENV_HOST}upload/board/${files[i]}`,
+                      // `${process.env.NEXT_PUBLIC_ENV_HOST}upload/temporary/${files[i]}`,
+                      // `${process.env.NEXT_PUBLIC_ENV_HOST}upload/board/${files[i]}`,
+                      `./public/upload/temporary/${files[i]}`,
+                      `./public/upload/board/${files[i]}`,
                       function (err) {
                         if (err) {
                           console.log(err);
