@@ -402,13 +402,16 @@ export default async function members(
             }[] = req.body.answers || [];
 
             fs.readdir(
-              `${process.env.NEXT_PUBLIC_ENV_HOST}/upload/temporary/`,
+              `${process.env.NEXT_PUBLIC_ENV_HOST}upload/temporary/`,
               (err, files) => {
                 for (var i = 0; i < files.length; i++) {
+                  console.log(
+                    `${process.env.NEXT_PUBLIC_ENV_HOST}upload/temporary/${files[i]}`
+                  );
                   if (files[i].includes(writerEmail)) {
                     fs.rename(
-                      `${process.env.NEXT_PUBLIC_ENV_HOST}/upload/temporary/${files[i]}`,
-                      `${process.env.NEXT_PUBLIC_ENV_HOST}/upload/board/${files[i]}`,
+                      `${process.env.NEXT_PUBLIC_ENV_HOST}upload/temporary/${files[i]}`,
+                      `${process.env.NEXT_PUBLIC_ENV_HOST}upload/board/${files[i]}`,
                       function (err) {
                         if (err) {
                           console.log(err);
