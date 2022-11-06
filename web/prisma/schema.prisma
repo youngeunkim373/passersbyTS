@@ -12,7 +12,7 @@ datasource db {
   referentialIntegrity = "prisma"
 }
 
-model Members {
+model members {
     email                            String          @id
     password                         String          
     nickname                         String          @unique
@@ -24,12 +24,12 @@ model Members {
     registerId                       String            
     registerDate                     DateTime        @updatedAt   
               
-    boardLists                       BoardList[]    
-    boardComments                    BoardComment[]  
-    boardAnswers                     BoardAnswerLog[]  
+    boardLists                       boardlist[]    
+    boardComments                    boardcomment[]  
+    boardAnswers                     boardanswerlog[]  
 }
 
-model BoardList {
+model boardlist {
     listId                           String          @id
     listTitle                        String          
     writerEmail                      String          
@@ -39,10 +39,10 @@ model BoardList {
     registerId                       String            
     registerDate                     DateTime        @updatedAt        
         
-    writer                           Members?        @relation(fields: [writerEmail], references: [email])
+    writer                           members?        @relation(fields: [writerEmail], references: [email])
 }
 
-model BoardComment {
+model boardcomment {
     listId                           String  
     commentSequence                  Decimal         @db.Decimal(15, 0)
     nestedCommentSequence            Decimal         @db.Decimal(15, 0)   // 원댓글:0, 대댓글: 1이상
@@ -51,12 +51,12 @@ model BoardComment {
     registerId                       String            
     registerDate                     DateTime        @updatedAt  
                    
-    writer                           Members?        @relation(fields: [writerEmail], references: [email])
+    writer                           members?        @relation(fields: [writerEmail], references: [email])
 
     @@id([listId, commentSequence, nestedCommentSequence])
 }
 
-model BoardAnswer {
+model boardanswer {
     listId                           String
     answerCategory                   String            
     answerSequence                   Decimal         @db.Decimal(15, 0)
@@ -65,12 +65,12 @@ model BoardAnswer {
     registerId                       String            
     registerDate                     DateTime        @updatedAt  
 
-    boardAnswersStats                BoardAnswerStats[]  
+    boardAnswersStats                boardanswerstats[]  
 
     @@id([listId, answerSequence])
 }
 
-model BoardAnswerLog {
+model boardanswerlog {
     listId                           String
     answerSequence                   Decimal         @db.Decimal(15, 0)    
     respondentEmail                  String               
@@ -80,12 +80,12 @@ model BoardAnswerLog {
     registerId                       String            
     registerDate                     DateTime        @updatedAt    
        
-    respondent                       Members?        @relation(fields: [respondentEmail], references: [email])  
+    respondent                       members?        @relation(fields: [respondentEmail], references: [email])  
 
     @@id([listId, respondentEmail])
 }
 
-model BoardAnswerStats {
+model boardanswerstats {
     listId                           String             
     answerSequence                   Decimal         @db.Decimal(15, 0)
     respondentSex_f                  Decimal         @db.Decimal(15, 0)    
@@ -117,7 +117,7 @@ model BoardAnswerStats {
     respondentRegion_chungcheong     Decimal         @db.Decimal(15, 0)  
     registerDate                     DateTime        @updatedAt 
 
-    answerList                       BoardAnswer?    @relation(fields: [listId, answerSequence], references: [listId, answerSequence])  
+    answerList                       boardanswer?    @relation(fields: [listId, answerSequence], references: [listId, answerSequence])  
 
     @@id([listId, answerSequence])
 }
