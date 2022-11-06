@@ -37,7 +37,7 @@ export default async function members(
                 : { registerDate: "desc" };
 
             const getPageCountResult: number | unknown = await getListPageCount(
-              "BoardList",
+              "boardlist",
               search ? search : ""
             );
 
@@ -78,8 +78,7 @@ export default async function members(
               }),
             };
 
-            const table = "BoardList";
-            const result: BoardListKeys[] = await prisma?.[table].findMany(
+            const result: BoardListKeys[] = await prisma.boardlist.findMany(
               option
             );
 
@@ -104,7 +103,7 @@ export default async function members(
             const listId: string = String(req.query.listId);
 
             const viewResult = await prisma.$executeRaw`
-                UPDATE BoardList
+                UPDATE boardlist
                    SET  viewCount = ifnull(viewCount, 0) + 1
                  WHERE listId = ${listId}
                 `;
@@ -130,7 +129,7 @@ export default async function members(
               },
             };
 
-            const result: BoardListKeys[] = await prisma.BoardList.findUnique(
+            const result: BoardListKeys[] = await prisma.boardlist.findUnique(
               option
             );
 
@@ -148,7 +147,7 @@ export default async function members(
             const currentPage: number = Number(req.query.page);
 
             const getPageCountResult: number | unknown =
-              await getCommentPageCount("BoardComment", listId);
+              await getCommentPageCount("boardcomment", listId);
 
             let option = {
               skip: Math.round((currentPage - 1) * 10),
@@ -181,9 +180,9 @@ export default async function members(
             };
 
             const result: BoardCommentKeys[] =
-              await prisma.BoardComment.findMany(option);
+              await prisma.boardcomment.findMany(option);
 
-            const totalCommentCount: number = await prisma.BoardComment.count({
+            const totalCommentCount: number = await prisma.boardcomment.count({
               where: {
                 listId: listId,
               },
@@ -221,7 +220,7 @@ export default async function members(
               ],
             };
 
-            const result: BoardAnswerKeys[] = await prisma.BoardAnswer.findMany(
+            const result: BoardAnswerKeys[] = await prisma.boardanswer.findMany(
               option
             );
 
@@ -268,8 +267,8 @@ export default async function members(
                          ,IFNULL(B.respondentRegion_gyeongsang, 0)          AS respondentRegion_gyeongsang
                          ,IFNULL(B.respondentRegion_jeolla, 0)              AS respondentRegion_jeolla
                          ,IFNULL(B.respondentRegion_chungcheong, 0)         AS respondentRegion_chungcheong
-                    FROM BoardAnswer A
-                    LEFT OUTER JOIN BoardAnswerStats B
+                    FROM boardanswer A
+                    LEFT OUTER JOIN boardanswerstats B
                             ON B.listId = A.listId
                            AND B.answerSequence = A.answerSequence
                    WHERE A.listId = ${listId}
@@ -280,10 +279,10 @@ export default async function members(
               answerContent: string;
             }[] = await prisma.$queryRaw`
                   SELECT  answerSequence
-                         ,(SELECT answerContent     FROM BoardAnswer
+                         ,(SELECT answerContent     FROM boardanswer
                             WHERE listId = A.listId
                               AND answerSequence = A.answerSequence)  AS answerContent
-                    FROM BoardAnswerLog A
+                    FROM boardanswerlog A
                    WHERE A.listId = ${listId}
                      AND A.respondentEmail = ${respondentEmail}
                   `;
@@ -315,7 +314,7 @@ export default async function members(
             const commentContent: string = req.body.commentContent;
 
             const result = await prisma.$executeRaw`
-                    INSERT INTO BoardComment
+                    INSERT INTO boardcomment
                            (
                             listId, commentSequence, nestedCommentSequence, writerEmail, commentContent, registerId, registerDate
                            )
@@ -323,13 +322,13 @@ export default async function members(
                            (
                              ${listId}
                             ,IF( ${name} = 'comment'
-                                ,(SELECT IFNULL(MAX(commentSequence),0) + 1     FROM BoardComment as subtable
+                                ,(SELECT IFNULL(MAX(commentSequence),0) + 1     FROM boardcomment as subtable
                                    WHERE listId = ${listId})
                                 ,${commentSequence}
                             )
                             ,IF( ${name} = 'comment'
                                 ,0
-                                ,(SELECT IFNULL(MAX(nestedCommentSequence),0) + 1     FROM BoardComment as subtable
+                                ,(SELECT IFNULL(MAX(nestedCommentSequence),0) + 1     FROM boardcomment as subtable
                                    WHERE listId = ${listId}
                                      AND commentSequence = ${commentSequence})
                             )
@@ -357,7 +356,7 @@ export default async function members(
             const commentContent: string = req.body.commentContent;
 
             const result = await prisma.$executeRaw`
-                      INSERT INTO BoardComment
+                      INSERT INTO boardcomment
                              (
                               listId, commentSequence, nestedCommentSequence, writerEmail, commentContent, registerId, registerDate
                              )
@@ -365,13 +364,13 @@ export default async function members(
                              (
                                ${listId}
                               ,IF( ${name} = 'comment'
-                                  ,(SELECT IFNULL(MAX(commentSequence),0) + 1     FROM BoardComment as subtable
+                                  ,(SELECT IFNULL(MAX(commentSequence),0) + 1     FROM boardcomment as subtable
                                      WHERE listId = ${listId})
                                   ,${commentSequence}
                               )
                               ,IF( ${name} = 'comment'
                                   ,0
-                                  ,(SELECT IFNULL(MAX(nestedCommentSequence),0) + 1     FROM BoardComment as subtable
+                                  ,(SELECT IFNULL(MAX(nestedCommentSequence),0) + 1     FROM boardcomment as subtable
                                      WHERE listId = ${listId}
                                        AND commentSequence = ${commentSequence})
                               )
@@ -424,14 +423,14 @@ export default async function members(
               await prisma.$queryRaw`
                         SELECT  CONCAT( DATE_FORMAT(CURDATE(), '%Y%m%d')
                                        ,LPAD(ifnull(RIGHT(MAX(listId),5),0)+1, 5, 0))     AS newListId
-                          FROM BoardList
+                          FROM boardlist
                          WHERE 1 = 1
                            AND DATE_FORMAT(registerDate, '%Y-%m-%d') = CURDATE()
                   `;
             const newListId = newListIdResult[0].newListId;
 
             const boardListResult = await prisma.$executeRaw`
-                        INSERT INTO BoardList
+                        INSERT INTO boardlist
                                (
                                 listId, listTitle, writerEmail, listContent, viewCount, answerCount, registerId,  registerDate
                                )
@@ -450,7 +449,7 @@ export default async function members(
 
             for (var i = 0; i < answers.length; i++) {
               let boardAnswerResult = await prisma.$executeRaw`
-                          INSERT INTO BoardAnswer
+                          INSERT INTO boardanswer
                                  (
                                   listId, answerCategory, answerSequence, answerContent, answerSelectionCount, registerId, registerDate
                                  )
@@ -492,14 +491,14 @@ export default async function members(
               sex: string;
               region: string;
             }[] = await prisma.$queryRaw`
-                  SELECT age, sex, region     FROM Members
+                  SELECT age, sex, region     FROM members
                    WHERE 1 = 1
                      AND email = ${respondentEmail}
                   `;
             const { age, sex, region } = findRespondentInfo[0];
 
             const logResult = await prisma.$executeRaw`
-                  INSERT INTO BoardAnswerLog
+                  INSERT INTO boardanswerlog
                          (
                           listId, answerSequence, respondentEmail, respondentAge, respondentSex, respondentRegion, registerId, registerDate
                          )
@@ -517,20 +516,20 @@ export default async function members(
                   `;
 
             const answerResult = await prisma.$executeRaw`
-                  UPDATE BoardAnswer
+                  UPDATE boardanswer
                      SET answerSelectionCount = IFNULL(answerSelectionCount, 0) + 1
                    WHERE listId = ${listId}
                      AND answerSequence = ${answerSequence}
                   `;
 
             const answerCountResult = await prisma.$executeRaw`
-                  UPDATE BoardList
+                  UPDATE boardlist
                      SET answerCount = IFNULL(answerCount, 0) + 1
                    WHERE listId = ${listId}
                   `;
 
             const statsResult = await prisma.$executeRaw`
-                  INSERT INTO BoardAnswerStats
+                  INSERT INTO boardanswerstats
                          (
                            listId
                           ,answerSequence

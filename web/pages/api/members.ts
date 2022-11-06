@@ -73,7 +73,7 @@ export default async function members(
           region,
         }: { [k: string]: string | number } = req.body;
 
-        const checkNicknameDuplication = await prisma?.Members.findUnique({
+        const checkNicknameDuplication = await prisma?.members.findUnique({
           where: {
             nickname: nickname,
           },
@@ -83,7 +83,7 @@ export default async function members(
         });
 
         if (!checkNicknameDuplication) {
-          const result = await prisma.Members.create({
+          const result = await prisma.members.create({
             data: {
               email,
               password,
@@ -111,7 +111,7 @@ export default async function members(
       try {
         const { email, password }: { [k: string]: string } = req.body;
 
-        const result = await prisma.Members.update({
+        const result = await prisma.members.update({
           where: {
             email: email,
           },

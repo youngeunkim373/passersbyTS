@@ -3,7 +3,7 @@ import prisma from "../../../lib/db/prisma";
 export default async function checkMembership(email: string) {
   try {
     const result: { [k: string]: string | number }[] = await prisma.$queryRaw`
-            SELECT email     FROM Members
+            SELECT email     FROM members
              WHERE email = ${email}
           `;
 

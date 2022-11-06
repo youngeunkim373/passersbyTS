@@ -150,16 +150,15 @@ export default Home;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const result = await axios.get(
-    // `${process.env.NEXT_PUBLIC_ENV_HOST}/api/board`,
-    `${process.env.NEXT_PUBLIC_ENV_HOST}/api/test`
-    // {
-    //   params: {
-    //     path: "getBoardList",
-    //     criteria: "registerDate",
-    //     page: 1,
-    //     take: 5,
-    //   },
-    // }
+    `${process.env.NEXT_PUBLIC_ENV_HOST}/api/board`,
+    {
+      params: {
+        path: "getBoardList",
+        criteria: "registerDate",
+        page: 1,
+        take: 5,
+      },
+    }
   );
 
   return {

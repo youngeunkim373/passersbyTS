@@ -17,7 +17,7 @@ export default NextAuth({
       authorize: async (credentials, _req) => {
         try {
           const result: MembersKeys[] = await prisma.$queryRaw`
-          SELECT email, password, nickname, userImage      FROM Members
+          SELECT email, password, nickname, userImage      FROM members
            WHERE email = ${credentials?.email}
         `;
 
