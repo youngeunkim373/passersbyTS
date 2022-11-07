@@ -8,6 +8,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     let email = req.body.email;
+    console.log(email);
     const newFileName = email + "_" + Date.now() + "_" + file.originalname;
     cb(null, newFileName);
   },
