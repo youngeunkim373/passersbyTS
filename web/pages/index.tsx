@@ -139,6 +139,7 @@ const Home = (props: HomeProps) => {
                 ? bindCategory(categories, 3)
                 : bindCategory(categories, 4)
             }
+            height="300px"
           />
         </CategoryCarouselContainer>
       </CategoryContainer>

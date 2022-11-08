@@ -19,13 +19,14 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     main {
+      margin-bottom: 100px;
       margin-top: 70px;
     }    
 
     footer {
       bottom: 0;
       color: #cccccc;
-      font-family: "ibmRegular";
+      font-family: ibmRegular;
       font-size: 20px;
       font-weight: normal;
       height: 150px;

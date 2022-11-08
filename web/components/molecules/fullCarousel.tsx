@@ -4,11 +4,12 @@ import { Paper } from "@mui/material";
 
 interface FullCarouselProps {
   banners: any[];
+  height?: string;
 }
 
-const FullCarousel = ({ banners }: FullCarouselProps) => {
+const FullCarousel = ({ banners, height }: FullCarouselProps) => {
   return (
-    <CenteredCarousel navButtonsAlwaysVisible={true}>
+    <CenteredCarousel height={height} navButtonsAlwaysVisible={true}>
       {banners.map((banner, idx) => (
         <BannerPaper key={idx}>{banner}</BannerPaper>
       ))}
@@ -25,8 +26,13 @@ const BannerPaper = styled(Paper)`
 
 const CenteredCarousel = styled(Carousel)`
   .MuiPaper-root {
+    box-shadow: none;
     display: flex;
+    height: ${({ height }) => (height ? height : "auto")};
     justify-content: center;
     align-items: center;
+  }
+  .css-1m9128y {
+    margin: 0px;
   }
 `;
