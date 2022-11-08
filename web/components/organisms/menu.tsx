@@ -220,8 +220,13 @@ const MenuContainer = styled.div`
   background: ${({ theme }) => theme.menu.bgColor};
   display: flex;
   height: 70px;
+  left: 0;
   min-width: 400px;
+  position: fixed;
+  right: 0;
+  top: 0;
   width: 100vw;
+  z-index: 999;
 `;
 
 const SettingMenuContainer = styled.div`

@@ -18,6 +18,10 @@ export const GlobalStyle = createGlobalStyle`
       width: 100vw;
     }
 
+    main {
+      margin-top: 70px;
+    }    
+
     footer {
       bottom: 0;
       color: #cccccc;

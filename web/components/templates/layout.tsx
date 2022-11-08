@@ -9,7 +9,9 @@ interface LayoutProps {
 const Layout = ({ children, isDark, toggleDarkMode }: LayoutProps) => {
   return (
     <>
-      <Menu isDark={isDark} toggleDarkMode={toggleDarkMode} />
+      <header>
+        <Menu isDark={isDark} toggleDarkMode={toggleDarkMode} />
+      </header>
       <main>{children}</main>
     </>
   );

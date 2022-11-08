@@ -31,7 +31,6 @@ app.post(uploadImage.single("file"), async (req: any, res: NextApiResponse) => {
         email + "_" + Date.now() + "_" + req.file.originalname;
 
       const blob = bucket.file(newFileName);
-      //const blob = bucket.file(req.file.originalname);
       const blobStream = blob.createWriteStream();
 
       blobStream.on("finish", () => {

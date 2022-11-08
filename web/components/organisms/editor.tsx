@@ -65,7 +65,6 @@ function Editor({ readOnly, value, onChange }: EditorProps) {
     await axios
       .post("/api/editor", formData, config)
       .then(async (res) => {
-        console.log(`${url}${res.data}`);
         const editor = quillRef.current!.getEditor();
         const range = editor.getSelection()!;
 
