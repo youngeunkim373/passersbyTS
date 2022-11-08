@@ -1,20 +1,16 @@
-import multer from "multer";
-import nextConnect from "next-connect";
 import type { NextApiRequest, NextApiResponse } from "next";
+import nextConnect from "next-connect";
+import multer from "multer";
+import findBoardBucket from "./utils/findBoardBucket";
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./public/upload/temporary");
-  },
-  filename: (req, file, cb) => {
-    let email = req.body.email;
-    console.log(email);
-    const newFileName = email + "_" + Date.now() + "_" + file.originalname;
-    cb(null, newFileName);
+const uploadImage = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024, // No larger than 5mb, change as you need
   },
 });
 
-const uploadImage = multer({ storage: storage });
+const bucket = findBoardBucket();
 
 const app = nextConnect({
   onError(error, req: NextApiRequest, res: NextApiResponse) {
@@ -27,16 +23,32 @@ const app = nextConnect({
   },
 });
 
-app.post(
-  uploadImage.array("file", 5),
-  async (req: any, res: NextApiResponse) => {
-    const urlArr: { [k: number]: string } = {};
-    for (var i = 0; i < req.files.length; i++) {
-      urlArr[i] = `/upload/temporary/${req.files[i].filename}`;
-    }
-    res.json(urlArr);
+app.post(uploadImage.single("file"), async (req: any, res: NextApiResponse) => {
+  try {
+    if (req.file) {
+      const email = req.body.email;
+      const newFileName =
+        email + "_" + Date.now() + "_" + req.file.originalname;
+
+      const blob = bucket.file(newFileName);
+      //const blob = bucket.file(req.file.originalname);
+      const blobStream = blob.createWriteStream();
+
+      blobStream.on("finish", () => {
+        res.status(200).send(newFileName);
+        console.log("Success");
+      });
+      blobStream.end(req.file.buffer);
+
+      // res.status(200).send(req.file.originalname);
+      // console.log(
+      //   `${newFileName} with contents ${req.file.originalname} uploaded.`
+      // );
+    } else throw "error with img";
+  } catch (error) {
+    res.status(500).send(error);
   }
-);
+});
 
 export default app;
 

@@ -4,6 +4,8 @@ import dynamic from "next/dynamic";
 import axios from "axios";
 import clsx from "clsx";
 import ReactQuill, { Quill } from "react-quill";
+import findBoardBucket from "../../pages/api/utils/findBoardBucket";
+import getImageFromGcp from "../../pages/api/getImageFromGcp";
 //import { ImageResize } from "quill-image-resize-module";
 //Quill.register("modules/imageResize", ImageResize);
 
@@ -34,51 +36,51 @@ function Editor({ readOnly, value, onChange }: EditorProps) {
 
   const quillRef = useRef<ReactQuill>();
 
+  const onChangeUploadImage = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0]!;
+    const filename = encodeURIComponent((file as any).name);
+    const fileType = encodeURIComponent((file as any).type);
+
+    const res = await fetch(
+      `/api/utils/uploadUrl?file=${filename}&fileType=${fileType}`
+    );
+    const { url, fields } = await res.json();
+
+    const formData = new FormData();
+    if (loggedInUser?.email) {
+      formData.append("email", loggedInUser!.email!);
+    }
+    formData.append("url", url);
+    Object.entries({ ...fields, file }).forEach(([key, value]) => {
+      formData.append(key, value as string);
+    });
+
+    const config = {
+      headers: { "Content-Type": "multipart/form-data" },
+      withCredentials: true,
+    };
+
+    await axios
+      .post("/api/editor", formData, config)
+      .then(async (res) => {
+        console.log(`${url}${res.data}`);
+        const editor = quillRef.current!.getEditor();
+        const range = editor.getSelection()!;
+
+        editor.insertEmbed(
+          range.index,
+          "image",
+          `https://storage.cloud.google.com/passersby_board/${res.data}`
+        );
+      })
+      .catch((error) => console.log(error));
+  };
+
   const imageHandler = () => {
     const input = document.getElementById("imageUpload")! as HTMLInputElement;
     input!.click();
-
-    const changeListener = async () => {
-      const files = Object.values(input.files!);
-
-      const formData = new FormData();
-      if (loggedInUser?.email) {
-        formData.append("email", loggedInUser!.email!);
-      }
-
-      Object.values(files).forEach((file: File) => {
-        formData.append("file", file);
-        formData.append("image", encodeURIComponent(file.name));
-      });
-
-      // for (let value of formData.values()) {
-      //   console.log(value);
-      // }
-
-      const config = {
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true,
-      };
-
-      await axios
-        .post("/api/editor", formData, config)
-        .then((res) => {
-          const editor = quillRef.current!.getEditor();
-          const range = editor.getSelection()!;
-          const images = Object.values(res.data);
-          for (var image of images) {
-            editor.insertEmbed(
-              range.index,
-              "image",
-              `${process.env.NEXT_PUBLIC_ENV_HOST}${image}`
-            );
-          }
-          input.removeEventListener("change", changeListener);
-        })
-        .catch((error) => console.log(error));
-    };
-
-    input.addEventListener("change", changeListener);
   };
 
   const modules = useMemo(() => {
@@ -118,7 +120,7 @@ function Editor({ readOnly, value, onChange }: EditorProps) {
       <input
         accept="image/*"
         id="imageUpload"
-        multiple
+        onChange={onChangeUploadImage}
         style={{ display: "none" }}
         type="file"
       />
