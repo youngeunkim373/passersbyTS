@@ -16,11 +16,13 @@ export const GlobalStyle = createGlobalStyle`
       padding: 0;
       position: relative;
       width: 100vw;
+      overflow-x:hidden;
     }
 
     main {
       margin-bottom: 100px;
       margin-top: 70px;
+      min-height: 600px;
     }    
 
     footer {
@@ -33,6 +35,7 @@ export const GlobalStyle = createGlobalStyle`
       left: 0;
       min-width: 700px;
       position: absolute;
+      right:0;
       text-align: center;
       white-space: nowrap;
       width: 100%;
@@ -71,14 +74,12 @@ export const GlobalStyle = createGlobalStyle`
     height: 100%;
     margin: 0 auto;
     min-width: "700px";
-    padding-bottom: 150px;
     padding-top: 100px;
   }
 
   #narrow-page {
     height: 100%;
     margin: 0 auto;
-    padding-bottom: 150px;
     padding-top: 100px;
     width: 300px;
   }  
@@ -88,7 +89,6 @@ export const GlobalStyle = createGlobalStyle`
     height: 100%;
     margin: 0 auto;
     padding-top: 100px;
-    padding-bottom: 150px;
     width:70vw;
   }
 
@@ -97,7 +97,6 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0 auto;
     max-width: 700px;
     min-width: 500px;   
-    padding-bottom: 150px; 
     padding-top: 100px;
     width: 50vw;
   }

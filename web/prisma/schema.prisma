@@ -27,6 +27,7 @@ model members {
     boardLists                       boardlist[]    
     boardComments                    boardcomment[]  
     boardAnswers                     boardanswerlog[]  
+    noticeLists                      noticelist[]   
 }
 
 model boardlist {
@@ -122,3 +123,13 @@ model boardanswerstats {
     @@id([listId, answerSequence])
 }
 
+model noticelist {
+    listId                           String          @id
+    listTitle                        String          
+    writerEmail                      String          
+    listContent                      String          @db.LongText
+    registerId                       String            
+    registerDate                     DateTime        @updatedAt        
+        
+    writer                           members?        @relation(fields: [writerEmail], references: [email])
+}

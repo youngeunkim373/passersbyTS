@@ -150,6 +150,28 @@ export interface BoardAnswerKeys {
   registerDate: Date;
 }
 
+export interface NoticeListKeys {
+  listId: string;
+  listTitle: string;
+  writerEmail: string;
+  listContent: string;
+  registerId?: string;
+  registerDate: Date;
+  writer: { nickname: string; userImage: string | null } | null;
+}
+
+export interface ListKeys {
+  listId: string;
+  listTitle: string;
+  writerEmail: string;
+  listContent: string;
+  viewCount?: Decimal | number;
+  answerCount?: Decimal | number;
+  registerId?: string;
+  registerDate: Date;
+  writer: { nickname: string; userImage: string | null } | null;
+}
+
 /* -------------------------------------------------- */
 /*                    SESSION DATA                    */
 /* -------------------------------------------------- */
@@ -159,6 +181,7 @@ export interface SessionDatas {
   email?: string | null;
   name?: string | null;
   image?: string | null;
+  role?: string | null;
 }
 
 /* -------------------------------------------------- */

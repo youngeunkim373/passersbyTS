@@ -10,11 +10,11 @@ import TableRow from "@mui/material/TableRow";
 
 import NewIcon from "../atoms/newIcon";
 import ProfileImage from "../molecules/profileImage";
-import { BoardListKeys } from "../../types/globalTypes";
+import { ListKeys } from "../../types/globalTypes";
 import { calcDate } from "../../lib/utils/calcDate";
 
 interface ListProps {
-  list: BoardListKeys[];
+  list: ListKeys[];
   pageCategory: string;
 }
 
@@ -31,7 +31,7 @@ const List = ({ list, pageCategory }: ListProps) => {
       sx={{ marginTop: "50px", minWidth: "600px" }}
     >
       <StyledTable aria-label="simple table">
-        {list.map((row: BoardListKeys) => (
+        {list.map((row: ListKeys) => (
           <StyledTableBody
             key={row.listId}
             onClick={(e) => {
