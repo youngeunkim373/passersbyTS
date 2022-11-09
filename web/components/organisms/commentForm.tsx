@@ -12,13 +12,10 @@ import CommentAccordian from "./commentAccordian";
 import CommentInput from "../molecules/commentInput";
 import Pagination from "../molecules/pagination";
 import ProfileImage from "../molecules/profileImage";
-import {
-  BoardCommentKeys,
-  GetBoardCommentProps,
-} from "../../types/globalTypes";
+import { CommentKeys, GetCommentProps } from "../../types/globalTypes";
 
 interface CommentFormProps {
-  comment: GetBoardCommentProps;
+  comment: GetCommentProps;
   pageCategory: string;
 }
 
@@ -47,7 +44,7 @@ const CommentForm = ({ comment, pageCategory }: CommentFormProps) => {
       })
       .then((res) => {
         setComments(res.data.comments);
-        setPageCount(res.data.pageCount);
+        setPageCount(res.data.pageCount > 0 ? res.data.pageCount : 1);
         setTotalComment(res.data.commentCount);
       })
       .catch((error) => console.log(error.response));
@@ -80,7 +77,7 @@ const CommentForm = ({ comment, pageCategory }: CommentFormProps) => {
             pageCategory={pageCategory}
           />
         </CommentSubmitContainer>
-        {comments.map((comment: BoardCommentKeys) => (
+        {comments.map((comment: CommentKeys) => (
           <div
             key={`${comment.commentSequence}}_${comment.nestedCommentSequence}`}
           >

@@ -28,6 +28,7 @@ model members {
     boardComments                    boardcomment[]  
     boardAnswers                     boardanswerlog[]  
     noticeLists                      noticelist[]   
+    noticeComments                   noticecomment[]  
 }
 
 model boardlist {
@@ -132,4 +133,18 @@ model noticelist {
     registerDate                     DateTime        @updatedAt        
         
     writer                           members?        @relation(fields: [writerEmail], references: [email])
+}
+
+model noticecomment {
+    listId                           String  
+    commentSequence                  Decimal         @db.Decimal(15, 0)
+    nestedCommentSequence            Decimal         @db.Decimal(15, 0)   // 원댓글:0, 대댓글: 1이상
+    writerEmail                      String     
+    commentContent                   String
+    registerId                       String            
+    registerDate                     DateTime        @updatedAt  
+                   
+    writer                           members?        @relation(fields: [writerEmail], references: [email])
+
+    @@id([listId, commentSequence, nestedCommentSequence])
 }

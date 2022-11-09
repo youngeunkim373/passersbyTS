@@ -8,11 +8,11 @@ import TableRow from "@mui/material/TableRow";
 import Editor from "../../components/organisms/editor";
 import NewIcon from "../../components/atoms/newIcon";
 import ProfileImage from "../../components/molecules/profileImage";
-import { BoardListKeys } from "../../types/globalTypes";
+import { ListKeys } from "../../types/globalTypes";
 import { calcDate } from "../../lib/utils/calcDate";
 
 interface ListDetailProps {
-  listDetail: BoardListKeys;
+  listDetail: ListKeys;
 }
 
 const ListDetail = ({ listDetail }: ListDetailProps) => {

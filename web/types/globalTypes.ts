@@ -129,7 +129,7 @@ export interface BoardListKeys {
   writer: { nickname: string; userImage: string | null } | null;
 }
 
-export interface BoardCommentKeys {
+export interface CommentKeys {
   listId: string;
   commentSequence: Decimal | number;
   nestedCommentSequence: Decimal | number | string;
@@ -188,8 +188,8 @@ export interface SessionDatas {
 /*                      APT RESULT                    */
 /* -------------------------------------------------- */
 
-export interface GetBoardCommentProps {
-  comments: BoardCommentKeys[];
+export interface GetCommentProps {
+  comments: CommentKeys[];
   pageCount: number;
   commentCount: number;
 }

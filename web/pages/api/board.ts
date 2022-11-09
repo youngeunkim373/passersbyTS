@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 import {
   BoardAnswerKeys,
-  BoardCommentKeys,
+  CommentKeys,
   BoardListKeys,
 } from "../../types/globalTypes";
 import getCommentPageCount from "./utils/getCommentPageCount";
@@ -178,8 +178,9 @@ export default async function members(
               ] as any,
             };
 
-            const result: BoardCommentKeys[] =
-              await prisma.boardcomment.findMany(option);
+            const result: CommentKeys[] = await prisma.boardcomment.findMany(
+              option
+            );
 
             const totalCommentCount: number = await prisma.boardcomment.count({
               where: {
@@ -308,49 +309,7 @@ export default async function members(
         case "createBoardComment":
           try {
             const name: string = req.body.name;
-            const listId: string = String(req.query.listId);
-            const commentSequence: number = req.body.commentSequence;
-            const writerEmail: string = req.body.writerEmail;
-            const commentContent: string = req.body.commentContent;
-
-            const result = await prisma.$executeRaw`
-                    INSERT INTO boardcomment
-                           (
-                            listId, commentSequence, nestedCommentSequence, writerEmail, commentContent, registerId, registerDate
-                           )
-                    VALUES
-                           (
-                             ${listId}
-                            ,IF( ${name} = 'comment'
-                                ,(SELECT IFNULL(MAX(commentSequence),0) + 1     FROM boardcomment as subtable
-                                   WHERE listId = ${listId})
-                                ,${commentSequence}
-                            )
-                            ,IF( ${name} = 'comment'
-                                ,0
-                                ,(SELECT IFNULL(MAX(nestedCommentSequence),0) + 1     FROM boardcomment as subtable
-                                   WHERE listId = ${listId}
-                                     AND commentSequence = ${commentSequence})
-                            )
-                            ,${writerEmail}
-                            ,${commentContent}
-                            ,${writerEmail}
-                            ,NOW()
-                           )
-                    `;
-
-            res.status(200).json({ result });
-          } catch (e) {
-            console.error("Request error", e);
-            res
-              .status(404)
-              .json({ error: "An error occured while creating data" });
-          }
-          break;
-        case "createBoardComment":
-          try {
-            const name: string = req.body.name;
-            const listId: string = String(req.query.listId);
+            const listId: string = String(req.body.listId);
             const commentSequence: number = req.body.commentSequence;
             const writerEmail: string = req.body.writerEmail;
             const commentContent: string = req.body.commentContent;

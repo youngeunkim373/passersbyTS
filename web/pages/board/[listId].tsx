@@ -22,12 +22,12 @@ import YesOrNoButtons from "../../components/molecules/yesOrNoButtons";
 import {
   BoardAnswerKeys,
   BoardListKeys,
-  GetBoardCommentProps,
+  GetCommentProps,
 } from "../../types/globalTypes";
 
 interface BoardDetailProps {
   boardAnswers: BoardAnswerKeys[];
-  boardComments: GetBoardCommentProps;
+  boardComments: GetCommentProps;
   boardDetail: BoardListKeys;
 }
 
