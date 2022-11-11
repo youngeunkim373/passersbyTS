@@ -48,7 +48,10 @@ const BasicInput = (
 export default forwardRef(BasicInput);
 
 const StyledInput = styled.input<InputProps>`
-  background: ${({ theme }) => theme.global.component.bgColor};
+  background: ${({ theme, readOnly }) =>
+    readOnly
+      ? theme.global.component.readOnlyBgColor
+      : theme.global.component.bgColor};
   border: ${({ theme }) => theme.global.component.border};
   border-radius: 5px;
   box-sizing: border-box;

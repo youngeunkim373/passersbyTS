@@ -3,11 +3,11 @@ import styled from "styled-components";
 
 import ProfileImage from "./profileImage";
 import { autoLink } from "../../lib/utils/autoLink";
-import { BoardCommentKeys } from "../../types/globalTypes";
+import { CommentKeys } from "../../types/globalTypes";
 import { calcDate } from "../../lib/utils/calcDate";
 
 interface CommentProps {
-  comment: BoardCommentKeys;
+  comment: CommentKeys;
 }
 
 const Comment = ({ comment }: CommentProps) => {

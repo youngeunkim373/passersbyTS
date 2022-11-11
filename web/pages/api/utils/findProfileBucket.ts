@@ -1,6 +1,6 @@
 import { Storage } from "@google-cloud/storage";
 
-export default function findBoardBucket() {
+export default function findProfileBucket() {
   const storage = new Storage({
     projectId: process.env.PROJECT_ID,
     credentials: {
@@ -9,6 +9,6 @@ export default function findBoardBucket() {
     },
   });
 
-  const bucket = storage.bucket(process.env.BOARD_BUCKET_NAME!);
+  const bucket = storage.bucket(process.env.PROFILE_BUCKET_NAME!);
   return bucket;
 }

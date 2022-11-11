@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
+import { signOut } from "next-auth/react";
 import axios from "axios";
 
 import { hashPassword } from "../../lib/utils/hashPassword";
@@ -52,6 +53,7 @@ const ChangePassword = (props: { email: string }) => {
         config
       )
       .then((res) => {
+        signOut();
         router.push("/member/signIn");
       })
       .catch((error) => console.log(error.response));

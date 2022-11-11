@@ -44,6 +44,7 @@ export const lightTheme: DefaultTheme = {
       color: "#151515",
       pointBgColor: "#fff7ff",
       pointColor: "#9000ff",
+      readOnlyBgColor: "#eaeaea",
     },
     layout: {
       bgColor: "#F5F5F5",
@@ -96,6 +97,7 @@ export const darkTheme: DefaultTheme = {
       color: "#F6F6F6",
       pointBgColor: "#1C1C1C",
       pointColor: "#ffffff",
+      readOnlyBgColor: "#353535",
     },
     layout: {
       bgColor: "#242424",

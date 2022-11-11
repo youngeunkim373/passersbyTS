@@ -265,13 +265,17 @@ const SignUp: React.FC = () => {
           <LabelContainer>
             <BasicLabel>성별</BasicLabel>
           </LabelContainer>
-          <BasicSelect options={sexList} ref={sexSelectRef} />
+          <BasicSelect height="50px" options={sexList} ref={sexSelectRef} />
         </SexSelectContainer>
         <RegionSelectContainer>
           <LabelContainer>
             <BasicLabel>지역</BasicLabel>
           </LabelContainer>
-          <BasicSelect options={regionList} ref={regionSelectRef} />
+          <BasicSelect
+            height="50px"
+            options={regionList}
+            ref={regionSelectRef}
+          />
         </RegionSelectContainer>
         <SignUpButtonContainer>
           <PushButton type="submit">회원가입</PushButton>
@@ -308,6 +312,10 @@ interface VerifyTextFieldProps {
 const VerifyTextField = styled(TextField)<VerifyTextFieldProps>`
   display: ${({ $verifyInput }) => ($verifyInput ? "block" : "none")};
   margin-top: 30px;
+
+  .css-nmbvik-MuiInputBase-root-MuiOutlinedInput-root {
+    color: ${({ theme }) => theme.global.component.color};
+  }
 `;
 
 interface VerifyCompleteParagraphProps {
@@ -337,5 +345,5 @@ const SignUpButtonContainer = styled.div`
 const SelfAuthButtonContainer = styled.div`
   left: calc(50% + 150px);
   position: absolute;
-  top: 315px;
+  top: 245px;
 `;

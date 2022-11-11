@@ -8,7 +8,13 @@ const BasicSelect = (
       id: "unselected",
       text: "선택",
     },
+    height = "35px",
     options,
+    width = `${
+      Object.values(options).reduce((acc, cur) => {
+        return Math.max(acc, cur.length);
+      }, 0) * 20
+    }px`,
     setOption,
   }: SelectProps,
   ref: React.Ref<HTMLLabelElement>
@@ -26,11 +32,18 @@ const BasicSelect = (
     <Container
       onClick={() => setShowOptions((prev) => !prev)}
       options={options}
+      height={height}
+      width={width}
     >
       <SelectedOption htmlFor={`${currentOption.id}`} ref={ref}>
         {currentOption.text}
       </SelectedOption>
-      <SelectList isShowOptions={isShowOptions} options={options}>
+      <SelectList
+        height={height}
+        width={width}
+        isShowOptions={isShowOptions}
+        options={options}
+      >
         <SelectItem id={"unselected"} onClick={handleChangeOption}>
           &nbsp;&nbsp;&nbsp;선택
         </SelectItem>
@@ -55,18 +68,11 @@ const Container = styled.div<SelectProps>`
   color: ${({ theme }) => theme.global.component.color};
   cursor: pointer;
   display: flex;
-  height: 35px;
+  height: ${({ height }) => height};
   max-width: 400px;
   min-width: 100px;
   position: relative;
-  width: ${({ options }) =>
-    options
-      ? `${
-          Object.values(options).reduce((acc, cur) => {
-            return Math.max(acc, cur.length);
-          }, 0) * 20
-        }px`
-      : "300px"};
+  width: ${({ width }) => width};
 
   ::before {
     color: #9000ff;
@@ -74,7 +80,7 @@ const Container = styled.div<SelectProps>`
     font-size: 20px;
     position: absolute;
     right: 8px;
-    top: -4px;
+    top: ${({ height }) => "calc(" + height + "- 20px)"};
   }
 `;
 
@@ -94,8 +100,10 @@ const SelectItem = styled.li`
 `;
 
 const SelectList = styled.ul<{
+  height?: string;
   isShowOptions?: boolean;
   options: { [k: string]: string };
+  width?: string;
 }>`
   background: ${({ theme }) => theme.global.component.bgColor};
   border: ${({ theme }) => theme.global.component.border};
@@ -115,15 +123,8 @@ const SelectList = styled.ul<{
     Object.keys(options).length >= 5 ? "auto" : "hidden"};
   padding: 0px;
   position: absolute;
-  top: 18px;
-  width: ${({ options }) =>
-    options
-      ? `${
-          Object.values(options).reduce((acc, cur) => {
-            return Math.max(acc, cur.length);
-          }, 0) * 20
-        }px`
-      : "300px"};
+  top: ${({ height }) => "calc(" + height + " - 20px)"};
+  width: ${({ width }) => width};
   z-index: 999;
 
   ::-webkit-scrollbar {

@@ -101,12 +101,12 @@ const Menu = ({ isDark, toggleDarkMode }: MenuProps) => {
               status === "authenticated"
                 ? {
                     koreanMenu: "프로필",
-                    englishMenu: "profile",
+                    englishMenu: "setting",
                     icon: <AccountCircleIcon />,
                   }
                 : {
                     koreanMenu: "프로필",
-                    englishMenu: "profile",
+                    englishMenu: "setting",
                     icon: <AccountCircleIcon />,
                     onClick: checkAuth,
                   },
@@ -166,12 +166,12 @@ const Menu = ({ isDark, toggleDarkMode }: MenuProps) => {
                   status === "authenticated"
                     ? {
                         koreanMenu: "프로필",
-                        englishMenu: "profile",
+                        englishMenu: "setting",
                         icon: <AccountCircleIcon />,
                       }
                     : {
                         koreanMenu: "프로필",
-                        englishMenu: "profile",
+                        englishMenu: "setting",
                         icon: <AccountCircleIcon />,
                         onClick: checkAuth,
                       },

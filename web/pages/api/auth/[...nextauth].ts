@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import axios from "axios";
 import prisma from "../../../lib/db/prisma";
 import { MembersKeys } from "../../../types/globalTypes";
 import { verifyPassword } from "../../../lib/utils/hashPassword";
@@ -33,8 +34,6 @@ export default NextAuth({
           return {
             id: result[0].email,
             email: result[0].email,
-            // name: result[0].nickname,
-            // image: result[0].userImage,
           };
         } catch (e) {
           // const errorMessage = e.response.data.message;
@@ -51,7 +50,7 @@ export default NextAuth({
     },
     session: async ({ session, token }) => {
       const result: MembersKeys[] = await prisma.$queryRaw`
-      SELECT email, nickname as name, userImage as image, userRole as role      FROM members
+      SELECT email, nickname as name, userImage as image, userRole as role, age, sex, region      FROM members
        WHERE email = ${session.user?.email}
       `;
 

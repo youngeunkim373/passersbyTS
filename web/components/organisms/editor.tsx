@@ -3,9 +3,7 @@ import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import axios from "axios";
 import clsx from "clsx";
-import ReactQuill, { Quill } from "react-quill";
-import findBoardBucket from "../../pages/api/utils/findBoardBucket";
-import getImageFromGcp from "../../pages/api/getImageFromGcp";
+import ReactQuill from "react-quill";
 //import { ImageResize } from "quill-image-resize-module";
 //Quill.register("modules/imageResize", ImageResize);
 
@@ -44,7 +42,7 @@ function Editor({ readOnly, value, onChange }: EditorProps) {
     const fileType = encodeURIComponent((file as any).type);
 
     const res = await fetch(
-      `/api/utils/uploadUrl?file=${filename}&fileType=${fileType}`
+      `/api/imageUpload/uploadUrl?file=${filename}&fileType=${fileType}&bucket=board`
     );
     const { url, fields } = await res.json();
 
@@ -63,7 +61,7 @@ function Editor({ readOnly, value, onChange }: EditorProps) {
     };
 
     await axios
-      .post("/api/editor", formData, config)
+      .post("/api/imageUpload/board", formData, config)
       .then(async (res) => {
         const editor = quillRef.current!.getEditor();
         const range = editor.getSelection()!;

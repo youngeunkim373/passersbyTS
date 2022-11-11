@@ -45,6 +45,7 @@ declare module "styled-components" {
         border: string;
         pointBgColor: string;
         pointColor: string;
+        readOnlyBgColor: string;
       };
       layout: {
         bgColor: string;

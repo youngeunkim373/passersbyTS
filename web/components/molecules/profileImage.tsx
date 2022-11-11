@@ -20,7 +20,9 @@ const Container = styled.div<ProfileImageProps>`
   background: #ffe8f5;
   background-image: ${({ image }) =>
     image
-      ? `url("/upload/profileImage/${image}")`
+      ? `url("https://storage.cloud.google.com/passersby_profile/${encodeURIComponent(
+          image
+        )}")`
       : `url("/upload/profileImage/basicProfile.png")`};
   background-position: center;
   background-repeat: no-repeat;

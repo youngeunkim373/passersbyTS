@@ -81,6 +81,8 @@ export interface LabelProps extends HTMLAttributes<HTMLLabelElement> {
 export interface SelectProps extends HTMLAttributes<HTMLDivElement> {
   options: { [k: string]: any };
   currentValue?: { [k: string]: string };
+  height?: string;
+  width?: string;
   setOption?: Dispatch<SetStateAction<string>>;
 }
 
@@ -182,6 +184,9 @@ export interface SessionDatas {
   name?: string | null;
   image?: string | null;
   role?: string | null;
+  age?: string | number | null;
+  sex?: string | null;
+  region?: string | null;
 }
 
 /* -------------------------------------------------- */
