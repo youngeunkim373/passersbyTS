@@ -368,13 +368,10 @@ export default async function members(
               content: string;
             }[] = req.body.answers || [];
 
-            console.log("before reddir");
-            console.log(`${process.env.NEXT_PUBLIC_UPLOAD_URL}/temporary/`);
             fs.readdir(
               `${process.env.NEXT_PUBLIC_UPLOAD_URL}/temporary/`,
               (err, files) => {
                 for (var i = 0; i < files.length; i++) {
-                  console.log(files[i]);
                   if (files[i].includes(writerEmail)) {
                     fs.rename(
                       `${process.env.NEXT_PUBLIC_UPLOAD_URL}/temporary/${files[i]}`,

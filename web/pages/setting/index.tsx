@@ -49,7 +49,7 @@ const Profile = (props: ProfileProps) => {
       {tab === "myProfile" ? (
         <MyProfile loggedInUser={loggedInUser!} setAlert={setAlert} />
       ) : (
-        <MyBoard loggedInUser={loggedInUser!} />
+        <MyBoard loggedInUser={loggedInUser!} setAlert={setAlert} />
       )}
     </div>
   );

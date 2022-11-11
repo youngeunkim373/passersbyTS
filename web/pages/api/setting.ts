@@ -63,7 +63,6 @@ export default async function members(
               take,
               where
             );
-            console.log(getPageCountResult);
 
             let option = {
               skip: Math.round((currentPage - 1) * +take),
@@ -88,7 +87,6 @@ export default async function members(
             };
 
             const result: any = await prisma.boardlist.findMany(option);
-            console.log(result);
 
             res
               .status(200)
@@ -145,6 +143,65 @@ export default async function members(
           res.status(500).json({ error: "Please check the path again!" });
           break;
       }
+    case "DELETE":
+    case "delete":
+      switch (path) {
+        case "deleteBoardList":
+          try {
+            const listIdList: string[] = req.body.listIdList;
+
+            for (var i = 0; i < listIdList.length; i++) {
+              const listId: any = listIdList[i];
+
+              let boardCommentResult = await prisma.boardcomment.deleteMany({
+                where: {
+                  listId: listId,
+                },
+              });
+
+              let boardAnswerLogResult = await prisma.boardanswerlog.deleteMany(
+                {
+                  where: {
+                    listId: listId,
+                  },
+                }
+              );
+
+              let boardAnswerResult = await prisma.boardanswer.deleteMany({
+                where: {
+                  listId: listId,
+                },
+              });
+
+              let boardAnswerStatsResult =
+                await prisma.boardanswerstats.deleteMany({
+                  where: {
+                    listId: listId,
+                  },
+                });
+
+              let boardListResult = await prisma.boardlist.delete({
+                where: {
+                  listId: listId,
+                },
+              });
+            }
+
+            res.status(200).json({ mesage: "Success" });
+          } catch (e) {
+            console.error("Request error", e);
+            res
+              .status(404)
+              .json({ error: "An error occured while deleting data" });
+          }
+          break;
+        default:
+          res.status(500).json({ error: "Please check the path again!" });
+          break;
+      }
+      break;
+    default:
+      res.status(403).json({ error: "Please check the method again!" });
       break;
   }
 }

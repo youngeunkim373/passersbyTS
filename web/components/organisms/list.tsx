@@ -1,6 +1,8 @@
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 
+import Checkbox from "@mui/material/Checkbox";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -10,58 +12,131 @@ import TableRow from "@mui/material/TableRow";
 
 import NewIcon from "../atoms/newIcon";
 import ProfileImage from "../molecules/profileImage";
-import { ListKeys } from "../../types/globalTypes";
 import { calcDate } from "../../lib/utils/calcDate";
+import { ListKeys } from "../../types/globalTypes";
 
 interface ListProps {
+  checkBox?: boolean;
+  checked?: string[];
   list: ListKeys[] | null;
   pageCategory: string;
+  setAlert: Dispatch<SetStateAction<{ open: boolean; text: string }>>;
+  setChecked?: Dispatch<SetStateAction<string[]>>;
 }
 
-const List = ({ list, pageCategory }: ListProps) => {
+const List = ({
+  checkBox = false,
+  checked,
+  list,
+  pageCategory,
+  setAlert,
+  setChecked,
+}: ListProps) => {
   const router = useRouter();
 
-  const onClickTableRow = (listId: string) => {
+  const onClickTableRow = async (e: React.MouseEvent, listId: string) => {
+    if ((e.target as HTMLInputElement).type === "checkbox") return;
     router.push(`/${pageCategory}/${listId}`);
+  };
+
+  const onChangeChecked = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newListId = e.target.value;
+    if (e.target.checked === true) {
+      if (checked!.length === 5) {
+        setAlert({
+          open: true,
+          text: "게시글은 5개까지 선택 가능합니다.",
+        });
+        return;
+      }
+
+      setChecked!((prev) => [...prev, newListId]);
+    } else {
+      const filteredChecked = checked!.filter(function (checked) {
+        return checked !== newListId;
+      });
+      setChecked!(filteredChecked);
+    }
   };
 
   return (
     <StyledTableContainer
       component={Paper}
-      sx={{ marginTop: "50px", minWidth: "600px" }}
+      sx={{ marginTop: "50px", minWidth: "500px" }}
     >
       <StyledTable aria-label="simple table">
         {list !== null &&
           list.map((row: ListKeys) => (
             <StyledTableBody
+              id={row.listId}
               key={row.listId}
-              onClick={(e) => {
-                onClickTableRow(row.listId);
-              }}
+              onClick={(e) => onClickTableRow(e, row.listId)}
             >
-              <TitleTableRow>
-                <TitleTableCell align="left">
-                  {calcDate(row.registerDate).dateDiff < 1440 && <NewIcon />}
-                  <TitleSpan>{row.listTitle}</TitleSpan>
-                </TitleTableCell>
-                <TableCell
-                  align="right"
-                  rowSpan={2}
-                  sx={{ minWidth: "200px", border: 0 }}
-                >
-                  <ProfileImageContainer>
-                    <ProfileImage image={row.writer?.userImage} />
-                  </ProfileImageContainer>
-                  <PostInfoContainer>
-                    {row.writer?.nickname}
-                    <TimeDiffParagraph>
-                      {calcDate(row.registerDate).expression}
-                    </TimeDiffParagraph>
-                  </PostInfoContainer>
-                </TableCell>
-              </TitleTableRow>
+              {checkBox ? (
+                <TitleTableRow>
+                  <TableCell
+                    align="center"
+                    rowSpan={2}
+                    sx={{ border: 0, width: "50px" }}
+                  >
+                    <Checkbox
+                      sx={{
+                        color: "#6f30c9",
+                        "&.Mui-checked": {
+                          color: "#6f30c9",
+                        },
+                        "& .MuiSvgIcon-root": { fontSize: 20 },
+                      }}
+                      value={row.listId}
+                      onChange={onChangeChecked}
+                      checked={checked!.includes(row.listId) ? true : false}
+                    />
+                  </TableCell>
+                  <TitleTableCell align="left">
+                    {calcDate(row.registerDate).dateDiff < 1440 && <NewIcon />}
+                    <TitleSpan>{row.listTitle}</TitleSpan>
+                  </TitleTableCell>
+                  <TableCell
+                    align="right"
+                    rowSpan={2}
+                    sx={{ minWidth: "200px", border: 0 }}
+                  >
+                    <ProfileImageContainer>
+                      <ProfileImage image={row.writer?.userImage} />
+                    </ProfileImageContainer>
+                    <PostInfoContainer>
+                      {row.writer?.nickname}
+                      <TimeDiffParagraph>
+                        {calcDate(row.registerDate).expression}
+                      </TimeDiffParagraph>
+                    </PostInfoContainer>
+                  </TableCell>
+                </TitleTableRow>
+              ) : (
+                <TitleTableRow>
+                  <TitleTableCell align="left">
+                    {calcDate(row.registerDate).dateDiff < 1440 && <NewIcon />}
+                    <TitleSpan>{row.listTitle}</TitleSpan>
+                  </TitleTableCell>
+                  <TableCell
+                    align="right"
+                    rowSpan={2}
+                    sx={{ minWidth: "200px", border: 0 }}
+                  >
+                    <ProfileImageContainer>
+                      <ProfileImage image={row.writer?.userImage} />
+                    </ProfileImageContainer>
+                    <PostInfoContainer>
+                      {row.writer?.nickname}
+                      <TimeDiffParagraph>
+                        {calcDate(row.registerDate).expression}
+                      </TimeDiffParagraph>
+                    </PostInfoContainer>
+                  </TableCell>
+                </TitleTableRow>
+              )}
               <ContentTableRow>
-                <ContentTableCell align="left">
+                <ContentTableCell align="left" colSpan={2}>
                   {row.listContent
                     .replace(/<[^>]*>?/g, "")
                     .replace(/&nbsp;/gi, "")}
