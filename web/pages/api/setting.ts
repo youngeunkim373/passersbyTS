@@ -63,6 +63,7 @@ export default async function members(
               take,
               where
             );
+            console.log(getPageCountResult);
 
             let option = {
               skip: Math.round((currentPage - 1) * +take),
@@ -87,6 +88,7 @@ export default async function members(
             };
 
             const result: any = await prisma.boardlist.findMany(option);
+            console.log(result);
 
             res
               .status(200)
