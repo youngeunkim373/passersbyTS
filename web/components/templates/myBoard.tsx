@@ -21,14 +21,14 @@ interface MyProfileProps {
   api?: string;
   boardList?: BoardListKeys[];
   checkBox?: boolean;
-  currentPage: number;
+  currentPage?: number;
   loggedInUser: SessionDatas;
-  pageCount: number;
+  pageCount?: number;
   title?: string;
   fetchAnswerList?: Function;
   fetchQuestionList?: Function;
   setAlert: Dispatch<SetStateAction<{ open: boolean; text: string }>>;
-  setCurrentPage: Dispatch<SetStateAction<number>>;
+  setCurrentPage?: Dispatch<SetStateAction<number>>;
   setOption?: Dispatch<SetStateAction<string>>;
   setSearch?: Dispatch<SetStateAction<string>>;
 }
@@ -200,9 +200,9 @@ const MyList = ({
           />
           <PaginationContainer>
             <Pagination
-              pageCount={pageCount}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
+              pageCount={pageCount!}
+              currentPage={currentPage!}
+              setCurrentPage={setCurrentPage!}
             />
             {api === "board" && (
               <ButtonContainer>

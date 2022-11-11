@@ -20,7 +20,7 @@ interface ListProps {
   checked?: string[];
   list: ListKeys[] | null;
   pageCategory: string;
-  setAlert: Dispatch<SetStateAction<{ open: boolean; text: string }>>;
+  setAlert?: Dispatch<SetStateAction<{ open: boolean; text: string }>>;
   setChecked?: Dispatch<SetStateAction<string[]>>;
 }
 
@@ -43,7 +43,7 @@ const List = ({
     const newListId = e.target.value;
     if (e.target.checked === true) {
       if (checked!.length === 5) {
-        setAlert({
+        setAlert!({
           open: true,
           text: "게시글은 5개까지 선택 가능합니다.",
         });
