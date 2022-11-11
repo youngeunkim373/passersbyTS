@@ -42,6 +42,7 @@ model boardlist {
     registerDate                     DateTime        @updatedAt        
         
     writer                           members?        @relation(fields: [writerEmail], references: [email])
+    boardAnswers                     boardanswerlog[]  
 }
 
 model boardcomment {
@@ -83,6 +84,7 @@ model boardanswerlog {
     registerDate                     DateTime        @updatedAt    
        
     respondent                       members?        @relation(fields: [respondentEmail], references: [email])  
+    lists                            boardlist?      @relation(fields: [listId], references: [listId])      
 
     @@id([listId, respondentEmail])
 }

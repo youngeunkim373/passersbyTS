@@ -9,6 +9,7 @@ import { Divider } from "@mui/material";
 import Alert from "../../components/molecules/alert";
 import Title from "../../components/atoms/title";
 import MyProfile from "../../components/templates/myProfile";
+import MyBoard from "../../components/templates/myBoard";
 
 interface ProfileProps {}
 
@@ -45,10 +46,11 @@ const Profile = (props: ProfileProps) => {
         <StyledTab value="myBoard" label="질문/답변" />
       </StyledTabs>
       <Divider />
-      {tab === "myProfile" && (
+      {tab === "myProfile" ? (
         <MyProfile loggedInUser={loggedInUser!} setAlert={setAlert} />
+      ) : (
+        <MyBoard loggedInUser={loggedInUser!} />
       )}
-      {/* {tab === "myProfile" ? <MyProfile /> : <MyBoard />} */}
     </div>
   );
 };

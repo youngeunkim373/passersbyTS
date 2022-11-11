@@ -1,17 +1,16 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { signIn, useSession } from "next-auth/react";
 import axios from "axios";
 import styled from "styled-components";
 
 import SettingsIcon from "@mui/icons-material/Settings";
 
 import BasicInput from "../atoms/basicInput";
-import ProfileImage from "../molecules/profileImage";
-import { SessionDatas } from "../../types/globalTypes";
-import BasicSelect from "../atoms/basicSelect";
-import PushButton from "../atoms/pushButton";
 import BasicLabel from "../atoms/basicLabel";
+import BasicSelect from "../atoms/basicSelect";
+import ProfileImage from "../molecules/profileImage";
+import PushButton from "../atoms/pushButton";
+import { SessionDatas } from "../../types/globalTypes";
 
 interface MyProfileProps {
   loggedInUser: SessionDatas;
@@ -47,7 +46,10 @@ const MyProfile = ({ loggedInUser, setAlert }: MyProfileProps) => {
   const sexSelectRef = useRef<HTMLLabelElement>(null);
   const regionSelectRef = useRef<HTMLLabelElement>(null);
 
-  const router = useRouter();
+  const reloadSession = () => {
+    const event = new Event("visibilitychange");
+    document.dispatchEvent(event);
+  };
 
   const onChangeFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -123,10 +125,10 @@ const MyProfile = ({ loggedInUser, setAlert }: MyProfileProps) => {
         config
       )
       .then((res) => {
-        router.reload();
-        // setNickname(res.data.nickname);
-        // setSex(res.data.sex);
-        // setRegion(res.data.region);
+        reloadSession();
+        setNickname(res.data.nickname);
+        setSex(res.data.sex);
+        setRegion(res.data.region);
         setAlert({
           open: true,
           text: "회원정보 변경이 완료되었습니다",
@@ -151,91 +153,89 @@ const MyProfile = ({ loggedInUser, setAlert }: MyProfileProps) => {
   };
 
   return (
-    <form
+    <ProfileForm
       encType="multi part/form-data"
       onSubmit={handleSubmit}
       method="put"
       acceptCharset="UTF-8"
     >
-      <ProfileContainer>
-        <LineContainer>
-          <ProfileImageContainer>
-            <ProfileImage image={profileImage} width="110px" height="110px" />
-            <input
-              accept="image/*"
-              id="imageUpload"
-              name="image"
-              onChange={onChangeFile}
-              ref={profileImageInputRef}
-              type="file"
-              style={{ display: "none" }}
-            />
-            <label htmlFor="imageUpload">
-              <StyledSettingsIcon name="file" />
-            </label>
-          </ProfileImageContainer>
-          <UserNameContainer>
-            <UserNameParagraph>{nickname}</UserNameParagraph>
-            <UserEmailParagraph>{loggedInUser.email}</UserEmailParagraph>
-          </UserNameContainer>
-        </LineContainer>
-        <LineContainer>
-          <ContentContainer>
-            <BasicLabel fontSize="20px">닉네임</BasicLabel>
-            <BasicInput
-              id="nickname"
-              placeholder="닉네임을 입력하세요."
-              ref={nicknameInputRef}
-              required={true}
-              type="text"
-              defaultValue={nickname!}
-              width="250px"
-            />
-          </ContentContainer>
-          <ContentContainer>
-            <BasicLabel fontSize="20px">연령</BasicLabel>
-            <BasicInput
-              id="nicknm"
-              readOnly={true}
-              type="text"
-              value={loggedInUser.age!}
-              width="250px"
-            />
-          </ContentContainer>
-        </LineContainer>
-        <LineContainer>
-          <ContentContainer>
-            <BasicLabel fontSize="20px">성별</BasicLabel>
-            <BasicSelect
-              options={sexList}
-              ref={sexSelectRef}
-              height="50px"
-              width="250px"
-              currentValue={{
-                id: sex!,
-                text: sexList[sex!],
-              }}
-            />
-          </ContentContainer>
-          <ContentContainer>
-            <BasicLabel fontSize="20px">지역</BasicLabel>
-            <BasicSelect
-              options={regionList}
-              ref={regionSelectRef}
-              height="50px"
-              width="250px"
-              currentValue={{
-                id: region!,
-                text: regionList[region!],
-              }}
-            />
-          </ContentContainer>
-        </LineContainer>
-        <ButtonContainer>
-          <PushButton type="submit">변경하기</PushButton>
-        </ButtonContainer>
-      </ProfileContainer>
-    </form>
+      <LineContainer>
+        <ProfileImageContainer>
+          <ProfileImage image={profileImage} width="110px" height="110px" />
+          <input
+            accept="image/*"
+            id="imageUpload"
+            name="image"
+            onChange={onChangeFile}
+            ref={profileImageInputRef}
+            type="file"
+            style={{ display: "none" }}
+          />
+          <label htmlFor="imageUpload">
+            <StyledSettingsIcon name="file" />
+          </label>
+        </ProfileImageContainer>
+        <UserNameContainer>
+          <UserNameParagraph>{nickname}</UserNameParagraph>
+          <UserEmailParagraph>{loggedInUser.email}</UserEmailParagraph>
+        </UserNameContainer>
+      </LineContainer>
+      <LineContainer>
+        <ContentContainer>
+          <BasicLabel fontSize="20px">닉네임</BasicLabel>
+          <BasicInput
+            id="nickname"
+            placeholder="닉네임을 입력하세요."
+            ref={nicknameInputRef}
+            required={true}
+            type="text"
+            defaultValue={nickname!}
+            width="250px"
+          />
+        </ContentContainer>
+        <ContentContainer>
+          <BasicLabel fontSize="20px">연령</BasicLabel>
+          <BasicInput
+            id="nicknm"
+            readOnly={true}
+            type="text"
+            value={loggedInUser.age!}
+            width="250px"
+          />
+        </ContentContainer>
+      </LineContainer>
+      <LineContainer>
+        <ContentContainer>
+          <BasicLabel fontSize="20px">성별</BasicLabel>
+          <BasicSelect
+            options={sexList}
+            ref={sexSelectRef}
+            height="50px"
+            width="250px"
+            currentValue={{
+              id: sex!,
+              text: sexList[sex!],
+            }}
+          />
+        </ContentContainer>
+        <ContentContainer>
+          <BasicLabel fontSize="20px">지역</BasicLabel>
+          <BasicSelect
+            options={regionList}
+            ref={regionSelectRef}
+            height="50px"
+            width="250px"
+            currentValue={{
+              id: region!,
+              text: regionList[region!],
+            }}
+          />
+        </ContentContainer>
+      </LineContainer>
+      <ButtonContainer>
+        <PushButton type="submit">변경하기</PushButton>
+      </ButtonContainer>
+    </ProfileForm>
   );
 };
 
@@ -261,7 +261,7 @@ const LineContainer = styled.div`
   width: 80%;
 `;
 
-const ProfileContainer = styled.div`
+const ProfileForm = styled.form`
   background: ${({ theme }) => theme.global.component.bgColor};
   padding: 50px;
 `;

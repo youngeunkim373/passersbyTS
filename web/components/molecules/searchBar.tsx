@@ -85,5 +85,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const StyledSearch = SCstyled(Search)`
   background: ${({ theme }) => theme.global.component.bgColor};
+  border:${({ theme }) => theme.global.component.border};
   color: ${({ theme }) => theme.global.component.color};
 `;

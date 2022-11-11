@@ -14,7 +14,7 @@ import { ListKeys } from "../../types/globalTypes";
 import { calcDate } from "../../lib/utils/calcDate";
 
 interface ListProps {
-  list: ListKeys[];
+  list: ListKeys[] | null;
   pageCategory: string;
 }
 
@@ -26,50 +26,51 @@ const List = ({ list, pageCategory }: ListProps) => {
   };
 
   return (
-    <TableContainer
+    <StyledTableContainer
       component={Paper}
       sx={{ marginTop: "50px", minWidth: "600px" }}
     >
       <StyledTable aria-label="simple table">
-        {list.map((row: ListKeys) => (
-          <StyledTableBody
-            key={row.listId}
-            onClick={(e) => {
-              onClickTableRow(row.listId);
-            }}
-          >
-            <TitleTableRow>
-              <TitleTableCell align="left">
-                {calcDate(row.registerDate).dateDiff < 1440 && <NewIcon />}
-                <TitleSpan>{row.listTitle}</TitleSpan>
-              </TitleTableCell>
-              <TableCell
-                align="right"
-                rowSpan={2}
-                sx={{ minWidth: "200px", border: 0 }}
-              >
-                <ProfileImageContainer>
-                  <ProfileImage image={row.writer?.userImage} />
-                </ProfileImageContainer>
-                <PostInfoContainer>
-                  {row.writer?.nickname}
-                  <TimeDiffParagraph>
-                    {calcDate(row.registerDate).expression}
-                  </TimeDiffParagraph>
-                </PostInfoContainer>
-              </TableCell>
-            </TitleTableRow>
-            <ContentTableRow>
-              <ContentTableCell align="left">
-                {row.listContent
-                  .replace(/<[^>]*>?/g, "")
-                  .replace(/&nbsp;/gi, "")}
-              </ContentTableCell>
-            </ContentTableRow>
-          </StyledTableBody>
-        ))}
+        {list !== null &&
+          list.map((row: ListKeys) => (
+            <StyledTableBody
+              key={row.listId}
+              onClick={(e) => {
+                onClickTableRow(row.listId);
+              }}
+            >
+              <TitleTableRow>
+                <TitleTableCell align="left">
+                  {calcDate(row.registerDate).dateDiff < 1440 && <NewIcon />}
+                  <TitleSpan>{row.listTitle}</TitleSpan>
+                </TitleTableCell>
+                <TableCell
+                  align="right"
+                  rowSpan={2}
+                  sx={{ minWidth: "200px", border: 0 }}
+                >
+                  <ProfileImageContainer>
+                    <ProfileImage image={row.writer?.userImage} />
+                  </ProfileImageContainer>
+                  <PostInfoContainer>
+                    {row.writer?.nickname}
+                    <TimeDiffParagraph>
+                      {calcDate(row.registerDate).expression}
+                    </TimeDiffParagraph>
+                  </PostInfoContainer>
+                </TableCell>
+              </TitleTableRow>
+              <ContentTableRow>
+                <ContentTableCell align="left">
+                  {row.listContent
+                    .replace(/<[^>]*>?/g, "")
+                    .replace(/&nbsp;/gi, "")}
+                </ContentTableCell>
+              </ContentTableRow>
+            </StyledTableBody>
+          ))}
       </StyledTable>
-    </TableContainer>
+    </StyledTableContainer>
   );
 };
 
@@ -111,6 +112,13 @@ const StyledTableBody = styled(TableBody)`
   &:hover {
     background: ${({ theme }) => theme.global.component.pointBgColor};
   }
+`;
+
+const StyledTableContainer = styled(TableContainer)<{ component: any }>`
+  box-shadow: ${({ theme }) =>
+    theme.global.component.bgColor === "#ffffff"
+      ? "0px 2px 1px -1px rgb(0 0 0 / 20%),0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)"
+      : "0px 2px 1px -1px rgb(255 255 255 / 20%),0px 1px 1px 0px rgb(255 255 255 / 14%), 0px 1px 3px 0px rgb(255 255 255 / 12%)"};
 `;
 
 const TimeDiffParagraph = styled.div`

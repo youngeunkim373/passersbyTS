@@ -1,13 +1,14 @@
 import prisma from "../../lib/db/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
+
+import getCommentPageCount from "./utils/getCommentPageCount";
+import getListPageCount from "./utils/getListPageCount";
 import {
   BoardAnswerKeys,
   CommentKeys,
   BoardListKeys,
 } from "../../types/globalTypes";
-import getCommentPageCount from "./utils/getCommentPageCount";
-import getListPageCount from "./utils/getListPageCount";
 
 export default async function members(
   req: NextApiRequest,
@@ -26,6 +27,7 @@ export default async function members(
             const currentPage: number = Number(req.query.page);
             const search: string = String(req.query?.search);
             const take: number = Number(req.query.take);
+            const email: string = String(req.query.email);
 
             const orderBy: { [k: string]: string } =
               criteria === "viewCount"
@@ -36,9 +38,28 @@ export default async function members(
                   }
                 : { registerDate: "desc" };
 
+            const where = {
+              OR: [
+                {
+                  listTitle: {
+                    contains: search,
+                  },
+                },
+                {
+                  listContent: {
+                    contains: search,
+                  },
+                },
+              ],
+              ...(email !== "undefined" && {
+                writerEmail: email,
+              }),
+            };
+
             const getPageCountResult: number | unknown = await getListPageCount(
               "boardlist",
-              search ? search : ""
+              take,
+              where
             );
 
             let option = {
@@ -61,20 +82,7 @@ export default async function members(
               },
               orderBy: orderBy,
               ...(search !== "undefined" && {
-                where: {
-                  OR: [
-                    {
-                      listTitle: {
-                        contains: search,
-                      },
-                    },
-                    {
-                      listContent: {
-                        contains: search,
-                      },
-                    },
-                  ],
-                },
+                where: where,
               }),
             };
 

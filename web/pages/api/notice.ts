@@ -21,9 +21,25 @@ export default async function members(
             const search: string = String(req.query?.search);
             const take: number = Number(req.query.take);
 
+            const where = {
+              OR: [
+                {
+                  listTitle: {
+                    contains: search,
+                  },
+                },
+                {
+                  listContent: {
+                    contains: search,
+                  },
+                },
+              ],
+            };
+
             const getPageCountResult: number | unknown = await getListPageCount(
               "noticelist",
-              search ? search : ""
+              take,
+              where
             );
 
             let option = {
@@ -44,20 +60,7 @@ export default async function members(
               },
               orderBy: { registerDate: "desc" } as any,
               ...(search !== "undefined" && {
-                where: {
-                  OR: [
-                    {
-                      listTitle: {
-                        contains: search,
-                      },
-                    },
-                    {
-                      listContent: {
-                        contains: search,
-                      },
-                    },
-                  ],
-                },
+                where: where,
               }),
             };
 

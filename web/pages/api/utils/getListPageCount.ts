@@ -2,32 +2,20 @@ import prisma from "../../../lib/db/prisma";
 
 export default async function getListPageCount(
   table: string,
-  search?: string
+  take: number,
+  where?: any
 ): Promise<number | unknown> {
   try {
     const option = {
-      ...(search !== "undefined" && {
-        where: {
-          OR: [
-            {
-              listTitle: {
-                contains: search,
-              },
-            },
-            {
-              listContent: {
-                contains: search,
-              },
-            },
-          ],
-        },
-      }),
+      where: where,
     };
 
     const result: number = await prisma?.[table].count(option);
 
     const getListPageCount =
-      result % 10 === 0 ? Math.floor(result / 10) : Math.floor(result / 10) + 1;
+      result % take === 0
+        ? Math.floor(result / take)
+        : Math.floor(result / take) + 1;
 
     return getListPageCount;
   } catch (error) {
