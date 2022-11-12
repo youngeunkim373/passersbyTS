@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, Middleware, StoreEnhancer } from "redux";
-import rootReducer from "./reducers";
+import rootReducer from "./modules/index";
 import { MakeStore, createWrapper } from "next-redux-wrapper";
 
 const bindMiddleware = (middleware: Middleware[]): StoreEnhancer => {

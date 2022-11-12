@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
@@ -15,6 +15,8 @@ import List from "../../components/organisms/list";
 import Pagination from "../../components/molecules/pagination";
 import PushButton from "../../components/atoms/pushButton";
 import { BoardListKeys } from "../../types/globalTypes";
+
+import LoadingContext from "../../context/loading";
 
 interface BoardListProps {
   boardList: BoardListKeys[];
@@ -39,7 +41,9 @@ const BoardList = (props: BoardListProps) => {
 
   const router = useRouter();
 
-  const { data: session, status } = useSession();
+  const { status } = useSession();
+
+  const { setLoading }: any = useContext(LoadingContext);
 
   const criteriaRef = useRef<HTMLLabelElement>(null);
 
@@ -74,15 +78,17 @@ const BoardList = (props: BoardListProps) => {
               open: true,
               text: "검색결과가 없습니다.",
             });
+            setLoading(false);
             return;
           }
           if (res.data.pageCount > 0) setPageCount(res.data.pageCount);
+          setLoading(false);
         })
         .catch((error) => console.log(error.response));
     }
-
+    setLoading(true);
     fetchBoardList();
-  }, [criteria, currentPage, search]);
+  }, [criteria, currentPage, search, setLoading]);
 
   return (
     <div id="list-page">

@@ -1,9 +1,8 @@
 import { useState } from "react";
 import type { AppProps } from "next/app";
-import Head from "next/head";
 import { SessionProvider } from "next-auth/react";
+import Head from "next/head";
 import { ThemeProvider } from "styled-components";
-//import { wrapper } from "../store";
 
 import "../styles/font.css";
 import "react-quill/dist/quill.snow.css";
@@ -11,6 +10,7 @@ import { GlobalStyle } from "../styles/globalStyle";
 import { lightTheme, darkTheme } from "../styles/theme";
 
 import Layout from "../components/templates/layout";
+import { LoadingProvider } from "../context/loading";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [isDark, setDark] = useState(false);
@@ -32,9 +32,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
         <GlobalStyle />
         <SessionProvider>
-          <Layout isDark={isDark} toggleDarkMode={toggleDarkMode}>
-            <Component {...pageProps} />
-          </Layout>
+          <LoadingProvider>
+            <Layout isDark={isDark} toggleDarkMode={toggleDarkMode}>
+              <Component {...pageProps} />
+            </Layout>
+          </LoadingProvider>
         </SessionProvider>
       </ThemeProvider>
     </>

@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GetServerSideProps } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
 import styled from "styled-components";
@@ -15,7 +16,8 @@ import PushButton from "../components/atoms/pushButton";
 import SmallBox from "../components/atoms/smallBox";
 import Title from "../components/atoms/title";
 import { BoardListKeys } from "../types/globalTypes";
-import Image from "next/image";
+
+import LoadingContext from "../context/loading";
 
 interface HomeProps {
   boardList: BoardListKeys[];
@@ -28,6 +30,8 @@ const Home = (props: HomeProps) => {
 
   const matches2 = useMediaQuery("(max-width:850px)");
   const matches3 = useMediaQuery("(max-width:1200px)");
+
+  const { setLoading }: any = useContext(LoadingContext);
 
   function bindCategory(arr: any[], number: number): any[] {
     let bind = [];
@@ -51,12 +55,13 @@ const Home = (props: HomeProps) => {
           if (res.data.boardList.length > 0) {
             setBoardList(res.data.boardList);
           }
+          setLoading(false);
         })
         .catch((error) => console.log(error.response));
     }
-
+    setLoading(true);
     fetchBoardList();
-  }, [criteria]);
+  }, [criteria, setLoading]);
 
   return (
     <Container>
