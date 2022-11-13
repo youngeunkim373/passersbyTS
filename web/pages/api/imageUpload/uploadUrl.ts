@@ -20,6 +20,8 @@ export default async function handler(
     bucket = storage.bucket(process.env.PROFILE_BUCKET_NAME!);
   } else if (bucketName === "board") {
     bucket = storage.bucket(process.env.BOARD_BUCKET_NAME!);
+  } else if (bucketName === "notice") {
+    bucket = storage.bucket(process.env.NOTICE_BUCKET_NAME!);
   } else {
     throw new Error("Can't find bucket!");
   }

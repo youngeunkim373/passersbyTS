@@ -217,7 +217,7 @@ const BoardWrite = () => {
             ))}
         </div>
       </BasicContainer>
-      <Editor value={content} onChange={setContent} />
+      <Editor bucket="board" value={content} onChange={setContent} />
       <PushButtonContainer>
         <PushButton type="submit">등록하기</PushButton>
       </PushButtonContainer>

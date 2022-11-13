@@ -8,6 +8,7 @@ import ReactQuill from "react-quill";
 //Quill.register("modules/imageResize", ImageResize);
 
 interface EditorProps {
+  bucket?: string;
   className?: string;
   forwardedRef?: React.Ref<any>;
   modules?: any;
@@ -28,7 +29,7 @@ const DynamicReactQuill = dynamic(
   { ssr: false }
 );
 
-function Editor({ readOnly, value, onChange }: EditorProps) {
+function Editor({ bucket, readOnly, value, onChange }: EditorProps) {
   const { data: session, status } = useSession();
   const loggedInUser = session?.user;
 
@@ -42,7 +43,7 @@ function Editor({ readOnly, value, onChange }: EditorProps) {
     const fileType = encodeURIComponent((file as any).type);
 
     const res = await fetch(
-      `/api/imageUpload/uploadUrl?file=${filename}&fileType=${fileType}&bucket=board`
+      `/api/imageUpload/uploadUrl?file=${filename}&fileType=${fileType}&bucket=${bucket}`
     );
     const { url, fields } = await res.json();
 
@@ -61,7 +62,7 @@ function Editor({ readOnly, value, onChange }: EditorProps) {
     };
 
     await axios
-      .post("/api/imageUpload/temporary", formData, config)
+      .post(`/api/imageUpload/${bucket}`, formData, config)
       .then(async (res) => {
         const editor = quillRef.current!.getEditor();
         const range = editor.getSelection()!;
@@ -69,7 +70,7 @@ function Editor({ readOnly, value, onChange }: EditorProps) {
         editor.insertEmbed(
           range.index,
           "image",
-          `https://storage.cloud.google.com/passersby_board/${res.data}`
+          `https://storage.cloud.google.com/passersby_${bucket}/${res.data}`
         );
       })
       .catch((error) => console.log(error));

@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { CommentKeys, NoticeListKeys } from "../../types/globalTypes";
 import getCommentPageCount from "./utils/getCommentPageCount";
 import getListPageCount from "./utils/getListPageCount";
+import findNoticeBucket from "./utils/findNoticeBucket";
 
 export default async function members(
   req: NextApiRequest,
@@ -180,6 +181,44 @@ export default async function members(
     case "POST":
     case "post":
       switch (path) {
+        case "createNoticeContent":
+          try {
+            const listTitle: string = req.body.listTitle;
+            const writerEmail: string = req.body.writerEmail;
+            const listContent: string = req.body.listContent;
+
+            const newListIdResult: { newListId: string }[] =
+              await prisma.$queryRaw`
+              SELECT  CONCAT( DATE_FORMAT(CURDATE(), '%Y%m%d')
+                             ,LPAD(ifnull(RIGHT(MAX(listId),5),0)+1, 5, 0))     AS newListId
+                FROM noticelist
+               WHERE 1 = 1
+                 AND DATE_FORMAT(registerDate, '%Y-%m-%d') = CURDATE()
+              `;
+            const newListId = newListIdResult[0].newListId;
+
+            const noticeListResult = await prisma.$executeRaw`
+                        INSERT INTO noticelist
+                               (
+                                listId, listTitle, writerEmail, listContent, registerId,  registerDate
+                               )
+                        VALUES
+                               (
+                                 ${newListId}
+                                ,${listTitle}
+                                ,${writerEmail}
+                                ,${listContent}
+                                ,${writerEmail}
+                                ,NOW()
+                               )
+                  `;
+
+            res.status(200).json({ noticeListResult });
+          } catch (e) {
+            console.error("Request error", e);
+            res.status(500).json({ error: "Error while seleting data" });
+          }
+          break;
         case "createNoticeComment":
           try {
             const name: string = req.body.name;
