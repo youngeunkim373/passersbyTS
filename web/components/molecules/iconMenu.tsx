@@ -1,7 +1,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import styled from "styled-components";
+import SCstyled, { useTheme } from "styled-components";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -10,6 +10,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
+import { styled } from "@mui/material/styles";
 
 import type { AnchorProps, ButtonProps } from "../../types/globalTypes";
 
@@ -107,6 +108,9 @@ export default function IconMenu({
     </Box>
   );
 
+  const SCtheme = useTheme();
+  const bgColor = SCtheme.menu.bgColor;
+
   return (
     <div>
       {([direction] as const).map((anchor) => (
@@ -114,7 +118,7 @@ export default function IconMenu({
           <Button onClick={toggleDrawer(anchor, true)}>
             <Icon sx={{ color: "#9000ff" }} />
           </Button>
-          <ThemeDrawer
+          <Drawer
             anchor={anchor}
             BackdropProps={{
               sx: {
@@ -124,6 +128,7 @@ export default function IconMenu({
             open={state[anchor]}
             PaperProps={{
               sx: {
+                backgroundColor: bgColor,
                 top: "70px",
                 boxShadow: "none",
               },
@@ -131,21 +136,21 @@ export default function IconMenu({
             onClose={toggleDrawer(anchor, false)}
           >
             {list(anchor, drawerList)}
-          </ThemeDrawer>
+          </Drawer>
         </React.Fragment>
       ))}
     </div>
   );
 }
 
-const EventTextMenu = styled.button<ButtonProps>`
+const EventTextMenu = SCstyled.button<ButtonProps>`
   color: ${({ theme }) => theme.global.component.color};
   font-family: ibmRegular;
   font-size: 20px;
   font-weight: bold;
 `;
 
-const LinkTextMenu = styled.a<LinkProps>`
+const LinkTextMenu = SCstyled.a<LinkProps>`
   color: ${({ englishMenu, path, theme }) =>
     `/${englishMenu}` === path ? "#9000ff" : theme.global.component.color};
   font-family: ibmRegular;
@@ -153,19 +158,12 @@ const LinkTextMenu = styled.a<LinkProps>`
   font-weight: bold;
 `;
 
-const ThemeDrawer = styled(Drawer)`
-  .css-1qvuuif-MuiPaper-root-MuiDrawer-paper,
-  .css-14ukx6z-MuiPaper-root-MuiDrawer-paper {
-    background: ${({ theme }) => theme.menu.bgColor};
-  }
-`;
-
-const ThemeListItem = styled(ListItem)`
+const ThemeListItem = SCstyled(ListItem)`
   :hover {
     background: rgb(255, 255, 255, 0.05);
   }
 `;
 
-const ThemeListItemIcon = styled(ListItemIcon)`
+const ThemeListItemIcon = SCstyled(ListItemIcon)`
   color: ${({ theme }) => theme.menuIcon.color};
 `;

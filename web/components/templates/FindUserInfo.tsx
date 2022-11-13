@@ -171,17 +171,17 @@ const ThemeDivider = styled(Divider)`
 const ThemeFormControlLabel = styled(FormControlLabel)`
   color: ${({ theme }) => theme.global.component.color};
 
-  .css-ahj2mt-MuiTypography-root {
+  .MuiTypography-root {
     font-family: ibmLight;
     font-size: 17px;
     font-weight: bold;
   }
 
-  .css-vqmohf-MuiButtonBase-root-MuiRadio-root {
+  .MuiRadio-root {
     color: ${({ theme }) => theme.global.component.color};
   }
 
-  .css-vqmohf-MuiButtonBase-root-MuiRadio-root.Mui-checked {
+  .MuiRadio-root.Mui-checked {
     color: #9000ff;
   }
 `;

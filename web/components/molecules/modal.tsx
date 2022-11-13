@@ -32,7 +32,7 @@ const CloseIconWithPosition = styled(CloseIcon)`
 `;
 
 const ThemeDialog = styled(Dialog)`
-  .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
+  .MuiDialog-paper {
     background: ${({ theme }) => theme.global.component.pointBgColor};
   }
 `;

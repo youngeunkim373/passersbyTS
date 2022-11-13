@@ -42,15 +42,15 @@ const Container = styled.div`
 `;
 
 const ThemePage = styled(Page)`
-  .css-yuzg60-MuiButtonBase-root-MuiPaginationItem-root {
+  .MuiPaginationItem-root {
     color: ${({ theme }) => theme.pagination.page};
   }
 
-  .css-yuzg60-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
+  .Mui-selected {
     background: ${({ theme }) => theme.pagination.circle};
   }
 
-  .css-g2z002-MuiSvgIcon-root-MuiPaginationItem-icon {
+  .MuiPaginationItem-icon {
     color: ${(props) => props.theme.pagination.arrow};
   }
 `;

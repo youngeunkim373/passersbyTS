@@ -76,7 +76,7 @@ const StyledAccordion = styled(Accordion)`
   &:before {
     background: transparent;
   }
-  .css-yw020d-MuiAccordionSummary-expandIconWrapper {
+  .MuiAccordionSummary-expandIconWrapper {
     color: ${({ theme }) => theme.global.component.pointColor};
   }
 `;

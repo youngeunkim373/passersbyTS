@@ -358,7 +358,7 @@ const ThemeAccordion = styled(Accordion)`
   border-bottom: ${({ theme }) => theme.global.component.border};
   color: ${({ theme }) => theme.global.component.color};
 
-  .css-yw020d-MuiAccordionSummary-expandIconWrapper {
+  .MuiAccordionSummary-expandIconWrapper {
     color: ${({ theme }) => theme.global.component.pointColor};
   }
 `;

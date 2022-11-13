@@ -209,16 +209,16 @@ const StyledFormControlLabel = styled(FormControlLabel)`
   padding-left: 30px;
   padding-right: 30px;
 
-  .css-vqmohf-MuiButtonBase-root-MuiRadio-root.Mui-checked {
+  .MuiRadio-root.Mui-checked {
     color: #9000ff;
   }
 
-  .css-ahj2mt-MuiTypography-root {
+  .MuiTypography-root {
     font-family: ibmLight;
     font-weight: bold;
   }
 
-  .css-vqmohf-MuiButtonBase-root-MuiRadio-root {
+  .MuiRadio-root {
     color: ${({ theme }) => theme.global.component.color};
   }
 `;

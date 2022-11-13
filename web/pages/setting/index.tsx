@@ -73,14 +73,7 @@ const StyledTabs = styled(Tabs)`
   background: ${({ theme }) => theme.global.component.bgColor};
   border-radius: 5px;
 
-  .css-1a4cg4j-MuiButtonBase-root-MuiTab-root.Mui-selected {
-    color: #9000ff;
-  }
-  .css-1dcpqh4-MuiButtonBase-root-MuiTab-root.Mui-selected {
-    color: #9000ff;
-  }
-
-  .css-1h9z7r5-MuiButtonBase-root-MuiTab-root.Mui-selected {
+  .MuiTab-root.Mui-selected {
     color: #9000ff;
   }
 `;

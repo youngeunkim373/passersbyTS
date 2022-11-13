@@ -313,7 +313,7 @@ const VerifyTextField = styled(TextField)<VerifyTextFieldProps>`
   display: ${({ $verifyInput }) => ($verifyInput ? "block" : "none")};
   margin-top: 30px;
 
-  .css-nmbvik-MuiInputBase-root-MuiOutlinedInput-root {
+  .MuiOutlinedInput-root {
     color: ${({ theme }) => theme.global.component.color};
   }
 `;
