@@ -305,48 +305,27 @@ const SignUp: React.FC = () => {
 
 export default SignUp;
 
-const UserInfoContainer = styled.div`
-  margin: 0 auto;
-  width: 300px;
-`;
-
 const LabelContainer = styled.div`
   padding-left: 10px;
+`;
+
+const RegionSelectContainer = styled.div`
+  float: right;
+  padding-top: 30px;
 `;
 
 const SecondLabelContainer = styled(LabelContainer)`
   padding-top: 30px;
 `;
 
-interface VerifyTextFieldProps {
-  $verifyInput: boolean;
-}
-
-const VerifyTextField = styled(TextField)<VerifyTextFieldProps>`
-  display: ${({ $verifyInput }) => ($verifyInput ? "block" : "none")};
-  margin-top: 30px;
-
-  .MuiOutlinedInput-root {
-    color: ${({ theme }) => theme.global.component.color};
-  }
-`;
-
-interface VerifyCompleteParagraphProps {
-  verifyComplete: boolean;
-}
-
-const VerifyCompleteParagraph = styled.p<VerifyCompleteParagraphProps>`
-  color: #5f00ff;
-  display: ${({ verifyComplete }) => (verifyComplete ? "block" : "none")};
+const SelfAuthButtonContainer = styled.div`
+  left: calc(50% + 150px);
+  position: absolute;
+  top: 245px;
 `;
 
 const SexSelectContainer = styled.div`
   float: left;
-  padding-top: 30px;
-`;
-
-const RegionSelectContainer = styled.div`
-  float: right;
   padding-top: 30px;
 `;
 
@@ -355,8 +334,21 @@ const SignUpButtonContainer = styled.div`
   text-align: center;
 `;
 
-const SelfAuthButtonContainer = styled.div`
-  left: calc(50% + 150px);
-  position: absolute;
-  top: 245px;
+const UserInfoContainer = styled.div`
+  margin: 0 auto;
+  width: 300px;
+`;
+
+const VerifyCompleteParagraph = styled.p<{ verifyComplete: boolean }>`
+  color: #5f00ff;
+  display: ${({ verifyComplete }) => (verifyComplete ? "block" : "none")};
+`;
+
+const VerifyTextField = styled(TextField)<{ $verifyInput: boolean }>`
+  display: ${({ $verifyInput }) => ($verifyInput ? "block" : "none")};
+  margin-top: 30px;
+
+  .MuiOutlinedInput-root {
+    color: ${({ theme }) => theme.global.component.color};
+  }
 `;

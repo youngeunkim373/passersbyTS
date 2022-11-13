@@ -1,5 +1,4 @@
-import { Dispatch, SetStateAction, useRef, useState } from "react";
-import { useRouter } from "next/router";
+import { Dispatch, SetStateAction, useContext, useRef, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 
@@ -11,6 +10,8 @@ import BasicSelect from "../atoms/basicSelect";
 import ProfileImage from "../molecules/profileImage";
 import PushButton from "../atoms/pushButton";
 import { SessionDatas } from "../../types/globalTypes";
+
+import LoadingContext from "../../context/loading";
 
 interface MyProfileProps {
   loggedInUser: SessionDatas;
@@ -41,6 +42,8 @@ const MyProfile = ({ loggedInUser, setAlert }: MyProfileProps) => {
   const [sex, setSex] = useState(loggedInUser.sex);
   const [region, setRegion] = useState(loggedInUser.region);
 
+  const { setLoading }: any = useContext(LoadingContext);
+
   const profileImageInputRef = useRef<HTMLInputElement>(null);
   const nicknameInputRef = useRef<HTMLInputElement>(null);
   const sexSelectRef = useRef<HTMLLabelElement>(null);
@@ -60,6 +63,7 @@ const MyProfile = ({ loggedInUser, setAlert }: MyProfileProps) => {
     const filename = encodeURIComponent((file as any).name);
     const fileType = encodeURIComponent((file as any).type);
 
+    setLoading(true);
     const res = await fetch(
       `/api/imageUpload/uploadUrl?file=${filename}&fileType=${fileType}&bucket=profileImage`
     );
@@ -87,6 +91,7 @@ const MyProfile = ({ loggedInUser, setAlert }: MyProfileProps) => {
       .post("/api/imageUpload/profileImage", formData, config)
       .then(async (res) => {
         setProfileImage(res.data);
+        setLoading(false);
       })
       .catch((error) => console.log(error));
   };
@@ -111,6 +116,7 @@ const MyProfile = ({ loggedInUser, setAlert }: MyProfileProps) => {
       withCredentials: true,
     };
 
+    setLoading(true);
     await axios
       .put(
         "/api/setting",
@@ -133,6 +139,7 @@ const MyProfile = ({ loggedInUser, setAlert }: MyProfileProps) => {
           open: true,
           text: "회원정보 변경이 완료되었습니다",
         });
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error.response);
@@ -141,12 +148,14 @@ const MyProfile = ({ loggedInUser, setAlert }: MyProfileProps) => {
             open: true,
             text: "이미 존재하는 닉네임입니다.",
           });
+          setLoading(false);
           return;
         } else {
           setAlert({
             open: true,
             text: "알 수 없는 오류가 발생하였습니다. 죄송합니다.",
           });
+          setLoading(false);
           return;
         }
       });

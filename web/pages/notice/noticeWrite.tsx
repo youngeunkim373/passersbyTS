@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import styled from "styled-components";
@@ -10,6 +10,8 @@ import Editor from "../../components/organisms/editor";
 import PushButton from "../../components/atoms/pushButton";
 import Title from "../../components/atoms/title";
 
+import LoadingContext from "../../context/loading";
+
 const NoticeWrite = () => {
   const [alert, setAlert] = useState({ open: false, text: "" });
   const [content, setContent] = useState("");
@@ -18,6 +20,8 @@ const NoticeWrite = () => {
   const loggedInUser = session?.user;
 
   const router = useRouter();
+
+  const { setLoading }: any = useContext(LoadingContext);
 
   const titleInputRef = useRef<HTMLInputElement>(null);
 
@@ -39,6 +43,7 @@ const NoticeWrite = () => {
       withCredentials: true,
     };
 
+    setLoading(true);
     await axios
       .post(
         "/api/notice",
@@ -51,6 +56,7 @@ const NoticeWrite = () => {
         config
       )
       .then((res) => {
+        setLoading(false);
         router.push("/notice");
       })
       .catch((error) => {

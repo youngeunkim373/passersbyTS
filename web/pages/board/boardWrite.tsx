@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import styled from "styled-components";
@@ -14,6 +14,8 @@ import PushButton from "../../components/atoms/pushButton";
 import Title from "../../components/atoms/title";
 import YesOrNoButtons from "../../components/molecules/yesOrNoButtons";
 
+import LoadingContext from "../../context/loading";
+
 interface InputItem {
   id: number;
 }
@@ -28,6 +30,8 @@ const BoardWrite = () => {
   const loggedInUser = session?.user;
 
   const router = useRouter();
+
+  const { setLoading }: any = useContext(LoadingContext);
 
   const titleInputRef = useRef<HTMLInputElement>(null);
   const inputId = useRef<number>(1);
@@ -123,6 +127,7 @@ const BoardWrite = () => {
       });
     }
 
+    setLoading(true);
     await axios
       .post(
         "/api/board",
@@ -136,6 +141,7 @@ const BoardWrite = () => {
         config
       )
       .then((res) => {
+        setLoading(false);
         router.push("/board");
       })
       .catch((error) => {

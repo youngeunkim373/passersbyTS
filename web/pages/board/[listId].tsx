@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
@@ -25,6 +25,8 @@ import {
   GetCommentProps,
 } from "../../types/globalTypes";
 
+import LoadingContext from "../../context/loading";
+
 interface BoardDetailProps {
   boardAnswers: BoardAnswerKeys[];
   boardComments: GetCommentProps;
@@ -43,6 +45,8 @@ const BoardDetail = (props: BoardDetailProps) => {
 
   const router = useRouter();
   const listId = router.query.listId!.toString();
+
+  const { setLoading }: any = useContext(LoadingContext);
 
   const onClickMakeAnswer = async (e: React.MouseEvent) => {
     if (status !== "authenticated") {
@@ -66,6 +70,7 @@ const BoardDetail = (props: BoardDetailProps) => {
       withCredentials: true,
     };
 
+    setLoading(true);
     await axios
       .post(
         "/api/board",
@@ -84,6 +89,7 @@ const BoardDetail = (props: BoardDetailProps) => {
             text: "답변이 완료되었습니다.",
           });
           setChartReload(true);
+          setLoading(false);
         }
       })
       .catch((error) => {

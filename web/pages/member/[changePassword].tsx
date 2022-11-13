@@ -1,8 +1,9 @@
-import { useState, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
 import axios from "axios";
+import styled from "styled-components";
 
 import { hashPassword } from "../../lib/utils/hashPassword";
 
@@ -12,11 +13,15 @@ import PushButton from "../../components/atoms/pushButton";
 import Title from "../../components/atoms/title";
 import Alert from "../../components/molecules/alert";
 
+import LoadingContext from "../../context/loading";
+
 const ChangePassword = (props: { email: string }) => {
   const { email } = props;
   const [alert, setAlert] = useState({ open: false, text: "" });
 
   const router = useRouter();
+
+  const { setLoading }: any = useContext(LoadingContext);
 
   const passwordInputRef = useRef<HTMLInputElement>(null);
   const confirmInputRef = useRef<HTMLInputElement>(null);
@@ -42,6 +47,7 @@ const ChangePassword = (props: { email: string }) => {
       withCredentials: true,
     };
 
+    setLoading(true);
     await axios
       .patch(
         "/api/members",
@@ -54,55 +60,53 @@ const ChangePassword = (props: { email: string }) => {
       )
       .then((res) => {
         signOut();
+        setLoading(false);
         router.push("/member/signIn");
       })
       .catch((error) => console.log(error.response));
   };
 
   return (
-    <form
-      id="page"
-      onSubmit={handleSubmit}
-      method="PUT"
-      className="narrow-width"
-    >
+    <form id="page" onSubmit={handleSubmit} method="PUT">
       <Title>비밀번호 변경</Title>
       <Alert open={alert.open} setOpen={setAlert}>
         {alert.text}
       </Alert>
-      <div className="PL10">
-        <BasicLabel>이메일</BasicLabel>
-      </div>
-      <BasicInput
-        type="text"
-        id="email"
-        required={true}
-        defaultValue={email}
-        readOnly={true}
-      />
-      <div className="PL10 PT30">
-        <BasicLabel>비밀번호</BasicLabel>
-      </div>
-      <BasicInput
-        type="password"
-        id="password"
-        placeholder="비밀번호를 입력하세요."
-        required={true}
-        ref={passwordInputRef}
-      />
-      <div className="PL10 PT30">
-        <BasicLabel>비밀번호 확인</BasicLabel>
-      </div>
-      <BasicInput
-        type="password"
-        id="confirm"
-        placeholder="비밀번호를 한 번 더 입력하세요."
-        required={true}
-        ref={confirmInputRef}
-      />
-      <div className="align-center PT50">
-        <PushButton type="submit">변경</PushButton>
-      </div>
+      <UserInfoContainer>
+        <LabelContainer>
+          <BasicLabel>이메일</BasicLabel>
+        </LabelContainer>
+        <BasicInput
+          type="text"
+          id="email"
+          required={true}
+          defaultValue={email}
+          readOnly={true}
+        />
+        <SecondLabelContainer>
+          <BasicLabel>비밀번호</BasicLabel>
+        </SecondLabelContainer>
+        <BasicInput
+          type="password"
+          id="password"
+          placeholder="비밀번호를 입력하세요."
+          required={true}
+          ref={passwordInputRef}
+        />
+        <SecondLabelContainer>
+          <BasicLabel>비밀번호 확인</BasicLabel>
+        </SecondLabelContainer>
+        <BasicInput
+          type="password"
+          id="confirm"
+          placeholder="비밀번호를 한 번 더 입력하세요."
+          required={true}
+          ref={confirmInputRef}
+        />
+        <ButtonContainer>
+          <PushButton type="submit">변경</PushButton>
+        </ButtonContainer>
+      </UserInfoContainer>
     </form>
   );
 };
@@ -120,3 +124,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   };
 };
+
+const ButtonContainer = styled.div`
+  padding-top: 70px;
+  text-align: center;
+`;
+
+const LabelContainer = styled.div`
+  padding-left: 10px;
+`;
+
+const SecondLabelContainer = styled(LabelContainer)`
+  padding-top: 30px;
+`;
+
+const UserInfoContainer = styled.div`
+  margin: 0 auto;
+  width: 300px;
+`;

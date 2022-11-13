@@ -2,6 +2,7 @@ import {
   Dispatch,
   SetStateAction,
   useCallback,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -16,6 +17,8 @@ import PushButton from "../atoms/pushButton";
 import SearchBar from "../molecules/searchBar";
 import Title from "../atoms/title";
 import { BoardListKeys, SessionDatas } from "../../types/globalTypes";
+
+import LoadingContext from "../../context/loading";
 
 interface MyProfileProps {
   api?: string;
@@ -51,7 +54,10 @@ const MyBoard = ({ loggedInUser, setAlert }: MyProfileProps) => {
   const [questionSearch, setQuestionSearch] = useState("");
   const [answerSearch, setAnswerSearch] = useState("");
 
+  const { setLoading }: any = useContext(LoadingContext);
+
   const fetchQuestionList = useCallback(async () => {
+    setLoading(true);
     await axios
       .get(`/api/board`, {
         params: {
@@ -66,6 +72,7 @@ const MyBoard = ({ loggedInUser, setAlert }: MyProfileProps) => {
       .then((res) => {
         setQuestionList(res.data.boardList);
         setQuestionPageCount(res.data.pageCount);
+        setLoading(false);
       })
       .catch((error) => console.log(error.response));
   }, [
@@ -73,9 +80,11 @@ const MyBoard = ({ loggedInUser, setAlert }: MyProfileProps) => {
     questionCriteria,
     questionCurrentPage,
     questionSearch,
+    setLoading,
   ]);
 
   const fetchAnswerList = useCallback(async () => {
+    setLoading(true);
     await axios
       .get(`/api/setting`, {
         params: {
@@ -90,9 +99,16 @@ const MyBoard = ({ loggedInUser, setAlert }: MyProfileProps) => {
       .then((res) => {
         setAnswerList(res.data.boardList);
         setAnswerPageCount(res.data.pageCount);
+        setLoading(false);
       })
       .catch((error) => console.log(error.response));
-  }, [answerCriteria, answerCurrentPage, answerSearch, loggedInUser.email]);
+  }, [
+    answerCriteria,
+    answerCurrentPage,
+    answerSearch,
+    loggedInUser.email,
+    setLoading,
+  ]);
 
   useEffect(() => {
     fetchQuestionList();
@@ -140,7 +156,6 @@ const MyList = ({
   boardList,
   checkBox,
   currentPage,
-  loggedInUser,
   pageCount,
   title,
   fetchAnswerList,
@@ -152,9 +167,12 @@ const MyList = ({
 }: MyProfileProps) => {
   const [checked, setChecked] = useState<string[]>([]);
 
+  const { setLoading }: any = useContext(LoadingContext);
+
   const criteriaRef = useRef<HTMLLabelElement>(null);
 
   const onButtonDelete = async (e: React.MouseEvent) => {
+    setLoading(true);
     await axios
       .delete("/api/setting", {
         data: {
@@ -166,6 +184,7 @@ const MyList = ({
         fetchQuestionList!();
         fetchAnswerList!();
         setChecked([]);
+        setLoading(false);
       })
       .catch((error) => console.log(error.response));
   };
