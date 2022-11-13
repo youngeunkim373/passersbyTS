@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import styled from "styled-components";
@@ -15,6 +15,8 @@ import Title from "../../components/atoms/title";
 
 import { checkEmail } from "../../lib/utils/checkEmail";
 import { hashPassword } from "../../lib/utils/hashPassword";
+
+import LoadingContext from "../../context/loading";
 
 const sexList = { F: "여성", M: "남성" };
 const regionList = {
@@ -51,12 +53,17 @@ const SignUp: React.FC = () => {
 
   const router = useRouter();
 
+  const { setLoading }: any = useContext(LoadingContext);
+
   const handleSendMail = async (e: React.FormEvent) => {
+    setLoading(true);
+
     if (verifyComplete === true) {
       setAlert({
         open: true,
         text: "이미 본인인증이 완료되었습니다.",
       });
+      setLoading(false);
       return;
     }
 
@@ -68,6 +75,7 @@ const SignUp: React.FC = () => {
         open: true,
         text: "이메일의 형식을 확인하세요.",
       });
+      setLoading(false);
       return;
     }
 
@@ -82,11 +90,13 @@ const SignUp: React.FC = () => {
         const { checkMembership, verifyNumber } = res.data;
         if (checkMembership > 0) {
           setAlert({ open: true, text: "이미 가입이력이 있는 이메일입니다." });
+          setLoading(false);
           return;
         }
 
         setVerifyInput(true);
         setVerifyNumber(verifyNumber);
+        setLoading(false);
       })
       .catch((error) => console.log(error.response));
   };
@@ -154,6 +164,7 @@ const SignUp: React.FC = () => {
       withCredentials: true,
     };
 
+    setLoading(true);
     await axios
       .post(
         "/api/members",
@@ -176,8 +187,10 @@ const SignUp: React.FC = () => {
               open: true,
               text: "중복되는 닉네임이 존재합니다.",
             });
+            setLoading(false);
             break;
           case 204:
+            setLoading(false);
             router.push("/member/signIn");
             break;
         }

@@ -52,7 +52,7 @@ export default async function members(
                         아래의 링크로 접속하여 비밀번호를 변경해주시길 바랍니다.<br/><br/>
                         <a href="${process.env.NEXT_PUBLIC_ENV_HOST}/member/${email}">비밀번호 변경</a> 
                        `;
-          sendEmail(from, email, subject, text);
+          await sendEmail(from, email, subject, text);
         }
 
         res.status(200).json(checkMembershipResult.length);

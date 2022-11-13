@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { getSession, signIn } from "next-auth/react";
 import styled from "styled-components";
@@ -12,6 +12,8 @@ import PushButton from "../../components/atoms/pushButton";
 import Title from "../../components/atoms/title";
 import { checkEmail } from "../../lib/utils/checkEmail";
 
+import LoadingContext from "../../context/loading";
+
 const SignIn: React.FC = () => {
   const [alert, setAlert] = useState({ open: false, text: "" });
   const [open, setOpen] = useState(false);
@@ -20,6 +22,8 @@ const SignIn: React.FC = () => {
   const passwordInputRef = useRef<HTMLInputElement>(null);
 
   const router = useRouter();
+
+  const { setLoading }: any = useContext(LoadingContext);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,6 +40,7 @@ const SignIn: React.FC = () => {
       return;
     }
 
+    setLoading(true);
     const result = await signIn("credentials", {
       redirect: false,
       email: email,
@@ -47,9 +52,11 @@ const SignIn: React.FC = () => {
         open: true,
         text: "이메일과 비밀번호를 확인하세요.",
       });
+      setLoading(false);
       return;
     }
 
+    setLoading(false);
     router.replace("/");
   };
 

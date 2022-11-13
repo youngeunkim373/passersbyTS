@@ -33,6 +33,14 @@ const Home = (props: HomeProps) => {
 
   const { setLoading }: any = useContext(LoadingContext);
 
+  const onClickCategory = async (e: React.MouseEvent) => {
+    setAlert({
+      open: true,
+      text: "아직 준비 중인 기능입니다.",
+    });
+    return;
+  };
+
   function bindCategory(arr: any[], number: number): any[] {
     let bind = [];
     for (var i = 0; i < arr.length; i += number)
@@ -145,6 +153,7 @@ const Home = (props: HomeProps) => {
                 : bindCategory(categories, 4)
             }
             height="300px"
+            onClick={onClickCategory}
           />
         </CategoryCarouselContainer>
       </CategoryContainer>
@@ -250,6 +259,7 @@ const CarouselContainer = styled.div`
 `;
 
 const CategoryBox = styled.div`
+  cursor: pointer;
   float: left;
   margin: 20px;
 `;

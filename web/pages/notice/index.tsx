@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
@@ -13,7 +13,9 @@ import Pagination from "../../components/molecules/pagination";
 import PushButton from "../../components/atoms/pushButton";
 import SearchBar from "../../components/molecules/searchBar";
 import Title from "../../components/atoms/title";
-import { NoticeListKeys, SessionDatas } from "../../types/globalTypes";
+import { NoticeListKeys } from "../../types/globalTypes";
+
+import LoadingContext from "../../context/loading";
 
 interface NoticeListProps {
   noticeList: NoticeListKeys[];
@@ -34,16 +36,10 @@ const NoticeList = (props: NoticeListProps) => {
   const { data: session, status } = useSession();
   const loggedInUser = (session as any | null)?.user;
 
+  const { setLoading }: any = useContext(LoadingContext);
+
   const onButtonClick = async (e: React.MouseEvent) => {
-    console.log("버튼클릭");
-    // if (status !== "authenticated") {
-    //   setAlert({
-    //     open: true,
-    //     text: "로그인 후 글쓰기 가능합니다.",
-    //   });
-    //   return;
-    // }
-    // router.push("notice/noticeWrite");
+    router.push("notice/noticeWrite");
   };
 
   useEffect(() => {
@@ -65,15 +61,17 @@ const NoticeList = (props: NoticeListProps) => {
               open: true,
               text: "검색결과가 없습니다.",
             });
+            setLoading(false);
             return;
           }
           if (res.data.pageCount > 0) setPageCount(res.data.pageCount);
+          setLoading(false);
         })
         .catch((error) => console.log(error.response));
     }
-
+    setLoading(true);
     fetchNoticeList();
-  }, [currentPage, search]);
+  }, [currentPage, search, setLoading]);
 
   return (
     <div id="list-page">

@@ -23,12 +23,12 @@ const LoadingContainer = styled.div`
   background: ${({ theme }) => theme.global.component.bgColor};
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100vh;
   justify-content: center;
   left: 0;
   opacity: 0.8;
-  position: absolute;
+  position: fixed;
   top: 0;
-  width: 100%;
+  width: 100vw;
   z-index: 998;
 `;
