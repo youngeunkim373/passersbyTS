@@ -5,7 +5,7 @@ export default function findBoardBucket() {
     projectId: process.env.PROJECT_ID,
     credentials: {
       client_email: process.env.CLIENT_EMAIL,
-      private_key: process.env.PRIVATE_KEY!.replace(/\\n/gm, "\n"),
+      private_key: process.env.PRIVATE_KEY,
     },
   });
 
