@@ -61,7 +61,7 @@ function Editor({ readOnly, value, onChange }: EditorProps) {
     };
 
     await axios
-      .post("/api/imageUpload/board", formData, config)
+      .post("/api/imageUpload/temporary", formData, config)
       .then(async (res) => {
         const editor = quillRef.current!.getEditor();
         const range = editor.getSelection()!;

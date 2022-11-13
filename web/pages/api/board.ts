@@ -9,6 +9,7 @@ import {
   CommentKeys,
   BoardListKeys,
 } from "../../types/globalTypes";
+import findBoardBucket from "./utils/findBoardBucket";
 
 export default async function members(
   req: NextApiRequest,
@@ -358,37 +359,52 @@ export default async function members(
           try {
             const listTitle: string = req.body.listTitle;
             const writerEmail: string = req.body.writerEmail;
-            const listContent: string = req.body.listContent.replaceAll(
-              "/upload/temporary/",
-              "/upload/board/"
-            );
+            const listContent: string = req.body.listContent;
             const answers: {
               category: string;
               sequence: number;
               content: string;
             }[] = req.body.answers || [];
 
-            fs.readdir(
-              `${process.env.NEXT_PUBLIC_UPLOAD_URL}/temporary/`,
-              (err, files) => {
-                for (var i = 0; i < files.length; i++) {
-                  if (files[i].includes(writerEmail)) {
-                    fs.rename(
-                      `${process.env.NEXT_PUBLIC_UPLOAD_URL}/temporary/${files[i]}`,
-                      `${process.env.NEXT_PUBLIC_UPLOAD_URL}/board/${files[i]}`,
-                      function (err) {
-                        if (err) {
-                          console.log(err);
-                        } else {
-                          console.log("Successfully renamed the directory.");
-                        }
-                      }
-                    );
-                  }
+            // 실제로 저장하려는 이미지 목록 추리기
+            const strReg = new RegExp(
+              "<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>",
+              "gim"
+            );
+            const imageTagList = listContent.match(strReg);
+
+            let imageList: string[] = [];
+            for (
+              var i = 0;
+              i < (imageTagList === null ? 0 : imageTagList.length);
+              i++
+            ) {
+              let image = imageTagList![i]
+                .replaceAll(
+                  '<img src="https://storage.cloud.google.com/passersby_board/',
+                  ""
+                )
+                .replaceAll('">', "");
+              imageList.push(image);
+            }
+
+            // temporary > board로 이미지 파일 이동 + temporary 폴더 내 이미지 삭제
+            const bucket = findBoardBucket();
+
+            const [files] = await bucket.getFiles({ prefix: "temporary/" });
+            files.forEach((file) => {
+              if (imageList.includes(file.name)) {
+                bucket
+                  .file(file.name)
+                  .move(file.name.replace("temporary", "board"));
+              } else {
+                if (file.name.includes(writerEmail)) {
+                  bucket.file(file.name).delete();
                 }
               }
-            );
+            });
 
+            // DB에 게시글 저장
             const newListIdResult: { newListId: string }[] =
               await prisma.$queryRaw`
                         SELECT  CONCAT( DATE_FORMAT(CURDATE(), '%Y%m%d')
@@ -409,7 +425,10 @@ export default async function members(
                                  ${newListId}
                                 ,${listTitle}
                                 ,${writerEmail}
-                                ,${listContent}
+                                ,${listContent.replaceAll(
+                                  "https://storage.cloud.google.com/passersby_board/temporary/",
+                                  "https://storage.cloud.google.com/passersby_board/board/"
+                                )}
                                 ,0
                                 ,0
                                 ,${writerEmail}

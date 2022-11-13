@@ -28,6 +28,7 @@ app.post(uploadImage.single("file"), async (req: any, res: NextApiResponse) => {
     if (req.file) {
       const email = req.body.email;
       const newFileName =
+        "temporary/" +
         email +
         "_" +
         Date.now() +
