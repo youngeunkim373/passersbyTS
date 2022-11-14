@@ -29,6 +29,7 @@ export default async function members(
             const search: string = String(req.query?.search);
             const take: number = Number(req.query.take);
             const email: string = String(req.query.email);
+            console.log(search);
 
             const orderBy: { [k: string]: string } =
               criteria === "viewCount"
@@ -83,7 +84,7 @@ export default async function members(
                 },
               },
               orderBy: orderBy,
-              ...(search !== "undefined" && {
+              ...(search && {
                 where: where,
               }),
             };

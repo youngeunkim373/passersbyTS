@@ -139,6 +139,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         path: "getBoardList",
         criteria: "registerDate",
         page: 1,
+        search: "",
         take: 10,
       },
     }

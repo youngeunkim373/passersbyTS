@@ -56,6 +56,7 @@ const Home = (props: HomeProps) => {
             path: "getBoardList",
             criteria: criteria,
             page: 1,
+            search: "",
             take: 5,
           },
         })
