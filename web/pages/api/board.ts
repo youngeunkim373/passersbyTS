@@ -417,7 +417,7 @@ export default async function members(
             const boardListResult = await prisma.$executeRaw`
                         INSERT INTO boardlist
                                (
-                                listId, listTitle, writerEmail, listContent, viewCount, answerCount, registerId, registerDate
+                                listId, listTitle, writerEmail, listContent, viewCount, answerCount, statsOption, registerId, registerDate
                                )
                         VALUES
                                (
@@ -430,6 +430,7 @@ export default async function members(
                                 )}
                                 ,0
                                 ,0
+                                ,${statsOption}
                                 ,${writerEmail}
                                 ,NOW()
                                )
