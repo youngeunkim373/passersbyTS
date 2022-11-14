@@ -15,6 +15,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import NightlightRoundIcon from "@mui/icons-material/NightlightRound";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SettingsIcon from "@mui/icons-material/Settings";
+import Switch from "@mui/material/Switch";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 import Alert from "../molecules/alert";
@@ -31,7 +32,7 @@ const Menu = ({ isDark, toggleDarkMode }: MenuProps) => {
 
   const { data: session, status } = useSession();
   const router = useRouter();
-  const matches = useMediaQuery("(max-width:750px)");
+  const matches = useMediaQuery("(max-width:850px)");
 
   const handleSignOut = async () => {
     signOut({ redirect: false });
@@ -68,6 +69,9 @@ const Menu = ({ isDark, toggleDarkMode }: MenuProps) => {
       </LogoContainer>
       {matches ? (
         <HamburgerMenuContainer>
+          <ThemeButtonContainer onClick={toggleDarkMode}>
+            {isDark ? <NightlightRoundIcon /> : <LightModeIcon />}
+          </ThemeButtonContainer>
           <IconMenu
             direction="right"
             drawerList={[
@@ -110,12 +114,12 @@ const Menu = ({ isDark, toggleDarkMode }: MenuProps) => {
                     icon: <AccountCircleIcon />,
                     onClick: checkAuth,
                   },
-              {
-                koreanMenu: "밝기",
-                englishMenu: "brightness",
-                icon: isDark ? <NightlightRoundIcon /> : <LightModeIcon />,
-                onClick: toggleDarkMode,
-              },
+              // {
+              //   koreanMenu: "밝기",
+              //   englishMenu: "brightness",
+              //   icon: isDark ? <NightlightRoundIcon /> : <LightModeIcon />,
+              //   onClick: toggleDarkMode,
+              // },
             ]}
             icon={MenuIcon}
           />
@@ -159,6 +163,9 @@ const Menu = ({ isDark, toggleDarkMode }: MenuProps) => {
                 />
               ))}
             </SettingMenuLeftSide>
+            <ThemeButtonContainer onClick={toggleDarkMode}>
+              {isDark ? <NightlightRoundIcon /> : <LightModeIcon />}
+            </ThemeButtonContainer>
             <SettingMenuRightSide>
               <IconMenu
                 direction="top"
@@ -175,12 +182,12 @@ const Menu = ({ isDark, toggleDarkMode }: MenuProps) => {
                         icon: <AccountCircleIcon />,
                         onClick: checkAuth,
                       },
-                  {
-                    koreanMenu: "밝기",
-                    englishMenu: "brightness",
-                    icon: isDark ? <NightlightRoundIcon /> : <LightModeIcon />,
-                    onClick: toggleDarkMode,
-                  },
+                  // {
+                  //   koreanMenu: "밝기",
+                  //   englishMenu: "brightness",
+                  //   icon: isDark ? <NightlightRoundIcon /> : <LightModeIcon />,
+                  //   onClick: toggleDarkMode,
+                  // },
                 ]}
                 icon={SettingsIcon}
               />
@@ -234,7 +241,7 @@ const SettingMenuContainer = styled.div`
   display: flex;
   float: right;
   justify-content: flex-end;
-  min-width: 340px;
+  min-width: 350px;
   width: 10vw;
 `;
 
@@ -252,6 +259,13 @@ const TextMenuContainer = styled.div`
   min-width: 200px;
   text-align: center;
   width: 60vw;
+`;
+
+const ThemeButtonContainer = styled.div`
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
 `;
 
 const TitleSpan = styled.span`
