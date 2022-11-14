@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import Head from "next/head";
@@ -13,11 +13,18 @@ import Layout from "../components/templates/layout";
 import { LoadingProvider } from "../context/loading";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [isDark, setDark] = useState(false);
+  const [isDark, setDark] = useState<boolean>(false);
 
   const toggleDarkMode = (): void => {
+    window.localStorage.setItem("theme", isDark === false ? "dark" : "light");
     setDark((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (window.localStorage.getItem("theme") === "dark") {
+      setDark(true);
+    }
+  }, []);
 
   return (
     <>
