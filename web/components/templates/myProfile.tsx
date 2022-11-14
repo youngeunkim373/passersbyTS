@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useContext, useRef, useState } from "react";
+import { useRouter } from "next/router";
 import axios from "axios";
 import styled from "styled-components";
 
@@ -43,6 +44,8 @@ const MyProfile = ({ loggedInUser, setAlert }: MyProfileProps) => {
   const [region, setRegion] = useState(loggedInUser.region);
 
   const { setLoading }: any = useContext(LoadingContext);
+
+  const router = useRouter();
 
   const profileImageInputRef = useRef<HTMLInputElement>(null);
   const nicknameInputRef = useRef<HTMLInputElement>(null);
@@ -241,6 +244,13 @@ const MyProfile = ({ loggedInUser, setAlert }: MyProfileProps) => {
           />
         </ContentContainer>
       </LineContainer>
+      <PasswordChangeContainer
+        onClick={() => {
+          router.push(`member/${loggedInUser.email}`);
+        }}
+      >
+        비밀번호 변경
+      </PasswordChangeContainer>
       <ButtonContainer>
         <PushButton type="submit">변경하기</PushButton>
       </ButtonContainer>
@@ -251,7 +261,7 @@ const MyProfile = ({ loggedInUser, setAlert }: MyProfileProps) => {
 export default MyProfile;
 
 const ButtonContainer = styled.div`
-  padding: 60px 0px 30px 0px;
+  padding: 40px 0px 30px 0px;
   text-align: center;
 `;
 
@@ -259,6 +269,14 @@ const ContentContainer = styled.div`
   display: block;
   margin: 0 auto;
   padding: 0px 7%;
+`;
+
+const PasswordChangeContainer = styled.div`
+  color: ${({ theme }) => theme.global.component.pointColor};
+  cursor: pointer;
+  left: calc(50% + 197px);
+  padding-top: 10px;
+  position: relative;
 `;
 
 const LineContainer = styled.div`
