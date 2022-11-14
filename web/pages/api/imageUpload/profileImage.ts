@@ -42,9 +42,11 @@ app.post(uploadImage.single("file"), async (req: any, res: NextApiResponse) => {
       };
 
       const prevProfile = await prisma.members.findUnique(option);
-      const prevProfileImage = prevProfile!.userImage as string;
 
-      bucket.file(prevProfileImage).delete();
+      if (prevProfile!.userImage) {
+        const prevProfileImage = prevProfile!.userImage as string;
+        bucket.file(prevProfileImage).delete();
+      }
 
       const blob = bucket.file(newFileName);
       const blobStream = blob.createWriteStream();

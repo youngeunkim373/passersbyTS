@@ -278,13 +278,13 @@ const CategoryContainer = styled.div`
 const Container = styled.div`
   margin: 0 auto;
   min-width: 700px;
-  white-space: nowrap;
   width: 100vw;
 `;
 
 const ListContainer = styled.div`
   margin: 0 auto;
-  width: 80%;
+  min-width: 500px;
+  width: 60%;
 `;
 
 const MembershipContainer = styled.div`

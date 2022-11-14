@@ -39,7 +39,7 @@ export default async function members(
                   respondentEmail: email,
                 },
               },
-              ...(search !== "undefined" && {
+              ...(search && {
                 OR: [
                   {
                     listTitle: {

@@ -136,7 +136,7 @@ const List = ({
                 </TitleTableRow>
               )}
               <ContentTableRow>
-                <ContentTableCell align="left" colSpan={2}>
+                <ContentTableCell align="left">
                   {row.listContent
                     .replace(/<[^>]*>?/g, "")
                     .replace(/&nbsp;/gi, "")}
