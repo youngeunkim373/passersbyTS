@@ -35,12 +35,14 @@ interface FullStatsSectionProps {
   chartReload: boolean;
   listId: string;
   loggedInUser?: SessionDatas;
+  statsOption: string;
 }
 
 const FullStatsSection = ({
   chartReload,
   listId,
   loggedInUser,
+  statsOption,
 }: FullStatsSectionProps) => {
   const [all, setAll] = useState<(string | number)[][]>();
   const [age, setAge] = useState<(string | number)[][]>();
@@ -220,112 +222,134 @@ const FullStatsSection = ({
                 }}
                 width="100%"
               />
-              <Chart
-                chartType="BarChart"
-                data={sex}
-                height="400px"
-                options={{
-                  title: "성별별 답변",
-                  backgroundColor: "transparent",
-                  chartArea: { width: "50%" },
-                  colors: colors,
-                  hAxis: {
-                    textStyle: {
-                      color:
-                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
-                    },
-                  },
-                  isStacked: true,
-                  legend: {
-                    textStyle: {
-                      color:
-                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
-                    },
-                  },
-                  titleTextStyle: {
-                    color:
-                      currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
-                  },
-                  vAxis: {
-                    textStyle: {
-                      color:
-                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
-                    },
-                  },
-                }}
-                width="100%"
-              />
-              <Chart
-                chartType="BarChart"
-                data={age}
-                height="400px"
-                options={{
-                  title: "연령별 답변",
-                  backgroundColor: "transparent",
-                  chartArea: { width: "50%" },
-                  colors: colors,
-                  isStacked: true,
-                  hAxis: {
-                    textStyle: {
-                      color:
-                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
-                    },
-                  },
-                  legend: {
-                    textStyle: {
-                      color:
-                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
-                    },
-                  },
-                  titleTextStyle: {
-                    color:
-                      currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
-                  },
-                  vAxis: {
-                    textStyle: {
-                      color:
-                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
-                    },
-                  },
-                }}
-                width="100%"
-              />
-              <Chart
-                chartType="BarChart"
-                data={region}
-                height="400px"
-                options={{
-                  title: "지역별 답변",
-                  backgroundColor: "transparent",
-                  chartArea: { width: "50%" },
-                  colors: colors,
-                  hAxis: {
-                    textStyle: {
-                      color:
-                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
-                    },
-                  },
-                  isStacked: true,
-                  legend: {
-                    textStyle: {
-                      color:
-                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
-                    },
-                  },
-                  titleTextStyle: {
-                    color:
-                      currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
-                  },
+              {statsOption === "all" && (
+                <>
+                  <Chart
+                    chartType="BarChart"
+                    data={sex}
+                    height="400px"
+                    options={{
+                      title: "성별별 답변",
+                      backgroundColor: "transparent",
+                      chartArea: { width: "50%" },
+                      colors: colors,
+                      hAxis: {
+                        textStyle: {
+                          color:
+                            currentTheme === "lightTheme"
+                              ? "#151515"
+                              : "#F6F6F6",
+                        },
+                      },
+                      isStacked: true,
+                      legend: {
+                        textStyle: {
+                          color:
+                            currentTheme === "lightTheme"
+                              ? "#151515"
+                              : "#F6F6F6",
+                        },
+                      },
+                      titleTextStyle: {
+                        color:
+                          currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
+                      },
+                      vAxis: {
+                        textStyle: {
+                          color:
+                            currentTheme === "lightTheme"
+                              ? "#151515"
+                              : "#F6F6F6",
+                        },
+                      },
+                    }}
+                    width="100%"
+                  />
+                  <Chart
+                    chartType="BarChart"
+                    data={age}
+                    height="400px"
+                    options={{
+                      title: "연령별 답변",
+                      backgroundColor: "transparent",
+                      chartArea: { width: "50%" },
+                      colors: colors,
+                      isStacked: true,
+                      hAxis: {
+                        textStyle: {
+                          color:
+                            currentTheme === "lightTheme"
+                              ? "#151515"
+                              : "#F6F6F6",
+                        },
+                      },
+                      legend: {
+                        textStyle: {
+                          color:
+                            currentTheme === "lightTheme"
+                              ? "#151515"
+                              : "#F6F6F6",
+                        },
+                      },
+                      titleTextStyle: {
+                        color:
+                          currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
+                      },
+                      vAxis: {
+                        textStyle: {
+                          color:
+                            currentTheme === "lightTheme"
+                              ? "#151515"
+                              : "#F6F6F6",
+                        },
+                      },
+                    }}
+                    width="100%"
+                  />
+                  <Chart
+                    chartType="BarChart"
+                    data={region}
+                    height="400px"
+                    options={{
+                      title: "지역별 답변",
+                      backgroundColor: "transparent",
+                      chartArea: { width: "50%" },
+                      colors: colors,
+                      hAxis: {
+                        textStyle: {
+                          color:
+                            currentTheme === "lightTheme"
+                              ? "#151515"
+                              : "#F6F6F6",
+                        },
+                      },
+                      isStacked: true,
+                      legend: {
+                        textStyle: {
+                          color:
+                            currentTheme === "lightTheme"
+                              ? "#151515"
+                              : "#F6F6F6",
+                        },
+                      },
+                      titleTextStyle: {
+                        color:
+                          currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
+                      },
 
-                  vAxis: {
-                    textStyle: {
-                      color:
-                        currentTheme === "lightTheme" ? "#151515" : "#F6F6F6",
-                    },
-                  },
-                }}
-                width="100%"
-              />
+                      vAxis: {
+                        textStyle: {
+                          color:
+                            currentTheme === "lightTheme"
+                              ? "#151515"
+                              : "#F6F6F6",
+                        },
+                      },
+                    }}
+                    width="100%"
+                  />
+                </>
+              )}
             </div>
           </div>
         ) : (

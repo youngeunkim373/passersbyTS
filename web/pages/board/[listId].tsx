@@ -103,6 +103,9 @@ const BoardDetail = (props: BoardDetailProps) => {
       <Alert open={alert.open} setOpen={setAlert}>
         {alert.text}
       </Alert>
+      {boardDetail.statsOption === "all"
+        ? "이 게시글은 성별, 연령, 지역별 통계 데이터를 보여줍니다. 답변할 때 이 점을 참고하세요!"
+        : "이 게시글은 전체 통계 데이터만 보여줍니다."}
       <StyledFormControl>
         <RadioGroup
           aria-labelledby="demo-radio-buttons-group-label"
@@ -144,6 +147,7 @@ const BoardDetail = (props: BoardDetailProps) => {
           chartReload={chartReload}
           listId={listId}
           loggedInUser={loggedInUser}
+          statsOption={boardDetail.statsOption}
         />
         <CommentForm comment={props.boardComments} pageCategory="Board" />
       </ThemeTableContainer>

@@ -73,6 +73,7 @@ export default async function members(
                 listContent: true,
                 viewCount: true,
                 answerCount: true,
+                statsOption: true,
                 registerDate: true,
                 writer: {
                   select: {
@@ -125,6 +126,7 @@ export default async function members(
                 listContent: true,
                 viewCount: true,
                 answerCount: true,
+                statsOption: true,
                 registerDate: true,
                 writer: {
                   select: {
@@ -365,6 +367,7 @@ export default async function members(
               sequence: number;
               content: string;
             }[] = req.body.answers || [];
+            const statsOption: string = req.body.statsOption;
 
             // 실제로 저장하려는 이미지 목록 추리기
             const strReg = new RegExp(
@@ -418,7 +421,7 @@ export default async function members(
             const boardListResult = await prisma.$executeRaw`
                         INSERT INTO boardlist
                                (
-                                listId, listTitle, writerEmail, listContent, viewCount, answerCount, registerId,  registerDate
+                                listId, listTitle, writerEmail, listContent, viewCount, answerCount, registerId, registerDate
                                )
                         VALUES
                                (

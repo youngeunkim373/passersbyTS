@@ -271,14 +271,6 @@ const ContentContainer = styled.div`
   padding: 0px 7%;
 `;
 
-const PasswordChangeContainer = styled.div`
-  color: ${({ theme }) => theme.global.component.pointColor};
-  cursor: pointer;
-  left: calc(50% + 197px);
-  padding-top: 10px;
-  position: relative;
-`;
-
 const LineContainer = styled.div`
   align-items: center;
   display: flex;
@@ -286,6 +278,14 @@ const LineContainer = styled.div`
   justify-content: center;
   margin: 0 auto;
   width: 80%;
+`;
+
+const PasswordChangeContainer = styled.div`
+  color: ${({ theme }) => theme.global.component.pointColor};
+  cursor: pointer;
+  left: calc(50% + 197px);
+  padding-top: 10px;
+  position: relative;
 `;
 
 const ProfileForm = styled.form`

@@ -15,6 +15,12 @@ import Title from "../../components/atoms/title";
 import YesOrNoButtons from "../../components/molecules/yesOrNoButtons";
 
 import LoadingContext from "../../context/loading";
+import BasicSelect from "../../components/atoms/basicSelect";
+
+const statsOptions: { [k: string]: any } = {
+  all: "성별, 지역, 연령별 통계를 보고싶습니다.",
+  one: "전체 통계만 보고싶습니다.",
+};
 
 interface InputItem {
   id: number;
@@ -26,7 +32,7 @@ const BoardWrite = () => {
   const [choices, setChoices] = React.useState<InputItem[]>([]);
   const [yesOrNos, setYesOrNos] = React.useState<InputItem[]>([]);
 
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const loggedInUser = session?.user;
 
   const router = useRouter();
@@ -34,6 +40,7 @@ const BoardWrite = () => {
   const { setLoading }: any = useContext(LoadingContext);
 
   const titleInputRef = useRef<HTMLInputElement>(null);
+  const statsOptionRef = useRef<HTMLLabelElement>(null);
   const inputId = useRef<number>(1);
 
   function addInput(): void {
@@ -97,6 +104,15 @@ const BoardWrite = () => {
     e.preventDefault();
 
     const title = titleInputRef.current!.value;
+    const statsOption = statsOptionRef.current?.htmlFor;
+
+    if (statsOption === "unselected") {
+      setAlert({
+        open: true,
+        text: "통계옵션을 선택하세요.",
+      });
+      return;
+    }
 
     if (!content) {
       setAlert({
@@ -137,6 +153,7 @@ const BoardWrite = () => {
           writerEmail: loggedInUser!.email,
           listContent: content,
           answers: answers,
+          statsOption: statsOption,
         }),
         config
       )
@@ -168,6 +185,17 @@ const BoardWrite = () => {
           width="100%"
           required={true}
           autoFocus={true}
+        />
+      </BasicContainer>
+      <BasicContainer>
+        <BasicSelect
+          options={statsOptions}
+          ref={statsOptionRef}
+          height="50px"
+          currentValue={{
+            id: "all",
+            text: statsOptions["all"],
+          }}
         />
       </BasicContainer>
       <BasicContainer>
