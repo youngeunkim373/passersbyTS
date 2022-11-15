@@ -257,7 +257,7 @@ export default async function members(
           } catch (e) {
             console.error("Request error", e);
             res
-              .status(404)
+              .status(500)
               .json({ error: "An error occured while creating data" });
           }
           break;

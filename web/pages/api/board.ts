@@ -1,6 +1,5 @@
 import prisma from "../../lib/db/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
-import fs from "fs";
 
 import getCommentPageCount from "./utils/getCommentPageCount";
 import getListPageCount from "./utils/getListPageCount";
@@ -622,12 +621,12 @@ export default async function members(
           }
           break;
         default:
-          res.status(500).json({ error: "Please check the path again!" });
+          res.status(404).json({ error: "Please check the path again!" });
           break;
       }
-      break;
-    default:
-      res.status(403).json({ error: "Please check the method again!" });
-      break;
+    //   break;
+    // default:
+    //   res.status(403).json({ error: "Please check the method again!" });
+    //   break;
   }
 }

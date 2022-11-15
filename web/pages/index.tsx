@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
@@ -19,15 +18,9 @@ import { BoardListKeys } from "../types/globalTypes";
 
 import LoadingContext from "../context/loading";
 
-interface HomeProps {
-  boardList: BoardListKeys[];
-}
-
-//const Home = (props: HomeProps) => {
 const Home = () => {
   const [alert, setAlert] = useState({ open: false, text: "" });
-  //const [boardList, setBoardList] = useState(props.boardList);
-  const [boardList, setBoardList] = useState([]);
+  const [boardList, setBoardList] = useState<BoardListKeys[]>([]);
   const [criteria, setCriteria] = useState("registerDate");
 
   const matches2 = useMediaQuery("(max-width:850px)");
