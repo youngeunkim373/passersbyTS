@@ -60,18 +60,18 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
               select: {
                 listId: true,
                 listTitle: true,
-                // writerEmail: true,
-                // listContent: true,
-                // viewCount: true,
-                // answerCount: true,
-                // statsOption: true,
-                // registerDate: true,
-                // writer: {
-                //   select: {
-                //     nickname: true,
-                //     userImage: true,
-                //   },
-                // },
+                writerEmail: true,
+                listContent: true,
+                viewCount: true,
+                answerCount: true,
+                //statsOption: true,
+                registerDate: true,
+                writer: {
+                  select: {
+                    nickname: true,
+                    userImage: true,
+                  },
+                },
               },
               // orderBy: orderBy,
               // where: where,
