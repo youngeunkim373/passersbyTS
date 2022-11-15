@@ -64,7 +64,7 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
                 listContent: true,
                 viewCount: true,
                 answerCount: true,
-                statsOption: true,
+                //statsOption: true,
                 registerDate: true,
                 writer: {
                   select: {
