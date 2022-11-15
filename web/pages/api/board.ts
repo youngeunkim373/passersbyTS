@@ -57,29 +57,27 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
             let option = {
               // skip: Math.round((Number(currentPage) - 1) * +take),
               // take: take,
-              // select: {
-              //   listId: true,
-              //   listTitle: true,
-              //   writerEmail: true,
-              //   listContent: true,
-              //   viewCount: true,
-              //   answerCount: true,
-              //   statsOption: true,
-              //   registerDate: true,
-              //   writer: {
-              //     select: {
-              //       nickname: true,
-              //       userImage: true,
-              //     },
-              //   },
-              // },
+              select: {
+                listId: true,
+                listTitle: true,
+                // writerEmail: true,
+                // listContent: true,
+                // viewCount: true,
+                // answerCount: true,
+                // statsOption: true,
+                // registerDate: true,
+                // writer: {
+                //   select: {
+                //     nickname: true,
+                //     userImage: true,
+                //   },
+                // },
+              },
               // orderBy: orderBy,
               // where: where,
             };
 
-            const result: BoardListKeys[] = await prisma.boardlist.findMany(
-              option
-            );
+            const result: any[] = await prisma.boardlist.findMany(option);
 
             // // const boardList = result.map((row) =>
             // //   typeof row.timeDiff === "bigint"
