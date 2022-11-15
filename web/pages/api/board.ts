@@ -19,7 +19,7 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
       switch (path) {
         case "getBoardList":
           try {
-            console.log(path);
+            res.status(200).json({ path });
             // const criteria: string = String(req.query.criteria);
             // const currentPage: number = Number(req.query.page);
             // const search: string = String(req.query?.search);
