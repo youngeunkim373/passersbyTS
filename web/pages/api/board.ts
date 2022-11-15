@@ -413,7 +413,7 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
             const boardListResult = await prisma.$executeRaw`
                            INSERT INTO boardlist
                                   (
-                                   listId, listTitle, writerEmail, listContent, viewCount, answerCount, categoryOption, statsOption, registerId, registerDate
+                                   listId, listTitle, writerEmail, listContent, viewCount, answerCount, category, statsOption, registerId, registerDate
                                   )
                            VALUES
                                   (
