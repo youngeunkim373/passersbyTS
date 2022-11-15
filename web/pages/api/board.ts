@@ -73,8 +73,8 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
                   },
                 },
               },
-              orderBy: orderBy,
-              where: where,
+              // orderBy: orderBy,
+              // where: where,
             };
 
             const result: BoardListKeys[] = await prisma.boardlist.findMany(
