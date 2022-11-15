@@ -77,9 +77,10 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
               // where: where,
             };
 
-            const result: BoardListKeys[] = await prisma.boardlist.findMany(
-              option
-            );
+            // const result: BoardListKeys[] = await prisma.boardlist.findMany(
+            //   option
+            // );
+            const result: any[] = await prisma.boardlist.findMany();
             res.status(200).json({ result });
 
             // // const boardList = result.map((row) =>
