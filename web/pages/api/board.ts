@@ -19,80 +19,79 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
       switch (path) {
         case "getBoardList":
           try {
-            const criteria: string = String(req.query.criteria);
-            const currentPage: number = Number(req.query.page);
-            const search: string = String(req.query?.search);
-            const take: number = Number(req.query.take);
-            console.log(search);
+            console.log(path);
+            // const criteria: string = String(req.query.criteria);
+            // const currentPage: number = Number(req.query.page);
+            // const search: string = String(req.query?.search);
+            // const take: number = Number(req.query.take);
 
-            const orderBy: { [k: string]: string } =
-              criteria === "viewCount"
-                ? { viewCount: "desc" }
-                : criteria === "answerCount"
-                ? {
-                    answerCount: "desc",
-                  }
-                : { registerDate: "desc" };
+            // const orderBy: { [k: string]: string } =
+            //   criteria === "viewCount"
+            //     ? { viewCount: "desc" }
+            //     : criteria === "answerCount"
+            //     ? {
+            //         answerCount: "desc",
+            //       }
+            //     : { registerDate: "desc" };
 
-            const where = {
-              OR: [
-                {
-                  listTitle: {
-                    contains: search,
-                  },
-                },
-                {
-                  listContent: {
-                    contains: search,
-                  },
-                },
-              ],
-            };
+            // const where = {
+            //   OR: [
+            //     {
+            //       listTitle: {
+            //         contains: search,
+            //       },
+            //     },
+            //     {
+            //       listContent: {
+            //         contains: search,
+            //       },
+            //     },
+            //   ],
+            // };
 
-            const getPageCountResult: number | unknown = await getListPageCount(
-              "boardlist",
-              take,
-              where
-            );
-
-            let option = {
-              skip: Math.round((currentPage - 1) * +take),
-              take: take,
-              select: {
-                listId: true,
-                listTitle: true,
-                writerEmail: true,
-                listContent: true,
-                viewCount: true,
-                answerCount: true,
-                statsOption: true,
-                registerDate: true,
-                writer: {
-                  select: {
-                    nickname: true,
-                    userImage: true,
-                  },
-                },
-              },
-              orderBy: orderBy,
-              where: where,
-            };
-
-            console.log(option);
-            const result: BoardListKeys[] = await prisma.boardlist.findMany(
-              option
-            );
-            console.log(result);
-
-            // const boardList = result.map((row) =>
-            //   typeof row.timeDiff === "bigint"
-            //     ? { ...row, timeDiff: parseInt(String(row.timeDiff)) }
-            //     : { ...row }
+            // const getPageCountResult: number | unknown = await getListPageCount(
+            //   "boardlist",
+            //   take,
+            //   where
             // );
 
-            res
-              .status(200)
-              .json({ boardList: result, pageCount: getPageCountResult });
+            // let option = {
+            //   skip: Math.round((currentPage - 1) * +take),
+            //   take: take,
+            //   select: {
+            //     listId: true,
+            //     listTitle: true,
+            //     writerEmail: true,
+            //     listContent: true,
+            //     viewCount: true,
+            //     answerCount: true,
+            //     statsOption: true,
+            //     registerDate: true,
+            //     writer: {
+            //       select: {
+            //         nickname: true,
+            //         userImage: true,
+            //       },
+            //     },
+            //   },
+            //   orderBy: orderBy,
+            //   where: where,
+            // };
+
+            // const result: BoardListKeys[] = await prisma.boardlist.findMany(
+            //   option
+            // );
+            // console.log(result);
+
+            // // const boardList = result.map((row) =>
+            // //   typeof row.timeDiff === "bigint"
+            // //     ? { ...row, timeDiff: parseInt(String(row.timeDiff)) }
+            // //     : { ...row }
+            // // );
+
+            // res
+            //   .status(200)
+            //   .json({ boardList: result, pageCount: getPageCountResult });
           } catch (e) {
             console.error("Request error", e);
             res
@@ -103,8 +102,6 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
         default:
           res.status(500).json({ error: "Please check the path again!" });
           break;
-        // res.status(500).json({ error: "Please check the path again!" });
-        // break;
       }
       break;
     default:
