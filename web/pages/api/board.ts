@@ -24,37 +24,37 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
             const search: string = String(req.query?.search);
             const take: number = Number(req.query.take);
 
-            res.status(200).json({ criteria, currentPage, search, take });
+            const orderBy: { [k: string]: string } =
+              criteria === "viewCount"
+                ? { viewCount: "desc" }
+                : criteria === "answerCount"
+                ? {
+                    answerCount: "desc",
+                  }
+                : { registerDate: "desc" };
 
-            // const orderBy: { [k: string]: string } =
-            //   criteria === "viewCount"
-            //     ? { viewCount: "desc" }
-            //     : criteria === "answerCount"
-            //     ? {
-            //         answerCount: "desc",
-            //       }
-            //     : { registerDate: "desc" };
+            const where = {
+              OR: [
+                {
+                  listTitle: {
+                    contains: search,
+                  },
+                },
+                {
+                  listContent: {
+                    contains: search,
+                  },
+                },
+              ],
+            };
 
-            // const where = {
-            //   OR: [
-            //     {
-            //       listTitle: {
-            //         contains: search,
-            //       },
-            //     },
-            //     {
-            //       listContent: {
-            //         contains: search,
-            //       },
-            //     },
-            //   ],
-            // };
+            const getPageCountResult: number | unknown = await getListPageCount(
+              "boardlist",
+              take,
+              where
+            );
 
-            // const getPageCountResult: number | unknown = await getListPageCount(
-            //   "boardlist",
-            //   take,
-            //   where
-            // );
+            res.status(200).json({ getPageCountResult });
 
             // let option = {
             //   skip: Math.round((currentPage - 1) * +take),
