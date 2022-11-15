@@ -19,11 +19,12 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
       switch (path) {
         case "getBoardList":
           try {
-            res.status(200).json({ path });
-            // const criteria: string = String(req.query.criteria);
-            // const currentPage: number = Number(req.query.page);
-            // const search: string = String(req.query?.search);
-            // const take: number = Number(req.query.take);
+            const criteria: string = String(req.query.criteria);
+            const currentPage: number = Number(req.query.page);
+            const search: string = String(req.query?.search);
+            const take: number = Number(req.query.take);
+
+            res.status(200).json({ criteria, currentPage, search, take });
 
             // const orderBy: { [k: string]: string } =
             //   criteria === "viewCount"
