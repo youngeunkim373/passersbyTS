@@ -1,4 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
@@ -26,15 +27,18 @@ const Home = () => {
   const matches2 = useMediaQuery("(max-width:850px)");
   const matches3 = useMediaQuery("(max-width:1200px)");
 
+  const router = useRouter();
+
   const { setLoading }: any = useContext(LoadingContext);
 
-  const onClickCategory = async (e: React.MouseEvent) => {
-    setAlert({
-      open: true,
-      text: "아직 준비 중인 기능입니다.",
-    });
-    return;
-  };
+  const onClickCategory = useMemo(() => {
+    return async (e: React.MouseEvent) => {
+      router.push({
+        pathname: "/board",
+        query: { category: e.currentTarget.id },
+      });
+    };
+  }, [router]);
 
   function bindCategory(arr: any[], number: number): any[] {
     let bind = [];
@@ -42,6 +46,175 @@ const Home = () => {
       bind.push(arr.slice(i, i + number));
     return bind;
   }
+
+  const categories = useMemo(() => {
+    return [
+      <CategoryBox key="job" id="job" onClick={onClickCategory}>
+        <SmallBox
+          background="#c2bae2"
+          color="#151515"
+          height="210px"
+          width="150px"
+        >
+          <CardContainer>
+            <CardTitle>직장/일</CardTitle>
+            <Image
+              alt="job"
+              height="100px"
+              src="/images/briefcase.png"
+              width="100px"
+            />
+            <CardDescription>우당탕탕 직장생활</CardDescription>
+            <br />
+          </CardContainer>
+        </SmallBox>
+      </CategoryBox>,
+      <CategoryBox key="love" id="love" onClick={onClickCategory}>
+        <SmallBox
+          background="#f3c1cc"
+          color="#151515"
+          height="210px"
+          width="150px"
+        >
+          <CardContainer>
+            <CardTitle>연애/결혼</CardTitle>
+            <Image
+              alt="love"
+              height="100px"
+              src="/images/heart-attack.png"
+              width="100px"
+            />
+            <CardDescription>연애 나만 힘들어?</CardDescription>
+            <br />
+          </CardContainer>
+        </SmallBox>
+      </CategoryBox>,
+      <CategoryBox key="family" id="family" onClick={onClickCategory}>
+        <SmallBox
+          background="#1390d9"
+          color="#151515"
+          height="210px"
+          width="150px"
+        >
+          <CardContainer>
+            <CardTitle>가족</CardTitle>
+            <Image
+              alt="family"
+              height="100px"
+              src="/images/family.png"
+              width="100px"
+            />
+            <CardDescription>가족, 가깝고도 먼...!</CardDescription>
+            <br />
+          </CardContainer>
+        </SmallBox>
+      </CategoryBox>,
+      <CategoryBox
+        key="relationship"
+        id="relationship"
+        onClick={onClickCategory}
+      >
+        <SmallBox
+          background="#f0c872"
+          color="#151515"
+          height="210px"
+          width="150px"
+        >
+          <CardContainer>
+            <CardTitle>인간관계</CardTitle>
+            <Image
+              alt="relationship"
+              height="100px"
+              src="/images/planet-earth.png"
+              width="100px"
+            />
+            <CardDescription>우리 같은 행성인 맞죠?</CardDescription>
+            <br />
+          </CardContainer>
+        </SmallBox>
+      </CategoryBox>,
+      <CategoryBox key="parenting" id="parenting" onClick={onClickCategory}>
+        <SmallBox
+          background="#84d9b7"
+          color="#151515"
+          height="210px"
+          width="150px"
+        >
+          <CardContainer>
+            <CardTitle>임신/육아</CardTitle>
+            <Image
+              alt="parenting"
+              height="100px"
+              src="/images/rocking-horse.png"
+              width="100px"
+            />
+            <CardDescription>성인체력x3 = 애들체력</CardDescription>
+            <br />
+          </CardContainer>
+        </SmallBox>
+      </CategoryBox>,
+      <CategoryBox key="school" id="school" onClick={onClickCategory}>
+        <SmallBox
+          background="#ec9ca3"
+          color="#151515"
+          height="210px"
+          width="150px"
+        >
+          <CardContainer>
+            <CardTitle>학교생활</CardTitle>
+            <Image
+              alt="school"
+              height="100px"
+              src="/images/school.png"
+              width="100px"
+            />
+            <CardDescription>졸업이라는 출소를..!</CardDescription>
+            <br />
+          </CardContainer>
+        </SmallBox>
+      </CategoryBox>,
+      <CategoryBox key="culture" id="culture" onClick={onClickCategory}>
+        <SmallBox
+          background="#4979cc"
+          color="#151515"
+          height="210px"
+          width="150px"
+        >
+          <CardContainer>
+            <CardTitle>문화생활</CardTitle>
+            <Image
+              alt="culture"
+              height="100px"
+              src="/images/color-palette.png"
+              width="100px"
+            />
+            <CardDescription>이거 하려고 돈 번다</CardDescription>
+            <br />
+          </CardContainer>
+        </SmallBox>
+      </CategoryBox>,
+      <CategoryBox key="etc" id="etc" onClick={onClickCategory}>
+        <SmallBox
+          background="#27aa80"
+          color="#151515"
+          height="210px"
+          width="150px"
+        >
+          <CardContainer>
+            <CardTitle>기타</CardTitle>
+            <Image
+              alt="etc"
+              height="100px"
+              src="/images/guitar.png"
+              width="100px"
+            />
+            <CardDescription>기타 ^^!</CardDescription>
+            <br />
+          </CardContainer>
+        </SmallBox>
+      </CategoryBox>,
+    ];
+  }, [onClickCategory]);
 
   useEffect(() => {
     async function fetchBoardList() {
@@ -150,7 +323,6 @@ const Home = () => {
                 : bindCategory(categories, 4)
             }
             height="300px"
-            onClick={onClickCategory}
           />
         </CategoryCarouselContainer>
       </CategoryContainer>
@@ -343,127 +515,4 @@ const banners = [
       &nbsp;can answer it!
     </BannerSmallContent>
   </BannerContainer>,
-];
-
-const categories = [
-  <CategoryBox key={1}>
-    <SmallBox background="#c2bae2" color="#151515" height="210px" width="150px">
-      <CardContainer>
-        <CardTitle>직장/일</CardTitle>
-        <Image
-          alt="job"
-          height="100px"
-          src="/images/briefcase.png"
-          width="100px"
-        />
-        <CardDescription>우당탕탕 직장생활</CardDescription>
-        <br />
-      </CardContainer>
-    </SmallBox>
-  </CategoryBox>,
-  <CategoryBox key={2}>
-    <SmallBox background="#f3c1cc" color="#151515" height="210px" width="150px">
-      <CardContainer>
-        <CardTitle>연애/결혼</CardTitle>
-        <Image
-          alt="love"
-          height="100px"
-          src="/images/heart-attack.png"
-          width="100px"
-        />
-        <CardDescription>연애 나만 힘들어?</CardDescription>
-        <br />
-      </CardContainer>
-    </SmallBox>
-  </CategoryBox>,
-  <CategoryBox key={3}>
-    <SmallBox background="#1390d9" color="#151515" height="210px" width="150px">
-      <CardContainer>
-        <CardTitle>가족</CardTitle>
-        <Image
-          alt="family"
-          height="100px"
-          src="/images/family.png"
-          width="100px"
-        />
-        <CardDescription>가족, 가깝고도 먼...!</CardDescription>
-        <br />
-      </CardContainer>
-    </SmallBox>
-  </CategoryBox>,
-  <CategoryBox key={4}>
-    <SmallBox background="#f0c872" color="#151515" height="210px" width="150px">
-      <CardContainer>
-        <CardTitle>인간관계</CardTitle>
-        <Image
-          alt="relationship"
-          height="100px"
-          src="/images/planet-earth.png"
-          width="100px"
-        />
-        <CardDescription>우리 같은 행성인 맞죠?</CardDescription>
-        <br />
-      </CardContainer>
-    </SmallBox>
-  </CategoryBox>,
-  <CategoryBox key={5}>
-    <SmallBox background="#84d9b7" color="#151515" height="210px" width="150px">
-      <CardContainer>
-        <CardTitle>임신/육아</CardTitle>
-        <Image
-          alt="parenting"
-          height="100px"
-          src="/images/rocking-horse.png"
-          width="100px"
-        />
-        <CardDescription>성인체력x3 = 애들체력</CardDescription>
-        <br />
-      </CardContainer>
-    </SmallBox>
-  </CategoryBox>,
-  <CategoryBox key={6}>
-    <SmallBox background="#ec9ca3" color="#151515" height="210px" width="150px">
-      <CardContainer>
-        <CardTitle>학교생활</CardTitle>
-        <Image
-          alt="school"
-          height="100px"
-          src="/images/school.png"
-          width="100px"
-        />
-        <CardDescription>졸업이라는 출소를..!</CardDescription>
-        <br />
-      </CardContainer>
-    </SmallBox>
-  </CategoryBox>,
-  <CategoryBox key={7}>
-    <SmallBox background="#4979cc" color="#151515" height="210px" width="150px">
-      <CardContainer>
-        <CardTitle>문화생활</CardTitle>
-        <Image
-          alt="culture"
-          height="100px"
-          src="/images/color-palette.png"
-          width="100px"
-        />
-        <CardDescription>이거 하려고 돈 번다</CardDescription>
-        <br />
-      </CardContainer>
-    </SmallBox>
-  </CategoryBox>,
-  <CategoryBox key={8}>
-    <SmallBox background="#27aa80" color="#151515" height="210px" width="150px">
-      <CardContainer>
-        <CardTitle>기타</CardTitle>
-        <Image
-          alt="etc"
-          height="100px"
-          src="/images/guitar.png"
-          width="100px"
-        />
-        <CardDescription>기타 ^^!</CardDescription>
-        <br />
-      </CardContainer>
-    </SmallBox>
-  </CategoryBox>,
 ];

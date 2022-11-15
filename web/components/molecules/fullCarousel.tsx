@@ -5,16 +5,13 @@ import { Paper } from "@mui/material";
 interface FullCarouselProps {
   banners: any[];
   height?: string;
-  onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
-const FullCarousel = ({ banners, height, onClick }: FullCarouselProps) => {
+const FullCarousel = ({ banners, height }: FullCarouselProps) => {
   return (
     <CenteredCarousel height={height} navButtonsAlwaysVisible={true}>
       {banners.map((banner, idx) => (
-        <BannerPaper key={idx} onClick={onClick}>
-          {banner}
-        </BannerPaper>
+        <BannerPaper key={idx}>{banner}</BannerPaper>
       ))}
     </CenteredCarousel>
   );

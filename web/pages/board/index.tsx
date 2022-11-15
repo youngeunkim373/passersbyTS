@@ -24,6 +24,7 @@ interface BoardListProps {
 }
 
 const CategoryOptions: { [k: string]: any } = {
+  unselected: "선택",
   job: "직장/일",
   love: "연애/결혼",
   family: "가족",
@@ -41,17 +42,21 @@ const criteriaList = {
 };
 
 const BoardList = (props: BoardListProps) => {
+  const router = useRouter();
+
   const [alert, setAlert] = useState({ open: false, text: "" });
   const [boardList, setBoardList] = useState(props.boardList);
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(
+    router.query?.category === undefined
+      ? "unselected"
+      : String(router.query?.category)
+  );
   const [criteria, setCriteria] = useState("registerDate");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState(
     props.pageCount > 0 ? props.pageCount : 1
   );
   const [search, setSearch] = useState("");
-
-  const router = useRouter();
 
   const { status } = useSession();
 
@@ -77,7 +82,7 @@ const BoardList = (props: BoardListProps) => {
         .get("/api/board", {
           params: {
             path: "getBoardList",
-            category: category,
+            category: category === "unselected" ? "" : category,
             criteria: criteria,
             page: currentPage,
             search: search,
@@ -115,6 +120,10 @@ const BoardList = (props: BoardListProps) => {
           <BasicSelect
             options={CategoryOptions}
             ref={categoryRef}
+            currentValue={{
+              id: category,
+              text: CategoryOptions[category],
+            }}
             setOption={setCategory}
           />
         </LeftContainer>
