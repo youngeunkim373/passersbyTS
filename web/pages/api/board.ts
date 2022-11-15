@@ -54,35 +54,33 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
               where
             );
 
-            res.status(200).json({ getPageCountResult });
+            let option = {
+              skip: Math.round((currentPage - 1) * +take),
+              take: take,
+              select: {
+                listId: true,
+                listTitle: true,
+                writerEmail: true,
+                listContent: true,
+                viewCount: true,
+                answerCount: true,
+                statsOption: true,
+                registerDate: true,
+                writer: {
+                  select: {
+                    nickname: true,
+                    userImage: true,
+                  },
+                },
+              },
+              orderBy: orderBy,
+              where: where,
+            };
 
-            // let option = {
-            //   skip: Math.round((currentPage - 1) * +take),
-            //   take: take,
-            //   select: {
-            //     listId: true,
-            //     listTitle: true,
-            //     writerEmail: true,
-            //     listContent: true,
-            //     viewCount: true,
-            //     answerCount: true,
-            //     statsOption: true,
-            //     registerDate: true,
-            //     writer: {
-            //       select: {
-            //         nickname: true,
-            //         userImage: true,
-            //       },
-            //     },
-            //   },
-            //   orderBy: orderBy,
-            //   where: where,
-            // };
-
-            // const result: BoardListKeys[] = await prisma.boardlist.findMany(
-            //   option
-            // );
-            // console.log(result);
+            const result: BoardListKeys[] = await prisma.boardlist.findMany(
+              option
+            );
+            res.status(200).json({ result });
 
             // // const boardList = result.map((row) =>
             // //   typeof row.timeDiff === "bigint"
