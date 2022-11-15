@@ -11,16 +11,31 @@ import ProfileImage from "../../components/molecules/profileImage";
 import { ListKeys } from "../../types/globalTypes";
 import { calcDate } from "../../lib/utils/calcDate";
 
+const CategoryOptions: { [k: string]: any } = {
+  job: "직장/일",
+  love: "연애/결혼",
+  family: "가족",
+  relationship: "인간관계",
+  parenting: "임신/육아",
+  school: "학교생활",
+  culture: "문화생활",
+  etc: "기타",
+};
+
 interface ListDetailProps {
+  category?: string;
   listDetail: ListKeys;
 }
 
-const ListDetail = ({ listDetail }: ListDetailProps) => {
+const ListDetail = ({ category, listDetail }: ListDetailProps) => {
   return (
     <ThemeTable aria-label="simple table">
       <TableBody>
         <TableRow>
           <TitleTableCell align="left">
+            {category && (
+              <CategoryParagraph>{CategoryOptions[category]}</CategoryParagraph>
+            )}
             {calcDate(listDetail.registerDate).dateDiff < 1440 && <NewIcon />}
             <TitleSpan>{listDetail.listTitle}</TitleSpan>
           </TitleTableCell>
@@ -47,6 +62,13 @@ const ListDetail = ({ listDetail }: ListDetailProps) => {
 };
 
 export default ListDetail;
+
+const CategoryParagraph = styled.div`
+  font-family: ibmLight;
+  font-size: 14px;
+  font-weight: normal;
+  padding-bottom: 10px;
+`;
 
 const PostInfoContainer = styled.div`
   color: ${({ theme }) => theme.global.component.color};

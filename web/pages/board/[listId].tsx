@@ -141,7 +141,7 @@ const BoardDetail = (props: BoardDetailProps) => {
         </RadioGroup>
       </StyledFormControl>
       <ThemeTableContainer component={Paper}>
-        <ListDetail listDetail={boardDetail} />
+        <ListDetail category={boardDetail.category} listDetail={boardDetail} />
         <FullStatsSection
           chartReload={chartReload}
           listId={listId}
