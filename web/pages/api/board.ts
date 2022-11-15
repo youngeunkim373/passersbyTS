@@ -20,7 +20,7 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
         case "getBoardList":
           try {
             const criteria: string = String(req.query.criteria);
-            const currentPage: number = Number(req.query.page);
+            const currentPage = req.query.page;
             const search: string = String(req.query?.search);
             const take: number = Number(req.query.take);
 
@@ -55,8 +55,8 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
             );
 
             let option = {
-              skip: Math.round((currentPage - 1) * +take),
-              take: take,
+              // skip: Math.round((Number(currentPage) - 1) * +take),
+              // take: take,
               select: {
                 listId: true,
                 listTitle: true,
