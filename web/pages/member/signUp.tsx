@@ -288,6 +288,7 @@ const SignUp: React.FC = () => {
             height="50px"
             options={regionList}
             ref={regionSelectRef}
+            width="150px"
           />
         </RegionSelectContainer>
         <SignUpButtonContainer>

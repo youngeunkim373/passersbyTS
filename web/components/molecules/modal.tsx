@@ -26,6 +26,7 @@ export default Modal;
 
 const CloseIconWithPosition = styled(CloseIcon)`
   background: ${({ theme }) => theme.global.component.pointBgColor};
+  color: ${({ theme }) => theme.global.component.color};
   cursor: pointer;
   padding-top: 10px;
   padding-left: 465px;

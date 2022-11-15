@@ -117,10 +117,9 @@ export default async function members(
             const checkNicknameResult: any = await checkNickname(nickname);
 
             if (prevNickname !== nickname && checkNicknameResult > 0) {
-              res
+              return res
                 .status(409)
                 .json({ message: `${nickname} is already existed.` });
-              return;
             }
 
             const result = await prisma.$executeRaw`
@@ -130,6 +129,7 @@ export default async function members(
                        ,region = ${region}
                  WHERE email = ${email}
             `;
+            console.log(result);
 
             res.status(200).json({ nickname, sex, region });
           } catch (e) {
