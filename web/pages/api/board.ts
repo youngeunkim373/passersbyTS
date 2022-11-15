@@ -28,6 +28,7 @@ export default async function members(
             const currentPage: number = Number(req.query.page);
             const search: string = String(req.query?.search);
             const take: number = Number(req.query.take);
+            console.log(search);
 
             const orderBy: { [k: string]: string } =
               criteria === "viewCount"
@@ -79,14 +80,14 @@ export default async function members(
                 },
               },
               orderBy: orderBy,
-              ...(search && {
-                where: where,
-              }),
+              where: where,
             };
 
+            console.log(option);
             const result: BoardListKeys[] = await prisma.boardlist.findMany(
               option
             );
+            console.log(result);
 
             // const boardList = result.map((row) =>
             //   typeof row.timeDiff === "bigint"
