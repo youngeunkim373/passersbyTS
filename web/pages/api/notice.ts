@@ -1,11 +1,10 @@
 import prisma from "../../lib/db/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { CommentKeys, NoticeListKeys } from "../../types/globalTypes";
 import getCommentPageCount from "./utils/getCommentPageCount";
 import getListPageCount from "./utils/getListPageCount";
-import findNoticeBucket from "./utils/findNoticeBucket";
+import { CommentKeys, NoticeListKeys } from "../../types/globalTypes";
 
-export default async function members(
+export default async function notice(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -265,5 +264,9 @@ export default async function members(
           res.status(403).json({ error: "Please check the method again!" });
           break;
       }
+      break;
+    default:
+      res.status(403).json({ error: "Please check the method again!" });
+      break;
   }
 }
