@@ -50,12 +50,12 @@ const NoticeList = () => {
           if (res.data.noticeList.length > 0) {
             setNoticeList(res.data.noticeList);
           } else {
+            setNoticeList([]);
             setAlert({
               open: true,
               text: "검색결과가 없습니다.",
             });
             setLoading(false);
-            return;
           }
           if (res.data.pageCount > 0) setPageCount(res.data.pageCount);
           setLoading(false);

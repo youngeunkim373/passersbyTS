@@ -19,6 +19,7 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
       switch (path) {
         case "getBoardList":
           try {
+            const category: string = String(req.query.category);
             const criteria: string = String(req.query.criteria);
             const currentPage: number = Number(req.query.page);
             const search: string = String(req.query?.search);
@@ -34,6 +35,7 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
                 : { registerDate: "desc" };
 
             const where = {
+              ...(category && { category: category }),
               OR: [
                 {
                   listTitle: {
@@ -47,7 +49,6 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
                 },
               ],
             };
-
             const getPageCountResult: number | unknown = await getListPageCount(
               "boardlist",
               take,

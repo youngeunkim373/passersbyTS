@@ -23,6 +23,17 @@ interface BoardListProps {
   pageCount: number;
 }
 
+const CategoryOptions: { [k: string]: any } = {
+  job: "직장/일",
+  love: "연애/결혼",
+  family: "가족",
+  relationship: "인간관계",
+  parenting: "임신/육아",
+  school: "학교생활",
+  culture: "문화생활",
+  etc: "기타",
+};
+
 const criteriaList = {
   registerDate: "최신순",
   viewCount: "조회수",
@@ -32,6 +43,7 @@ const criteriaList = {
 const BoardList = (props: BoardListProps) => {
   const [alert, setAlert] = useState({ open: false, text: "" });
   const [boardList, setBoardList] = useState(props.boardList);
+  const [category, setCategory] = useState("");
   const [criteria, setCriteria] = useState("registerDate");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState(
@@ -45,6 +57,7 @@ const BoardList = (props: BoardListProps) => {
 
   const { setLoading }: any = useContext(LoadingContext);
 
+  const categoryRef = useRef<HTMLLabelElement>(null);
   const criteriaRef = useRef<HTMLLabelElement>(null);
 
   const onButtonClick = async (e: React.MouseEvent) => {
@@ -64,6 +77,7 @@ const BoardList = (props: BoardListProps) => {
         .get("/api/board", {
           params: {
             path: "getBoardList",
+            category: category,
             criteria: criteria,
             page: currentPage,
             search: search,
@@ -74,12 +88,12 @@ const BoardList = (props: BoardListProps) => {
           if (res.data.boardList.length > 0) {
             setBoardList(res.data.boardList);
           } else {
+            setBoardList([]);
             setAlert({
               open: true,
               text: "검색결과가 없습니다.",
             });
             setLoading(false);
-            return;
           }
           if (res.data.pageCount > 0) setPageCount(res.data.pageCount);
           setLoading(false);
@@ -88,7 +102,7 @@ const BoardList = (props: BoardListProps) => {
     }
     setLoading(true);
     fetchBoardList();
-  }, [criteria, currentPage, search, setLoading]);
+  }, [category, criteria, currentPage, search, setLoading]);
 
   return (
     <div id="list-page">
@@ -97,15 +111,24 @@ const BoardList = (props: BoardListProps) => {
         {alert.text}
       </Alert>
       <CriteriaContainer>
-        <BasicSelect
-          options={criteriaList}
-          ref={criteriaRef}
-          currentValue={{
-            id: "registerDate",
-            text: "최신순",
-          }}
-          setOption={setCriteria}
-        />
+        <LeftContainer>
+          <BasicSelect
+            options={CategoryOptions}
+            ref={categoryRef}
+            setOption={setCategory}
+          />
+        </LeftContainer>
+        <LeftContainer>
+          <BasicSelect
+            options={criteriaList}
+            ref={criteriaRef}
+            currentValue={{
+              id: "registerDate",
+              text: "최신순",
+            }}
+            setOption={setCriteria}
+          />
+        </LeftContainer>
       </CriteriaContainer>
       <SearchContainer>
         <SearchBar setSearch={setSearch} setCurrentPage={setCurrentPage} />
@@ -152,6 +175,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   };
 };
+
+const LeftContainer = styled.div`
+  float: left;
+  padding-right: 20px;
+`;
 
 const CriteriaContainer = styled.div`
   float: left;
