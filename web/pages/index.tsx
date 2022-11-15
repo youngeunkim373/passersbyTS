@@ -223,6 +223,7 @@ const Home = () => {
         .get("/api/board", {
           params: {
             path: "getBoardList",
+            category: "",
             criteria: criteria,
             page: 1,
             search: "",

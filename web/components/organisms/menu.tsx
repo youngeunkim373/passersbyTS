@@ -241,7 +241,7 @@ const SettingMenuContainer = styled.div`
   display: flex;
   float: right;
   justify-content: flex-end;
-  min-width: 350px;
+  min-width: 360px;
   width: 10vw;
 `;
 
