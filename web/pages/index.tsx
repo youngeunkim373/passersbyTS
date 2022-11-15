@@ -52,6 +52,7 @@ const Home = () => {
 
   useEffect(() => {
     async function fetchBoardList() {
+      setLoading(true);
       await axios
         .get("/api/board", {
           params: {
@@ -70,7 +71,7 @@ const Home = () => {
         })
         .catch((error) => console.log(error.response));
     }
-    setLoading(true);
+
     fetchBoardList();
   }, [criteria, setLoading]);
 
@@ -165,27 +166,6 @@ const Home = () => {
 };
 
 export default Home;
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const result = await axios.get(
-//     `${process.env.NEXT_PUBLIC_ENV_HOST}/api/board`,
-//     {
-//       params: {
-//         path: "getBoardList",
-//         criteria: "registerDate",
-//         page: 1,
-//         search: "",
-//         take: 5,
-//       },
-//     }
-//   );
-
-//   return {
-//     props: {
-//       boardList: result.data.boardList,
-//     },
-//   };
-// };
 
 const BannerContainer = styled.div`
   background-position: 85% 30px;
