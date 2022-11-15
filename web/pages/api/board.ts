@@ -73,15 +73,13 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
                   },
                 },
               },
-              // orderBy: orderBy,
+              orderBy: orderBy,
               // where: where,
             };
 
-            // const result: BoardListKeys[] = await prisma.boardlist.findMany(
-            //   option
-            // );
-            const result: any[] = await prisma.boardlist.findMany();
-            res.status(200).json({ result });
+            const result: BoardListKeys[] = await prisma.boardlist.findMany(
+              option
+            );
 
             // // const boardList = result.map((row) =>
             // //   typeof row.timeDiff === "bigint"
@@ -89,9 +87,9 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
             // //     : { ...row }
             // // );
 
-            // res
-            //   .status(200)
-            //   .json({ boardList: result, pageCount: getPageCountResult });
+            res
+              .status(200)
+              .json({ boardList: result, pageCount: getPageCountResult });
           } catch (e) {
             console.error("Request error", e);
             res
