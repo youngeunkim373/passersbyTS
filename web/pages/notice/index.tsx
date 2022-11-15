@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import axios from "axios";
@@ -17,19 +16,12 @@ import { NoticeListKeys } from "../../types/globalTypes";
 
 import LoadingContext from "../../context/loading";
 
-interface NoticeListProps {
-  noticeList: NoticeListKeys[];
-  pageCount: number;
-}
-
-const NoticeList = (props: NoticeListProps) => {
+const NoticeList = () => {
   const [alert, setAlert] = useState({ open: false, text: "" });
-  const [noticeList, setNoticeList] = useState(props.noticeList);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageCount, setPageCount] = useState(
-    props.pageCount > 0 ? props.pageCount : 1
-  );
-  const [search, setSearch] = useState("");
+  const [noticeList, setNoticeList] = useState<NoticeListKeys[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageCount, setPageCount] = useState<number>(1);
+  const [search, setSearch] = useState<string | "">("");
 
   const router = useRouter();
 
@@ -44,6 +36,7 @@ const NoticeList = (props: NoticeListProps) => {
 
   useEffect(() => {
     async function fetchNoticeList() {
+      setLoading(true);
       await axios
         .get("/api/notice", {
           params: {
@@ -69,7 +62,7 @@ const NoticeList = (props: NoticeListProps) => {
         })
         .catch((error) => console.log(error.response));
     }
-    setLoading(true);
+
     fetchNoticeList();
   }, [currentPage, search, setLoading]);
 
@@ -102,31 +95,6 @@ const NoticeList = (props: NoticeListProps) => {
 };
 
 export default NoticeList;
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const result = await axios.get(
-    `${process.env.NEXT_PUBLIC_ENV_HOST}/api/notice`,
-    {
-      params: {
-        path: "getNoticeList",
-        page: 1,
-        take: 10,
-      },
-    }
-  );
-
-  return {
-    props: {
-      noticeList: result.data.noticeList,
-      pageCount: result.data.pageCount,
-    },
-  };
-};
-
-const CriteriaContainer = styled.div`
-  float: left;
-  padding-top: 10px;
-`;
 
 const SearchContainer = styled.div`
   float: right;

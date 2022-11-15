@@ -27,7 +27,7 @@ const CommentInput = ({
   const { data: session, status } = useSession();
 
   const router = useRouter();
-  const listId = router.query.listId!.toString();
+  const listId: string = String(router.query.listId);
 
   const commentInputRef = useRef<HTMLInputElement>(null);
 

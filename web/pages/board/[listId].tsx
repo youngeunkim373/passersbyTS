@@ -29,7 +29,6 @@ import LoadingContext from "../../context/loading";
 
 interface BoardDetailProps {
   boardAnswers: BoardAnswerKeys[];
-  boardComments: GetCommentProps;
   boardDetail: BoardListKeys;
 }
 
@@ -149,7 +148,7 @@ const BoardDetail = (props: BoardDetailProps) => {
           loggedInUser={loggedInUser}
           statsOption={boardDetail.statsOption}
         />
-        <CommentForm comment={props.boardComments} pageCategory="Board" />
+        <CommentForm pageCategory="Board" />
       </ThemeTableContainer>
     </div>
   );
@@ -170,17 +169,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   );
 
-  const boardCommentResult = await axios.get(
-    `${process.env.NEXT_PUBLIC_ENV_HOST}/api/board`,
-    {
-      params: {
-        path: "getBoardComments",
-        listId: listId,
-        page: 1,
-      },
-    }
-  );
-
   const boardAnswerResult = await axios.get(
     `${process.env.NEXT_PUBLIC_ENV_HOST}/api/board`,
     {
@@ -194,7 +182,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       boardDetail: boardDetailResult.data,
-      boardComments: boardCommentResult.data,
       boardAnswers: boardAnswerResult.data.result,
     },
   };

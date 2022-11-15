@@ -15,23 +15,20 @@ import ProfileImage from "../molecules/profileImage";
 import { CommentKeys, GetCommentProps } from "../../types/globalTypes";
 
 interface CommentFormProps {
-  comment: GetCommentProps;
   pageCategory: string;
 }
 
-const CommentForm = ({ comment, pageCategory }: CommentFormProps) => {
-  const [comments, setComments] = useState(comment.comments);
+const CommentForm = ({ pageCategory }: CommentFormProps) => {
+  const [comments, setComments] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageCount, setPageCount] = useState(
-    comment.pageCount > 0 ? comment.pageCount : 1
-  );
-  const [totalComment, setTotalComment] = useState(comment.commentCount);
+  const [pageCount, setPageCount] = useState(1);
+  const [totalComment, setTotalComment] = useState(0);
 
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const loggedInUser = session?.user;
 
   const router = useRouter();
-  const listId: string = router.query.listId!.toString();
+  const listId: string = String(router.query.listId);
 
   const fetchComments = useCallback(async () => {
     await axios

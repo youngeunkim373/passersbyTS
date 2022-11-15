@@ -1,7 +1,5 @@
-import { useState } from "react";
-import { GetServerSideProps } from "next";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
 import axios from "axios";
 import styled from "styled-components";
 
@@ -14,20 +12,36 @@ import ListDetail from "../../components/organisms/listDetatil";
 import Title from "../../components/atoms/title";
 import { NoticeListKeys, GetCommentProps } from "../../types/globalTypes";
 
-interface NoticeDetailProps {
-  noticeComments: GetCommentProps;
-  noticeDetail: NoticeListKeys;
-}
+import LoadingContext from "../../context/loading";
 
-const NoticeDetail = (props: NoticeDetailProps) => {
+const NoticeDetail = () => {
   const [alert, setAlert] = useState({ open: false, text: "" });
-  const [noticeDetail, setNoticeDetail] = useState(props.noticeDetail);
-
-  const { data: session, status } = useSession();
-  const loggedInUser = session?.user;
+  const [noticeDetail, setNoticeDetail] = useState<NoticeListKeys | []>([]);
 
   const router = useRouter();
-  const listId = router.query.listId!.toString();
+  const listId: string = String(router.query.listId);
+
+  const { setLoading }: any = useContext(LoadingContext);
+
+  useEffect(() => {
+    async function fetchNoticeList() {
+      setLoading(true);
+      await axios
+        .get("/api/notice", {
+          params: {
+            path: "getNoticeDetail",
+            listId: listId,
+          },
+        })
+        .then((res) => {
+          setNoticeDetail(res.data);
+          setLoading(false);
+        })
+        .catch((error) => console.log(error.response));
+    }
+
+    fetchNoticeList();
+  }, [listId, setLoading]);
 
   return (
     <div id="list-page">
@@ -36,46 +50,14 @@ const NoticeDetail = (props: NoticeDetailProps) => {
         {alert.text}
       </Alert>
       <ThemeTableContainer component={Paper}>
-        <ListDetail listDetail={noticeDetail} />
-        <CommentForm comment={props.noticeComments} pageCategory="Notice" />
+        <ListDetail listDetail={noticeDetail as NoticeListKeys} />
+        <CommentForm pageCategory="Notice" />
       </ThemeTableContainer>
     </div>
   );
 };
 
 export default NoticeDetail;
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const listId = context.query.listId;
-
-  const noticeDetailResult = await axios.get(
-    `${process.env.NEXT_PUBLIC_ENV_HOST}/api/notice`,
-    {
-      params: {
-        path: "getNoticeDetail",
-        listId: listId,
-      },
-    }
-  );
-
-  const noticeCommentResult = await axios.get(
-    `${process.env.NEXT_PUBLIC_ENV_HOST}/api/notice`,
-    {
-      params: {
-        path: "getNoticeComments",
-        listId: listId,
-        page: 1,
-      },
-    }
-  );
-
-  return {
-    props: {
-      noticeDetail: noticeDetailResult.data,
-      noticeComments: noticeCommentResult.data,
-    },
-  };
-};
 
 const ThemeTableContainer = styled(TableContainer)<{ component: any }>`
   background: ${({ theme }) => theme.global.component.bgColor};

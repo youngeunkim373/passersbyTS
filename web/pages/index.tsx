@@ -23,9 +23,11 @@ interface HomeProps {
   boardList: BoardListKeys[];
 }
 
-const Home = (props: HomeProps) => {
+//const Home = (props: HomeProps) => {
+const Home = () => {
   const [alert, setAlert] = useState({ open: false, text: "" });
-  const [boardList, setBoardList] = useState(props.boardList);
+  //const [boardList, setBoardList] = useState(props.boardList);
+  const [boardList, setBoardList] = useState([]);
   const [criteria, setCriteria] = useState("registerDate");
 
   const matches2 = useMediaQuery("(max-width:850px)");
@@ -164,26 +166,26 @@ const Home = (props: HomeProps) => {
 
 export default Home;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const result = await axios.get(
-    `${process.env.NEXT_PUBLIC_ENV_HOST}/api/board`,
-    {
-      params: {
-        path: "getBoardList",
-        criteria: "registerDate",
-        page: 1,
-        search: "",
-        take: 5,
-      },
-    }
-  );
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const result = await axios.get(
+//     `${process.env.NEXT_PUBLIC_ENV_HOST}/api/board`,
+//     {
+//       params: {
+//         path: "getBoardList",
+//         criteria: "registerDate",
+//         page: 1,
+//         search: "",
+//         take: 5,
+//       },
+//     }
+//   );
 
-  return {
-    props: {
-      boardList: result.data.boardList,
-    },
-  };
-};
+//   return {
+//     props: {
+//       boardList: result.data.boardList,
+//     },
+//   };
+// };
 
 const BannerContainer = styled.div`
   background-position: 85% 30px;
