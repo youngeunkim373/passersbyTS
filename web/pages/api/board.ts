@@ -23,7 +23,6 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
             const currentPage: number = Number(req.query.page);
             const search: string = String(req.query?.search);
             const take: number = Number(req.query.take);
-            console.log(search);
 
             const orderBy: { [k: string]: string } =
               criteria === "viewCount"
@@ -65,6 +64,7 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
                 listContent: true,
                 viewCount: true,
                 answerCount: true,
+                category: true,
                 statsOption: true,
                 registerDate: true,
                 writer: {
@@ -78,11 +78,9 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
               where: where,
             };
 
-            console.log(option);
             const result: BoardListKeys[] = await prisma.boardlist.findMany(
               option
             );
-            console.log(result);
 
             // const boardList = result.map((row) =>
             //   typeof row.timeDiff === "bigint"
@@ -118,6 +116,7 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
                 listContent: true,
                 viewCount: true,
                 answerCount: true,
+                category: true,
                 statsOption: true,
                 registerDate: true,
                 writer: {
@@ -359,6 +358,7 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
               sequence: number;
               content: string;
             }[] = req.body.answers || [];
+            const categoryOption: string = req.body.categoryOption;
             const statsOption: string = req.body.statsOption;
 
             // 실제로 저장하려는 이미지 목록 추리기
@@ -413,7 +413,7 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
             const boardListResult = await prisma.$executeRaw`
                            INSERT INTO boardlist
                                   (
-                                   listId, listTitle, writerEmail, listContent, viewCount, answerCount, statsOption, registerId, registerDate
+                                   listId, listTitle, writerEmail, listContent, viewCount, answerCount, categoryOption, statsOption, registerId, registerDate
                                   )
                            VALUES
                                   (
@@ -426,6 +426,7 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
                                    )}
                                    ,0
                                    ,0
+                                   ,${categoryOption}
                                    ,${statsOption}
                                    ,${writerEmail}
                                    ,NOW()

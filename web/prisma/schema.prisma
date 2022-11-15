@@ -38,6 +38,7 @@ model boardlist {
     listContent                      String          @db.LongText
     viewCount                        Decimal         @db.Decimal(15, 0)
     answerCount                      Decimal         @db.Decimal(15, 0)
+    category                         String
     statsOption                      String
     registerId                       String            
     registerDate                     DateTime        @updatedAt        

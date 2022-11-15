@@ -13,7 +13,7 @@ const BasicSelect = (
     width = `${
       Object.values(options).reduce((acc, cur) => {
         return Math.max(acc, cur.length);
-      }, 0) * 20
+      }, 0) * 25
     }px`,
     setOption,
   }: SelectProps,

@@ -126,6 +126,7 @@ export interface BoardListKeys {
   listContent: string;
   viewCount: Decimal | number;
   answerCount: Decimal | number;
+  category: string;
   statsOption: string;
   registerId?: string;
   registerDate: Date;

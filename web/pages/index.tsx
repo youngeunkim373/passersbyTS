@@ -351,7 +351,7 @@ const categories = [
       <CardContainer>
         <CardTitle>직장/일</CardTitle>
         <Image
-          alt="work/job"
+          alt="job"
           height="100px"
           src="/images/briefcase.png"
           width="100px"
@@ -366,7 +366,7 @@ const categories = [
       <CardContainer>
         <CardTitle>연애/결혼</CardTitle>
         <Image
-          alt="love/marriage"
+          alt="love"
           height="100px"
           src="/images/heart-attack.png"
           width="100px"
@@ -411,7 +411,7 @@ const categories = [
       <CardContainer>
         <CardTitle>임신/육아</CardTitle>
         <Image
-          alt="pregnancy/parenting"
+          alt="parenting"
           height="100px"
           src="/images/rocking-horse.png"
           width="100px"
@@ -441,7 +441,7 @@ const categories = [
       <CardContainer>
         <CardTitle>문화생활</CardTitle>
         <Image
-          alt="cultural life"
+          alt="culture"
           height="100px"
           src="/images/color-palette.png"
           width="100px"
