@@ -1,4 +1,5 @@
 import { useContext, useRef, useState } from "react";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
 import axios from "axios";
@@ -14,11 +15,11 @@ import Alert from "../../components/molecules/alert";
 
 import LoadingContext from "../../context/loading";
 
-const ChangePassword = () => {
+const ChangePassword = (props: { email: string }) => {
   const [alert, setAlert] = useState({ open: false, text: "" });
 
   const router = useRouter();
-  const email = router.query.changePassword;
+  const email = props.email;
 
   const { setLoading }: any = useContext(LoadingContext);
 
@@ -111,6 +112,16 @@ const ChangePassword = () => {
 };
 
 export default ChangePassword;
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const email = context.query.changePassword;
+
+  return {
+    props: {
+      email: email,
+    },
+  };
+};
 
 const ButtonContainer = styled.div`
   padding-top: 70px;

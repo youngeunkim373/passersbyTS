@@ -19,10 +19,11 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
       switch (path) {
         case "getBoardList":
           try {
-            const category: string = String(req.query.category);
+            const category: string = String(req.query?.category);
             const criteria: string = String(req.query.criteria);
             const currentPage: number = Number(req.query.page);
-            const search: string = String(req.query?.search);
+            const email: string = String(req.query?.email);
+            const search: string = String(req.query.search);
             const take: number = Number(req.query.take);
 
             const orderBy: { [k: string]: string } =
@@ -35,7 +36,10 @@ export default async function board(req: NextApiRequest, res: NextApiResponse) {
                 : { registerDate: "desc" };
 
             const where = {
-              ...(category && { category: category }),
+              ...(category !== "undefined" && { category: category }),
+              ...(email !== "undefined" && {
+                writerEmail: email,
+              }),
               OR: [
                 {
                   listTitle: {

@@ -19,11 +19,7 @@ import FullStatsSection from "../../components/organisms/FullStatsSection";
 import ListDetail from "../../components/organisms/listDetatil";
 import Title from "../../components/atoms/title";
 import YesOrNoButtons from "../../components/molecules/yesOrNoButtons";
-import {
-  BoardAnswerKeys,
-  BoardListKeys,
-  GetCommentProps,
-} from "../../types/globalTypes";
+import { BoardAnswerKeys, BoardListKeys } from "../../types/globalTypes";
 
 import LoadingContext from "../../context/loading";
 
@@ -34,8 +30,6 @@ interface BoardDetailProps {
 
 const BoardDetail = (props: BoardDetailProps) => {
   const [alert, setAlert] = useState({ open: false, text: "" });
-  const [boardDetail, setBoardDetail] = useState(props.boardDetail);
-  const [boardAnswers, setBoardAnswers] = useState(props.boardAnswers);
   const [chartReload, setChartReload] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState("");
 
@@ -47,7 +41,14 @@ const BoardDetail = (props: BoardDetailProps) => {
 
   const { setLoading }: any = useContext(LoadingContext);
 
+  const onClickButton = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setSelectedAnswer((e.currentTarget as HTMLButtonElement).id);
+  };
+
   const onClickMakeAnswer = async (e: React.MouseEvent) => {
+    e.preventDefault();
+
     if (status !== "authenticated") {
       setAlert({
         open: true,
@@ -102,7 +103,7 @@ const BoardDetail = (props: BoardDetailProps) => {
       <Alert open={alert.open} setOpen={setAlert}>
         {alert.text}
       </Alert>
-      {boardDetail.statsOption === "all"
+      {props.boardDetail.statsOption === "all"
         ? "이 게시글은 성별, 연령, 지역별 통계 데이터를 보여줍니다. 답변할 때 이 점을 참고하세요!"
         : "이 게시글은 전체 통계 데이터만 보여줍니다."}
       <StyledFormControl>
@@ -111,9 +112,9 @@ const BoardDetail = (props: BoardDetailProps) => {
           defaultValue="female"
           name="radio-buttons-group"
         >
-          {boardAnswers[0].answerCategory === "choices" ? (
+          {props.boardAnswers[0].answerCategory === "choices" ? (
             <>
-              {boardAnswers.map((answer: BoardAnswerKeys) => (
+              {props.boardAnswers.map((answer: BoardAnswerKeys) => (
                 <StyledFormControlLabel
                   key={String(answer.answerSequence)}
                   value={answer.answerSequence}
@@ -128,9 +129,7 @@ const BoardDetail = (props: BoardDetailProps) => {
           ) : (
             <YesOrNoButtons
               $selectedAnswer={selectedAnswer}
-              onClick={(e: React.SyntheticEvent) =>
-                setSelectedAnswer((e.currentTarget as HTMLButtonElement).id)
-              }
+              onClick={onClickButton}
             />
           )}
           <AnswerButtonContainer>
@@ -141,12 +140,15 @@ const BoardDetail = (props: BoardDetailProps) => {
         </RadioGroup>
       </StyledFormControl>
       <ThemeTableContainer component={Paper}>
-        <ListDetail category={boardDetail.category} listDetail={boardDetail} />
+        <ListDetail
+          category={props.boardDetail.category}
+          listDetail={props.boardDetail}
+        />
         <FullStatsSection
           chartReload={chartReload}
           listId={listId}
           loggedInUser={loggedInUser}
-          statsOption={boardDetail.statsOption}
+          statsOption={props.boardDetail.statsOption}
         />
         <CommentForm pageCategory="Board" />
       </ThemeTableContainer>

@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import axios from "axios";
 import prisma from "../../../lib/db/prisma";
 import { MembersKeys } from "../../../types/globalTypes";
 import { verifyPassword } from "../../../lib/utils/hashPassword";
@@ -8,6 +7,8 @@ import { verifyPassword } from "../../../lib/utils/hashPassword";
 export default NextAuth({
   session: {
     strategy: "jwt",
+    maxAge: 24 * 60 * 60,
+    updateAge: 6 * 60 * 60,
   },
   providers: [
     CredentialsProvider({

@@ -26,13 +26,13 @@ const BannerPaper = styled(Paper)`
 
 const CenteredCarousel = styled(Carousel)`
   .MuiPaper-root {
+    align-items: center;
     box-shadow: none;
     display: flex;
     height: ${({ height }) => (height ? height : "auto")};
     justify-content: center;
-    align-items: center;
   }
-  .css-1m9128y {
-    margin: 0px;
-  }
+  // .css-1m9128y {
+  //   width: 100%;
+  // }
 `;

@@ -223,7 +223,7 @@ const Home = () => {
         .get("/api/board", {
           params: {
             path: "getBoardList",
-            category: "",
+            category: undefined,
             criteria: criteria,
             page: 1,
             search: "",
@@ -405,7 +405,7 @@ const CarouselContainer = styled.div`
   background-repeat: no-repeat;
   background-size: contain;
   height: 380px;
-  min-width: 1200px;
+  min-width: 700px;
 `;
 
 const CategoryBox = styled.div`

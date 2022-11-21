@@ -249,7 +249,7 @@ const MyProfile = ({ loggedInUser, setAlert }: MyProfileProps) => {
           router.push(`member/${loggedInUser.email}`);
         }}
       >
-        비밀번호 변경
+        <p>비밀번호 변경</p>
       </PasswordChangeContainer>
       <ButtonContainer>
         <PushButton type="submit">변경하기</PushButton>
@@ -261,7 +261,7 @@ const MyProfile = ({ loggedInUser, setAlert }: MyProfileProps) => {
 export default MyProfile;
 
 const ButtonContainer = styled.div`
-  padding: 40px 0px 30px 0px;
+  padding-bottom: 30px;
   text-align: center;
 `;
 
@@ -281,11 +281,17 @@ const LineContainer = styled.div`
 `;
 
 const PasswordChangeContainer = styled.div`
-  color: ${({ theme }) => theme.global.component.pointColor};
-  cursor: pointer;
-  left: calc(50% + 197px);
-  padding-top: 10px;
+  height: 100px;
+  margin: 0 auto;
+  min-width: 600px;
   position: relative;
+  width: 80%;
+
+  p {
+    padding-right: 7%;
+    position: absolute;
+    right: 0;
+  }
 `;
 
 const ProfileForm = styled.form`

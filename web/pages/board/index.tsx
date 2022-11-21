@@ -82,7 +82,7 @@ const BoardList = (props: BoardListProps) => {
         .get("/api/board", {
           params: {
             path: "getBoardList",
-            category: category === "unselected" ? "" : category,
+            category: category === "unselected" ? undefined : category,
             criteria: criteria,
             page: currentPage,
             search: search,

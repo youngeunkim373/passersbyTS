@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 
 import Table from "@mui/material/Table";
@@ -61,7 +62,7 @@ const ListDetail = ({ category, listDetail }: ListDetailProps) => {
   );
 };
 
-export default ListDetail;
+export default React.memo(ListDetail);
 
 const CategoryParagraph = styled.div`
   font-family: ibmLight;
