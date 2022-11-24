@@ -281,6 +281,7 @@ const LineContainer = styled.div`
 `;
 
 const PasswordChangeContainer = styled.div`
+  cursor: pointer;
   height: 100px;
   margin: 0 auto;
   min-width: 600px;

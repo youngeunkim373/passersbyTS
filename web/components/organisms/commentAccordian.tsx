@@ -69,12 +69,12 @@ const ProfileContainer = styled.div`
 `;
 
 const StyledAccordion = styled(Accordion)`
-  background: transparent;
+  background: ${({ theme }) => theme.global.component.bgColor};
   box-shadow: none;
   padding-bottom: 15px;
 
   &:before {
-    background: transparent;
+    background: ${({ theme }) => theme.global.component.bgColor};
   }
   .MuiAccordionSummary-expandIconWrapper {
     color: ${({ theme }) => theme.global.component.pointColor};

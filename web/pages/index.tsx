@@ -128,7 +128,12 @@ const Home = () => {
               src="/images/planet-earth.png"
               width="100px"
             />
-            <CardDescription>우리 같은 행성인 맞죠?</CardDescription>
+            <CardDescription>
+              우리 같은 행성인...
+              <br />
+              <br />
+              맞죠?
+            </CardDescription>
             <br />
           </CardContainer>
         </SmallBox>
@@ -148,7 +153,10 @@ const Home = () => {
               src="/images/rocking-horse.png"
               width="100px"
             />
-            <CardDescription>성인체력x3 = 애들체력</CardDescription>
+            <CardDescription>
+              성인체력 x 3<br />
+              <br />= 애들체력
+            </CardDescription>
             <br />
           </CardContainer>
         </SmallBox>
