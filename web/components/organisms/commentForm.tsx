@@ -12,7 +12,7 @@ import CommentAccordian from "./commentAccordian";
 import CommentInput from "../molecules/commentInput";
 import Pagination from "../molecules/pagination";
 import ProfileImage from "../molecules/profileImage";
-import { CommentKeys, GetCommentProps } from "../../types/globalTypes";
+import { CommentKeys } from "../../types/globalTypes";
 
 interface CommentFormProps {
   pageCategory: string;

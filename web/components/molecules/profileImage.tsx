@@ -29,7 +29,6 @@ const Container = styled.div<ProfileImageProps>`
   background-size: cover;
   border-radius: 50%;
   height: ${({ height }) => height};
-  position: relative;
   width: ${({ width }) => width};
   z-index: 1;
 `;

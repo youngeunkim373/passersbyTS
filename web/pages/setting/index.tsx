@@ -11,9 +11,7 @@ import Title from "../../components/atoms/title";
 import MyProfile from "../../components/templates/myProfile";
 import MyBoard from "../../components/templates/myBoard";
 
-interface ProfileProps {}
-
-const Profile = (props: ProfileProps) => {
+const Profile = () => {
   const [alert, setAlert] = useState({ open: false, text: "" });
   const [tab, setTab] = useState("myProfile");
 
